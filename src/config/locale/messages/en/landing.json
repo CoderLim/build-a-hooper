@@ -4,8 +4,8 @@
     "pricing": "Pricing"
   },
   "hero": {
-    "headline": "Less boilerplate, more product.",
-    "subheadline": "Pre-wired payments, auth, RBAC, and credits — so you can ship your SaaS in days, not months.",
+    "headline": "The headless engine for your next SaaS.",
+    "subheadline": "Auth, payments, subscriptions, credits, RBAC, CMS, and i18n — all pre-wired. Just build your product on top.",
     "cta": "Get Started",
     "secondary": "Dashboard"
   },

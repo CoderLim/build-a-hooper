@@ -4,8 +4,8 @@
     "pricing": "价格"
   },
   "hero": {
-    "headline": "少写样板代码，多做产品。",
-    "subheadline": "预置支付、认证、权限和积分系统 — 让你的 SaaS 从数月缩短到数天。",
+    "headline": "你的下一个 SaaS 的 Headless 引擎。",
+    "subheadline": "认证、支付、订阅、积分、权限、内容管理和国际化 — 全部预置就绪，直接在上面构建你的产品。",
     "cta": "立即开始",
     "secondary": "控制台"
   },

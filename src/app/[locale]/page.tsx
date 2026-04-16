@@ -72,13 +72,16 @@ export default async function HomePage() {
     <div className="min-h-screen flex flex-col bg-background text-foreground">
       <LandingHeader navLinks={navLinks} />
 
-      {/* Hero — manus-style: centered, conversational, action chips */}
+      {/* Hero */}
       <section className="flex flex-col items-center justify-center px-4 pt-24 pb-16 sm:pt-36 sm:pb-24">
-        <div className="max-w-3xl text-center space-y-8">
+        <div className="max-w-3xl text-center space-y-6">
+          <p className="text-sm font-medium text-primary tracking-wide uppercase">
+            {envConfigs.app_name}
+          </p>
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl leading-[1.1]">
             {t("hero.headline")}
           </h1>
-          <p className="text-lg text-muted-foreground sm:text-xl max-w-xl mx-auto">
+          <p className="text-lg text-muted-foreground sm:text-xl max-w-2xl mx-auto leading-relaxed">
             {t("hero.subheadline")}
           </p>
 
