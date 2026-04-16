@@ -32,6 +32,19 @@ export default function SignUpPage() {
   const [loading, setLoading] = useState(false);
   const [configs, setConfigs] = useState<Record<string, string>>({});
 
+  const [redirectParam, setRedirectParam] = useState<string | null>(null);
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setRedirectParam(params.get("redirect"));
+    setCallbackUrl(params.get("callbackUrl"));
+  }, []);
+
+  const afterLoginUrl = redirectParam
+    ? `/auth-callback?redirect=${encodeURIComponent(redirectParam)}`
+    : callbackUrl || "/dashboard";
+
   useEffect(() => {
     fetch("/api/config/public")
       .then((r) => r.json())
@@ -54,7 +67,7 @@ export default function SignUpPage() {
       if (result.error) {
         setError(result.error.message || "Sign up failed");
       } else {
-        router.push("/dashboard");
+        router.push(afterLoginUrl);
       }
     } catch (err: any) {
       setError(err.message || "Sign up failed");

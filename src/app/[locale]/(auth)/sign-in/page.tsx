@@ -31,6 +31,21 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [configs, setConfigs] = useState<Record<string, string>>({});
 
+  // redirect: client protocol, goes through auth-callback
+  // callbackUrl: web page URL, goes directly after login
+  const [redirectParam, setRedirectParam] = useState<string | null>(null);
+  const [callbackUrl, setCallbackUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setRedirectParam(params.get("redirect"));
+    setCallbackUrl(params.get("callbackUrl"));
+  }, []);
+
+  const afterLoginUrl = redirectParam
+    ? `/auth-callback?redirect=${encodeURIComponent(redirectParam)}`
+    : callbackUrl || "/dashboard";
+
   useEffect(() => {
     fetch("/api/config/public")
       .then((r) => r.json())
@@ -53,7 +68,7 @@ export default function SignInPage() {
       if (result.error) {
         setError(result.error.message || "Sign in failed");
       } else {
-        router.push("/dashboard");
+        router.push(afterLoginUrl);
       }
     } catch (err: any) {
       setError(err.message || "Sign in failed");

@@ -13,10 +13,7 @@ import { and, eq } from 'drizzle-orm';
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword } from 'better-auth/crypto';
 
-import { loadEnvFiles } from '../src/lib/env';
 import * as schema from '../src/config/db/schema';
-
-loadEnvFiles();
 
 // ─── Create DB connection based on provider ─────────────────────────────────
 async function createScriptDb() {

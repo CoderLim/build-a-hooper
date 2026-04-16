@@ -28,6 +28,20 @@ export const envConfigs: Record<string, string> = {
   paypal_webhook_id: process.env.PAYPAL_WEBHOOK_ID ?? '',
   paypal_environment: process.env.PAYPAL_ENVIRONMENT ?? 'sandbox',
 
+  // Payment - Alipay
+  alipay_app_id: process.env.ALIPAY_APP_ID ?? '',
+  alipay_private_key: process.env.ALIPAY_PRIVATE_KEY ?? '',
+  alipay_public_key: process.env.ALIPAY_PUBLIC_KEY ?? '',
+  alipay_notify_url: process.env.ALIPAY_NOTIFY_URL ?? '',
+
+  // Payment - WeChat Pay
+  wechat_app_id: process.env.WECHAT_APP_ID ?? '',
+  wechat_mch_id: process.env.WECHAT_MCH_ID ?? '',
+  wechat_api_v3_key: process.env.WECHAT_API_V3_KEY ?? '',
+  wechat_private_key: process.env.WECHAT_PRIVATE_KEY ?? '',
+  wechat_serial_no: process.env.WECHAT_SERIAL_NO ?? '',
+  wechat_notify_url: process.env.WECHAT_NOTIFY_URL ?? '',
+
   // Email - Resend
   resend_api_key: process.env.RESEND_API_KEY ?? '',
   resend_email_from: process.env.RESEND_EMAIL_FROM ?? '',

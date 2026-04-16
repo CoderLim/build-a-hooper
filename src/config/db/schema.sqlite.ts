@@ -601,3 +601,49 @@ export type NewChatMessage = typeof chatMessage.$inferInsert;
 
 // ─── Custom tables ───────────────────────────────────────────────────────────
 // Add your own tables below this line.
+
+// ─── Invite Codes ────────────────────────────────────────────────────────────
+
+export const inviteCode = table(
+  'invite_code',
+  {
+    id: text('id').primaryKey(),
+    code: text('code').notNull().unique(),
+    maxUses: integer('max_uses').notNull().default(1),
+    usedCount: integer('used_count').notNull().default(0),
+    trialDays: integer('trial_days').notNull().default(15),
+    note: text('note').default(''),
+    createdBy: text('created_by').references(() => user.id),
+    expiresAt: integer('expires_at', { mode: 'timestamp' }),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [index('idx_invite_code_code').on(t.code)]
+);
+
+export const userInvite = table(
+  'user_invite',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id),
+    inviteCodeId: text('invite_code_id')
+      .notNull()
+      .references(() => inviteCode.id),
+    activatedAt: integer('activated_at', { mode: 'timestamp' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    trialEndsAt: integer('trial_ends_at', { mode: 'timestamp' }).notNull(),
+  },
+  (t) => [
+    index('idx_user_invite_user').on(t.userId),
+    index('idx_user_invite_code').on(t.inviteCodeId),
+  ]
+);
+
+export type InviteCode = typeof inviteCode.$inferSelect;
+export type NewInviteCode = typeof inviteCode.$inferInsert;
+export type UserInvite = typeof userInvite.$inferSelect;
+export type NewUserInvite = typeof userInvite.$inferInsert;

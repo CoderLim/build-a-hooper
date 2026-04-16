@@ -1,5 +1,5 @@
 import { eq, and, desc, isNull } from 'drizzle-orm';
-import { PaymentManager, StripeProvider } from '@/core/payment';
+import { PaymentManager, StripeProvider, AlipayProvider, WechatPayProvider } from '@/core/payment';
 import type { PaymentOrder, CheckoutSession, PaymentEvent } from '@/core/payment/types';
 import { PaymentStatus, PaymentType } from '@/core/payment/types';
 import { getUuid, getUniSeq, getSnowId } from '@/lib/hash';
@@ -14,6 +14,7 @@ import {
   updateBySubscriptionNo,
 } from '@/modules/subscriptions/service';
 import { calculateCreditExpirationTime } from '@/modules/credits/service';
+import { getAllConfigs } from '@/modules/config/service';
 
 // --- Order types ---
 
@@ -24,23 +25,67 @@ enum OrderStatus {
   FAILED = 'failed',
 }
 
-// --- Payment Manager singleton ---
+// --- Payment Manager ---
 
 let manager: PaymentManager | null = null;
+let managerConfigHash = '';
 
-function getPaymentManager(): PaymentManager {
-  if (manager) return manager;
+async function getPaymentManager(): Promise<PaymentManager> {
+  const configs = await getAllConfigs();
+  const c = (key: string) => configs[key] || '';
+
+  // Rebuild manager if provider configs changed
+  const hash = JSON.stringify([
+    c('stripe_secret_key') || c('stripe_api_key'),
+    c('alipay_app_id'),
+    c('wechat_mch_id'),
+    c('default_payment_provider'),
+  ]);
+  if (manager && hash === managerConfigHash) return manager;
+
   manager = new PaymentManager();
+  managerConfigHash = hash;
 
-  if (envConfigs.stripe_secret_key) {
+  const stripeKey = c('stripe_secret_key') || c('stripe_api_key');
+  if (stripeKey) {
+    const isDefault = !c('default_payment_provider') || c('default_payment_provider') === 'stripe';
     manager.addProvider(
       new StripeProvider({
-        secretKey: envConfigs.stripe_secret_key,
-        publishableKey: envConfigs.stripe_publishable_key,
-        signingSecret: envConfigs.stripe_signing_secret || undefined,
+        secretKey: stripeKey,
+        publishableKey: c('stripe_publishable_key'),
+        signingSecret: c('stripe_webhook_secret') || c('stripe_signing_secret') || undefined,
         allowPromotionCodes: true,
+        allowedPaymentMethods: ['card', 'wechat_pay', 'alipay'],
       }),
-      true
+      isDefault
+    );
+  }
+
+  if (c('alipay_app_id') && c('alipay_private_key')) {
+    const isDefault = c('default_payment_provider') === 'alipay';
+    manager.addProvider(
+      new AlipayProvider({
+        appId: c('alipay_app_id'),
+        privateKey: c('alipay_private_key'),
+        alipayPublicKey: c('alipay_public_key'),
+        notifyUrl: c('alipay_notify_url') || undefined,
+      }),
+      isDefault
+    );
+  }
+
+  if (c('wechat_mch_id') && c('wechat_private_key')) {
+    const isDefault = c('default_payment_provider') === 'wechat';
+    manager.addProvider(
+      new WechatPayProvider({
+        appId: c('wechat_app_id'),
+        mchId: c('wechat_mch_id'),
+        apiV3Key: c('wechat_api_v3_key'),
+        privateKey: c('wechat_private_key'),
+        serialNo: c('wechat_serial_no'),
+        notifyUrl: c('wechat_notify_url') || undefined,
+      }),
+      isDefault
     );
   }
 
@@ -56,7 +101,7 @@ export async function createCheckout(params: {
   provider?: string;
 }): Promise<CheckoutSession> {
   const { userId, userEmail, paymentOrder, provider } = params;
-  const pm = getPaymentManager();
+  const pm = await getPaymentManager();
   const orderNo = getUniSeq('ORD');
 
   const session = await pm.createPayment({
@@ -90,13 +135,53 @@ export async function createCheckout(params: {
   return session;
 }
 
+// --- Payment callback (return_url) ---
+
+export async function handlePaymentCallback(orderNo: string) {
+  // Find the order
+  const [existingOrder] = await db()
+    .select()
+    .from(order)
+    .where(eq(order.orderNo, orderNo))
+    .limit(1);
+
+  if (!existingOrder) return;
+  if (existingOrder.status === OrderStatus.PAID) return;
+
+  // Query the payment provider for latest status
+  const pm = await getPaymentManager();
+  const provider = pm.getProvider(existingOrder.paymentProvider);
+  if (!provider) return;
+
+  const session = await provider.getPaymentSession({
+    sessionId: existingOrder.paymentSessionId || existingOrder.orderNo,
+  });
+
+  if (session.paymentStatus === PaymentStatus.SUCCESS) {
+    const paymentInfo = session.paymentInfo;
+    await db()
+      .update(order)
+      .set({
+        status: OrderStatus.PAID,
+        paymentResult: JSON.stringify(session.paymentResult),
+        paymentAmount: paymentInfo?.paymentAmount || null,
+        paymentCurrency: paymentInfo?.paymentCurrency || null,
+        paymentEmail: paymentInfo?.paymentEmail || null,
+        paidAt: paymentInfo?.paidAt || new Date(),
+        transactionId: paymentInfo?.transactionId || null,
+        paymentUserId: paymentInfo?.paymentUserId || null,
+      })
+      .where(eq(order.orderNo, orderNo));
+  }
+}
+
 // --- Webhook handling ---
 
 export async function handleWebhook(params: {
   req: Request;
   provider: string;
 }): Promise<PaymentEvent> {
-  const pm = getPaymentManager();
+  const pm = await getPaymentManager();
   const event = await pm.getPaymentEvent({ req: params.req, provider: params.provider });
   const session = event.paymentSession;
   if (!session) return event;

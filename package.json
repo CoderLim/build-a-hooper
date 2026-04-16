@@ -9,12 +9,12 @@
     "lint": "next lint",
     "postinstall": "mkdir -p data && (test -f src/config/db/schema.ts || cp src/config/db/schema.sqlite.ts src/config/db/schema.ts)",
     "db:setup": "node -e \"const p=process.env.DATABASE_PROVIDER||'sqlite'; require('fs').copyFileSync('src/config/db/schema.'+p+'.ts','src/config/db/schema.ts'); console.log('Schema set to '+p)\"",
-    "db:push": "drizzle-kit push --config=drizzle.config.ts",
-    "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
-    "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
-    "db:studio": "drizzle-kit studio --config=drizzle.config.ts",
-    "rbac:init": "npx tsx scripts/init-rbac.ts",
-    "rbac:assign": "npx tsx scripts/assign-role.ts"
+    "db:push": "tsx scripts/with-env.ts drizzle-kit push --config=drizzle.config.ts",
+    "db:generate": "tsx scripts/with-env.ts drizzle-kit generate --config=drizzle.config.ts",
+    "db:migrate": "tsx scripts/with-env.ts drizzle-kit migrate --config=drizzle.config.ts",
+    "db:studio": "tsx scripts/with-env.ts drizzle-kit studio --config=drizzle.config.ts",
+    "rbac:init": "tsx scripts/with-env.ts tsx scripts/init-rbac.ts",
+    "rbac:assign": "tsx scripts/with-env.ts tsx scripts/assign-role.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",
@@ -35,6 +35,7 @@
     "clsx": "^2.1.0",
     "drizzle-orm": "^0.44.2",
     "lucide-react": "^0.511.0",
+    "motion": "^12.38.0",
     "mysql2": "^3.14.0",
     "nanoid": "^5.0.0",
     "next": "^16.0.7",
@@ -63,6 +64,7 @@
     "@types/react-dom": "^19.1.0",
     "drizzle-kit": "^0.31.4",
     "tailwindcss": "^4.1.0",
+    "tsx": "^4.21.0",
     "typescript": "^5.9.0"
   }
 }
