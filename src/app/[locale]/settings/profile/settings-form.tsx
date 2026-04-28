@@ -40,12 +40,12 @@ export function SettingsForm({
       }).then((r) => r.json());
 
       if (res.code === 0) {
-        toast.success(t("dashboard.settings.saved"));
+        toast.success(t("settings.profile.saved"));
       } else {
-        toast.error(res.message || t("dashboard.settings.save_failed"));
+        toast.error(res.message || t("settings.profile.save_failed"));
       }
     } catch {
-      toast.error(t("dashboard.settings.save_failed"));
+      toast.error(t("settings.profile.save_failed"));
     } finally {
       setSaving(false);
     }
@@ -59,26 +59,26 @@ export function SettingsForm({
   return (
     <form onSubmit={handleSave} className="p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold">{t("dashboard.settings.title")}</h1>
-        <p className="text-muted-foreground">{t("dashboard.settings.description")}</p>
+        <h1 className="text-2xl font-bold">{t("settings.profile.title")}</h1>
+        <p className="text-muted-foreground">{t("settings.profile.description")}</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>{t("dashboard.settings.profile")}</CardTitle>
+          <CardTitle>{t("settings.profile.profile")}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6 pb-2">
           <div className="space-y-2">
-            <Label>{t("dashboard.settings.avatar")}</Label>
+            <Label>{t("settings.profile.avatar")}</Label>
             <ImageUploader
               defaultPreviews={image ? [image] : []}
               onChange={handleAvatarChange}
               maxSizeMB={2}
-              emptyHint={t("dashboard.settings.avatar_hint")}
+              emptyHint={t("settings.profile.avatar_hint")}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="name">{t("dashboard.settings.name")}</Label>
+            <Label htmlFor="name">{t("settings.profile.name")}</Label>
             <Input
               id="name"
               value={name}
@@ -87,13 +87,13 @@ export function SettingsForm({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="email">{t("dashboard.settings.email")}</Label>
+            <Label htmlFor="email">{t("settings.profile.email")}</Label>
             <Input id="email" value={email} disabled className="opacity-60" />
           </div>
         </CardContent>
         <CardFooter>
           <Button type="submit" disabled={saving}>
-            {saving ? t("dashboard.settings.saving") : t("dashboard.settings.save")}
+            {saving ? t("settings.profile.saving") : t("settings.profile.save")}
           </Button>
         </CardFooter>
       </Card>

@@ -14,7 +14,7 @@ export async function GET(req: Request) {
   const url = new URL(req.url);
   const orderNo = url.searchParams.get('order_no');
   const redirect = url.searchParams.get('redirect');
-  const fallback = `${envConfigs.app_url}/dashboard/billing`;
+  const fallback = `${envConfigs.app_url}/settings/billing`;
 
   try {
     if (orderNo) {

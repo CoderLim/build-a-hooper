@@ -29,7 +29,7 @@ export default function SettingsPage() {
 
   if (!user) {
     return (
-      <div className="p-6 text-muted-foreground">{t("dashboard.settings.loading")}</div>
+      <div className="p-6 text-muted-foreground">{t("settings.profile.loading")}</div>
     );
   }
 

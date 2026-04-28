@@ -21,7 +21,7 @@ export function AppLayout({
   mobileBrand,
   headerExtra,
   requirePermission,
-  unauthorizedRedirect = "/dashboard",
+  unauthorizedRedirect = "/settings",
 }: {
   children: React.ReactNode;
   navItems: NavItem[];

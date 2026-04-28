@@ -6,7 +6,6 @@
   "nav": {
     "overview": "概览",
     "settings": "设置",
-    "home": "首页",
     "rbac": "权限管理",
     "users": "用户",
     "roles": "角色",

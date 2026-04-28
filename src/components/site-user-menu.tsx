@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { LayoutDashboardIcon, LogOutIcon, ShieldIcon } from "lucide-react";
+import { SettingsIcon, LogOutIcon, ShieldIcon } from "lucide-react";
 import { Link, useRouter } from "@/core/i18n/navigation";
 import { signOut } from "@/core/auth/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -71,9 +71,9 @@ export function SiteUserMenu({
           </DropdownMenuLabel>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem render={<Link href="/dashboard" />}>
-          <LayoutDashboardIcon className="size-4" />
-          {t("nav.dashboard")}
+        <DropdownMenuItem render={<Link href="/settings" />}>
+          <SettingsIcon className="size-4" />
+          {t("nav.settings")}
         </DropdownMenuItem>
         {isAdmin && (
           <DropdownMenuItem render={<Link href="/admin" />}>

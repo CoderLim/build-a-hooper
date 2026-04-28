@@ -34,7 +34,7 @@ type Tab = (typeof TABS)[number];
 const PAGE_SIZE = 20;
 
 export default function CreditsPage() {
-  const t = useTranslations("dashboard.credits");
+  const t = useTranslations("settings.credits");
   const [balance, setBalance] = useState<number | null>(null);
   const [balanceLoaded, setBalanceLoaded] = useState(false);
   const [rows, setRows] = useState<CreditRow[]>([]);

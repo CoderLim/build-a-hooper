@@ -1,18 +1,27 @@
 {
-  "title": "Dashboard",
+  "title": "Settings",
   "welcome": "Welcome back, {name}",
   "placeholder": "Your app content goes here.",
   "nav": {
     "overview": "Overview",
-    "settings": "Settings",
-    "home": "Home",
+    "profile": "Profile",
     "billing": "Billing",
     "payments": "Payments",
     "credits": "Credits",
     "apikeys": "API Keys"
   },
-  "settings": {
-    "title": "Settings",
+  "overview": {
+    "plan": "Plan",
+    "plan_free": "Free",
+    "plan_description": "Current subscription",
+    "usage": "Usage",
+    "usage_description": "API calls this month",
+    "apikeys_description": "Active keys",
+    "getting_started": "Getting Started",
+    "getting_started_description": "Build your product on top of this engine"
+  },
+  "profile": {
+    "title": "Profile",
     "description": "Manage your account",
     "profile": "Profile",
     "name": "Name",

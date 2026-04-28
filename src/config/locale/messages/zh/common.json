@@ -55,7 +55,8 @@
   "systems": {
     "label": "切换系统",
     "admin": "管理后台",
-    "dashboard": "控制台"
+    "settings": "设置",
+    "home": "首页"
   },
   "search": {
     "placeholder": "搜索..."
@@ -69,7 +70,6 @@
     "refresh": "刷新"
   },
   "nav": {
-    "dashboard": "控制台",
     "settings": "设置",
     "billing": "账单",
     "apikeys": "API 密钥",

@@ -85,7 +85,7 @@ function isCancellable(status?: string | null) {
 }
 
 export default function BillingPage() {
-  const t = useTranslations("dashboard.billing");
+  const t = useTranslations("settings.billing");
   const [current, setCurrent] = useState<Subscription | null>(null);
   const [currentLoaded, setCurrentLoaded] = useState(false);
   const [rows, setRows] = useState<Subscription[]>([]);

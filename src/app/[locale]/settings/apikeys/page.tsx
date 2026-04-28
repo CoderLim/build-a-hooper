@@ -71,9 +71,9 @@ export default function ApiKeysPage() {
       });
       const data = await res.json();
       if (data.code === 0) {
-        toast.success(t("dashboard.apikeys.created"));
+        toast.success(t("settings.apikeys.created"));
         await navigator.clipboard.writeText(data.data.key);
-        toast.info(t("dashboard.apikeys.key_copied"));
+        toast.info(t("settings.apikeys.key_copied"));
         setOpen(false);
         setNewKeyName("");
         fetchKeys(page, search);
@@ -81,7 +81,7 @@ export default function ApiKeysPage() {
         toast.error(data.message);
       }
     } catch {
-      toast.error(t("dashboard.apikeys.failed"));
+      toast.error(t("settings.apikeys.failed"));
     } finally {
       setLoading(false);
     }
@@ -91,29 +91,29 @@ export default function ApiKeysPage() {
     const res = await fetch(`/api/apikeys?id=${id}`, { method: "DELETE" });
     const data = await res.json();
     if (data.code === 0) {
-      toast.success(t("dashboard.apikeys.deleted"));
+      toast.success(t("settings.apikeys.deleted"));
       fetchKeys(page, search);
     }
   }
 
   async function handleCopy(key: string) {
     await navigator.clipboard.writeText(key);
-    toast.success(t("dashboard.apikeys.copied"));
+    toast.success(t("settings.apikeys.copied"));
   }
 
   const columns: Column<ApiKey>[] = [
     {
-      header: t("dashboard.apikeys.name_col"),
+      header: t("settings.apikeys.name_col"),
       cell: (k) => <span className="font-medium">{k.title}</span>,
     },
     {
-      header: t("dashboard.apikeys.key_col"),
+      header: t("settings.apikeys.key_col"),
       cell: (k) => (
         <span className="font-mono text-xs">{k.key.slice(0, 12)}...</span>
       ),
     },
     {
-      header: t("dashboard.apikeys.actions_col"),
+      header: t("settings.apikeys.actions_col"),
       className: "w-[100px]",
       cell: (k) => (
         <div className="flex gap-1">
@@ -142,38 +142,38 @@ export default function ApiKeysPage() {
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{t("dashboard.apikeys.title")}</h1>
+          <h1 className="text-2xl font-bold">{t("settings.apikeys.title")}</h1>
           <p className="text-muted-foreground">
-            {t("dashboard.apikeys.description")}
+            {t("settings.apikeys.description")}
           </p>
         </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DialogTrigger className="inline-flex items-center justify-center rounded-lg bg-primary text-primary-foreground text-sm font-medium h-8 gap-1.5 px-2.5 hover:bg-primary/80 transition-colors">
             <Plus className="size-4" />
-            {t("dashboard.apikeys.create_key")}
+            {t("settings.apikeys.create_key")}
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{t("dashboard.apikeys.create_title")}</DialogTitle>
+              <DialogTitle>{t("settings.apikeys.create_title")}</DialogTitle>
               <DialogDescription>
-                {t("dashboard.apikeys.create_description")}
+                {t("settings.apikeys.create_description")}
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-2 py-4">
-              <Label htmlFor="key-name">{t("dashboard.apikeys.key_name")}</Label>
+              <Label htmlFor="key-name">{t("settings.apikeys.key_name")}</Label>
               <Input
                 id="key-name"
                 value={newKeyName}
                 onChange={(e) => setNewKeyName(e.target.value)}
-                placeholder={t("dashboard.apikeys.key_name_placeholder")}
+                placeholder={t("settings.apikeys.key_name_placeholder")}
               />
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setOpen(false)}>
-                {t("dashboard.apikeys.cancel")}
+                {t("settings.apikeys.cancel")}
               </Button>
               <Button onClick={handleCreate} disabled={loading}>
-                {loading ? t("dashboard.apikeys.creating") : t("dashboard.apikeys.create")}
+                {loading ? t("settings.apikeys.creating") : t("settings.apikeys.create")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -190,7 +190,7 @@ export default function ApiKeysPage() {
             pageSize={PAGE_SIZE}
             onPageChange={setPage}
             rowKey={(k) => k.id}
-            emptyText={t("dashboard.apikeys.no_keys")}
+            emptyText={t("settings.apikeys.no_keys")}
             search={search}
             onSearchChange={setSearch}
             onRefresh={() => fetchKeys(page, search)}

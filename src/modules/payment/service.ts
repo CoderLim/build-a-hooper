@@ -132,7 +132,7 @@ export async function createCheckout(params: {
   const pm = await getPaymentManager();
   const orderNo = getUniSeq('ORD');
 
-  const finalSuccessUrl = paymentOrder.successUrl || `${envConfigs.app_url}/dashboard/billing?success=1`;
+  const finalSuccessUrl = paymentOrder.successUrl || `${envConfigs.app_url}/settings/billing?success=1`;
   const callbackSuccessUrl = `${envConfigs.app_url}/api/payment/callback?order_no=${orderNo}&redirect=${encodeURIComponent(finalSuccessUrl)}`;
 
   const session = await pm.createPayment({
@@ -140,7 +140,7 @@ export async function createCheckout(params: {
       ...paymentOrder,
       orderNo,
       successUrl: callbackSuccessUrl,
-      cancelUrl: paymentOrder.cancelUrl || `${envConfigs.app_url}/dashboard/billing?canceled=1`,
+      cancelUrl: paymentOrder.cancelUrl || `${envConfigs.app_url}/settings/billing?canceled=1`,
     },
     provider,
   });

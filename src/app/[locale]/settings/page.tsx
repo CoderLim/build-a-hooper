@@ -49,66 +49,66 @@ export default function DashboardPage() {
   }, []);
 
   const planLabel =
-    subscription?.planName || subscription?.productName || "Free";
+    subscription?.planName || subscription?.productName || t("settings.overview.plan_free");
 
   return (
     <div className="p-4 md:p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("dashboard.title")}</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("settings.title")}</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          {t("dashboard.welcome", { name: session?.user?.name || session?.user?.email || "" })}
+          {t("settings.welcome", { name: session?.user?.name || session?.user?.email || "" })}
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Plan</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("settings.overview.plan")}</CardTitle>
             <TrendingUp className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{planLabel}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Current subscription
+              {t("settings.overview.plan_description")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">{t("dashboard.credits.title")}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("settings.credits.title")}</CardTitle>
             <CreditCard className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{credits ?? "—"}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              {t("dashboard.credits.description")}
+              {t("settings.credits.description")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">{t("dashboard.apikeys.title")}</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("settings.apikeys.title")}</CardTitle>
             <Key className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{apiKeys ?? "—"}</div>
             <p className="text-xs text-muted-foreground mt-1">
-              Active keys
+              {t("settings.overview.apikeys_description")}
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Usage</CardTitle>
+            <CardTitle className="text-sm font-medium">{t("settings.overview.usage")}</CardTitle>
             <Activity className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">0</div>
             <p className="text-xs text-muted-foreground mt-1">
-              API calls this month
+              {t("settings.overview.usage_description")}
             </p>
           </CardContent>
         </Card>
@@ -116,12 +116,12 @@ export default function DashboardPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-base">Getting Started</CardTitle>
-          <CardDescription>Build your product on top of this engine</CardDescription>
+          <CardTitle className="text-base">{t("settings.overview.getting_started")}</CardTitle>
+          <CardDescription>{t("settings.overview.getting_started_description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="rounded-lg border border-dashed border-border p-8 text-center text-muted-foreground">
-            <p className="text-sm">{t("dashboard.placeholder")}</p>
+            <p className="text-sm">{t("settings.placeholder")}</p>
           </div>
         </CardContent>
       </Card>

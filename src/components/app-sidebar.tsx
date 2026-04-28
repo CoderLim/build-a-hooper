@@ -1,6 +1,6 @@
 "use client";
 
-import { type LucideIcon, ChevronsUpDown, LayoutDashboard, Shield } from "lucide-react";
+import { type LucideIcon, ChevronsUpDown, Settings, Shield, Home } from "lucide-react";
 import { Link, usePathname } from "@/core/i18n/navigation";
 import { useTranslations, useLocale } from "next-intl";
 import {
@@ -35,7 +35,7 @@ export interface NavItem {
 
 const SYSTEMS = [
   { key: "admin", href: "/admin", icon: Shield },
-  { key: "dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { key: "settings", href: "/settings", icon: Settings },
 ] as const;
 
 export function AppSidebar({
@@ -72,58 +72,54 @@ export function AppSidebar({
   // Filter to systems the user can access, and detect current
   const visibleSystems = SYSTEMS.filter((s) => s.key !== "admin" || isAdmin);
   const currentSystem = visibleSystems.find((s) => pathname.startsWith(s.href));
-  const showSwitcher = visibleSystems.length > 1;
 
   return (
     <Sidebar variant="inset">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            {showSwitcher ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger
-                  className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer outline-none"
-                >
-                  <span className="flex-1 font-serif italic text-lg leading-none">
-                    {brand}
-                  </span>
-                  <ChevronsUpDown className="size-4 text-muted-foreground" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="right" align="start">
-                  <DropdownMenuGroup>
-                    <DropdownMenuLabel>{t("systems.label")}</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    {visibleSystems.map((sys) => {
-                      const Icon = sys.icon;
-                      const isCurrent = sys.key === currentSystem?.key;
-                      return (
-                        <DropdownMenuItem
-                          key={sys.key}
-                          disabled={isCurrent}
-                          onClick={() => {
-                            if (!isCurrent) {
-                              window.open(`/${locale}${sys.href}`, "_blank");
-                            }
-                          }}
-                        >
-                          <Icon className="size-4" />
-                          {t(`systems.${sys.key}`)}
-                        </DropdownMenuItem>
-                      );
-                    })}
-                  </DropdownMenuGroup>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <Link
-                href={brandHref}
-                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm"
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className="flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground cursor-pointer outline-none"
               >
                 <span className="flex-1 font-serif italic text-lg leading-none">
                   {brand}
                 </span>
-              </Link>
-            )}
+                <ChevronsUpDown className="size-4 text-muted-foreground" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent side="right" align="start">
+                <DropdownMenuGroup>
+                  <DropdownMenuLabel>{t("systems.label")}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {visibleSystems.map((sys) => {
+                    const Icon = sys.icon;
+                    const isCurrent = sys.key === currentSystem?.key;
+                    return (
+                      <DropdownMenuItem
+                        key={sys.key}
+                        disabled={isCurrent}
+                        onClick={() => {
+                          if (!isCurrent) {
+                            window.open(`/${locale}${sys.href}`, "_blank");
+                          }
+                        }}
+                      >
+                        <Icon className="size-4" />
+                        {t(`systems.${sys.key}`)}
+                      </DropdownMenuItem>
+                    );
+                  })}
+                  <DropdownMenuItem
+                    onClick={() => {
+                      window.open(`/${locale}`, "_blank");
+                    }}
+                  >
+                    <Home className="size-4" />
+                    {t("systems.home")}
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

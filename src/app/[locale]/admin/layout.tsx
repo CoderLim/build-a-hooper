@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, Users, Shield, KeyRound, Settings, DollarSign, CreditCard, Coins, FolderOpen, FileText, Home } from "lucide-react";
+import { LayoutDashboard, Users, Shield, KeyRound, DollarSign, CreditCard, Coins, FolderOpen, FileText } from "lucide-react";
 import { envConfigs } from "@/config";
 import { AppLayout } from "@/components/app-layout";
 
@@ -25,15 +25,9 @@ export default function AdminLayout({
     { href: "/admin/credits", label: t("nav.credits"), icon: Coins, group: t("nav.billing") },
   ];
 
-  const footerNavItems = [
-    { href: "/admin/settings", label: t("nav.settings"), icon: Settings },
-    { href: "/", label: t("nav.home"), icon: Home, newTab: true },
-  ];
-
   return (
     <AppLayout
       navItems={navItems}
-      footerNavItems={footerNavItems}
       brand={envConfigs.app_name}
       brandHref="/admin"
       requirePermission="admin.*"

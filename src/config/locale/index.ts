@@ -15,7 +15,7 @@ export const localeDetection = false;
 
 export const localeMessagesPaths = [
   'common',
-  'dashboard',
+  'settings',
   'admin',
   'landing',
 ];

@@ -6,7 +6,6 @@
   "nav": {
     "overview": "Overview",
     "settings": "Settings",
-    "home": "Home",
     "rbac": "RBAC",
     "users": "Users",
     "roles": "Roles",

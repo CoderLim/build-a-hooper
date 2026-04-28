@@ -63,7 +63,7 @@ export function SiteHeader({
             />
           ) : (
             <Link
-              href="/dashboard"
+              href="/settings"
               className={cn(buttonVariants(), "gap-1.5")}
             >
               {t("nav.get_started")}
@@ -110,7 +110,7 @@ export function SiteHeader({
               />
             ) : (
               <Link
-                href="/dashboard"
+                href="/settings"
                 className={cn(buttonVariants(), "gap-1.5")}
                 onClick={() => setMobileOpen(false)}
               >

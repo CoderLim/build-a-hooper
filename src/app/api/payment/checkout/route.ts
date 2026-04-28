@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     const baseUrl = envConfigs.app_url || 'http://localhost:3000';
     const finalRedirect = redirect
       ? `${baseUrl}/auth-callback?redirect=${encodeURIComponent(redirect)}`
-      : `${baseUrl}/dashboard/billing`;
+      : `${baseUrl}/settings/billing`;
     const successUrl = `${baseUrl}/api/payment/callback?redirect=${encodeURIComponent(finalRedirect)}`;
     const cancelUrl = `${baseUrl}/pricing`;
 

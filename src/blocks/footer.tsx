@@ -29,7 +29,7 @@ export async function Footer() {
     {
       title: t("footer.feature"),
       links: [
-        { label: t("footer.dashboard"), href: "/dashboard", external: true},
+        { label: t("footer.settings"), href: "/settings", external: true},
         { label: t("footer.admin"), href: "/admin", external: true },
       ],
     },

@@ -43,7 +43,7 @@ export default function SignInPage() {
 
   const afterLoginUrl = redirectParam
     ? `/auth-callback?redirect=${encodeURIComponent(redirectParam)}`
-    : callbackUrl || "/dashboard";
+    : callbackUrl || "/settings";
 
   useEffect(() => {
     fetch("/api/config/public")
@@ -81,7 +81,7 @@ export default function SignInPage() {
   }
 
   async function handleSocial(provider: "google" | "github") {
-    await signIn.social({ provider, callbackURL: "/dashboard" });
+    await signIn.social({ provider, callbackURL: "/settings" });
   }
 
   return (

@@ -44,7 +44,7 @@ function statusVariant(status: string): "default" | "secondary" | "destructive" 
 }
 
 export default function PaymentsPage() {
-  const t = useTranslations("dashboard.payments");
+  const t = useTranslations("settings.payments");
   const [orders, setOrders] = useState<Order[]>([]);
   const [total, setTotal] = useState(0);
   const [tab, setTab] = useState<Tab>("all");
