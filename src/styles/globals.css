@@ -9,7 +9,6 @@
 :root {
   --font-sans: "Inter Variable", "Inter", sans-serif;
   --font-serif-display: "Libre Baskerville", serif;
-  --font-serif-sc: "Noto Serif SC", serif;
 }
 
 @theme inline {
@@ -50,7 +49,10 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --font-sans: var(--font-sans), -apple-system, "system-ui", "Segoe UI", Helvetica, Arial, sans-serif;
-  --font-serif: var(--font-serif-display), var(--font-serif-sc), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  /* CJK serif glyphs use locally-installed fonts — a Chinese serif webfont
+     ships 300+ @font-face subsets (~100KB render-blocking CSS on every page)
+     and is not worth it for headings. */
+  --font-serif: var(--font-serif-display), ui-serif, Georgia, Cambria, "Times New Roman", "Noto Serif SC", "Source Han Serif SC", "Songti SC", "SimSun", Times, serif;
 }
 
 @layer base {

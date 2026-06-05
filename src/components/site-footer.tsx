@@ -51,9 +51,9 @@ export function SiteFooter({
           >
             {columns.map((col) => (
               <div key={col.title} className="space-y-5">
-                <h4 className="text-[13px] font-semibold tracking-wide text-neutral-100">
+                <p className="text-[13px] font-semibold tracking-wide text-neutral-100">
                   {col.title}
-                </h4>
+                </p>
                 <ul className="space-y-2">
                   {col.links.map((link) => (
                     <li key={link.label}>
@@ -111,7 +111,7 @@ export function SiteFooter({
         {/* Bottom bar */}
         <div className="mt-6 flex flex-col gap-3 border-t border-neutral-800 pt-5 sm:flex-row sm:items-center sm:justify-between">
           <BuiltWithShipAny />
-          <span className="text-sm text-neutral-500">
+          <span className="text-sm text-neutral-400">
             {copyright || `© ${year} ${envConfigs.app_name}. All rights reserved.`}
           </span>
         </div>

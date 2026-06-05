@@ -430,6 +430,11 @@ STRIPE_SIGNING_SECRET=
 # Locale (optional, public)
 VITE_DEFAULT_LOCALE=en
 
+# Optional: encrypt admin-settings secrets (AES-256-GCM) in the config table.
+# Unset = plaintext storage (default). Once set, keep it stable — rotating or
+# removing it orphans already-encrypted values (they fall back to env values).
+CONFIG_ENCRYPTION_KEY=
+
 # Other optional public: VITE_APP_DESCRIPTION, VITE_APP_LOGO
 # Other optional server-only: RESEND_API_KEY, STORAGE_*, REPLICATE_API_TOKEN
 ```
@@ -444,3 +449,4 @@ VITE_DEFAULT_LOCALE=en
 6. **Translations live in `messages/{en,zh}.json`** with flat dot keys; access via `m['ns.key']()` (add the key to both locale files)
 7. **Always verify `pnpm build` passes** after making changes
 8. **Return `respData`/`respErr`** from API routes
+9. **Run the `security-scan` skill before every `git commit`** — it checks for leaked secrets, injection/XSS/logic vulnerabilities in the diff, and `.gitignore`/`.dockerignore` gaps. HIGH findings block the commit.

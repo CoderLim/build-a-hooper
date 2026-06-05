@@ -2,6 +2,8 @@ import { eq } from 'drizzle-orm';
 import { db } from '@/core/db';
 import { config } from '@/config/db/schema';
 import { envConfigs } from '@/config';
+import { encryptSecret, decryptSecret, isEncryptedSecret } from '@/lib/crypto';
+import { getSettings } from './settings';
 
 type ConfigMap = Record<string, string>;
 
@@ -27,7 +29,17 @@ export async function getDbConfigs(): Promise<ConfigMap> {
     const rows = await db().select().from(config);
     const result: ConfigMap = {};
     for (const row of rows) {
-      if (row.name && row.value) {
+      if (!row.name || !row.value) continue;
+
+      if (isEncryptedSecret(row.value)) {
+        const plain = await decryptSecret(row.value);
+        if (plain === null) {
+          // Wrong/rotated encryption key — skip so env value (if any) applies.
+          console.warn(`[config] failed to decrypt "${row.name}", skipping`);
+          continue;
+        }
+        result[row.name] = plain;
+      } else {
         result[row.name] = row.value;
       }
     }
@@ -68,12 +80,55 @@ const PROTECTED_CONFIG_KEYS: ReadonlySet<string> = new Set([
 ]);
 
 /**
+ * Keys whose values are secrets: encrypted at rest in the config table and
+ * masked when returned to the admin UI.
+ *
+ * Derived from the settings definitions (password fields + private keys),
+ * plus a name-pattern fallback so env-only secrets (e.g. stripe_secret_key)
+ * and future custom keys are covered without registration.
+ */
+const SECRET_SETTING_NAMES: ReadonlySet<string> = new Set(
+  getSettings()
+    .filter((s) => s.type === 'password' || s.name.endsWith('_private_key'))
+    .map((s) => s.name)
+);
+
+const SECRET_KEY_PATTERN =
+  /(_secret|_secret_key|_token|_password|_private_key|_api_key|_access_key|_api_v3_key)$/;
+
+export function isSecretConfigKey(name: string): boolean {
+  return SECRET_SETTING_NAMES.has(name) || SECRET_KEY_PATTERN.test(name);
+}
+
+/** Mask marker — secrets never start with bullets, so it's unambiguous. */
+const MASK_PREFIX = '••••••••';
+
+/**
+ * Mask a secret for display: keep the last 4 chars when long enough to be
+ * unidentifiable from them, otherwise mask entirely.
+ */
+export function maskConfigValue(value: string): string {
+  return value.length > 8 ? MASK_PREFIX + value.slice(-4) : MASK_PREFIX;
+}
+
+/** A masked value round-tripped from the admin UI means "unchanged". */
+export function isMaskedConfigValue(value: string): boolean {
+  return value.startsWith(MASK_PREFIX);
+}
+
+/**
  * Save multiple configs to database (upsert). Protected keys are silently
- * dropped — see PROTECTED_CONFIG_KEYS.
+ * dropped — see PROTECTED_CONFIG_KEYS. Masked values round-tripped from the
+ * admin UI are skipped (the user didn't change them). Secret keys are
+ * encrypted at rest — see SECRET_SETTING_NAMES / SECRET_KEY_PATTERN.
  */
 export async function saveConfigs(configs: ConfigMap) {
-  const entries = Object.entries(configs).filter(
-    ([name]) => !PROTECTED_CONFIG_KEYS.has(name)
+  const entries = await Promise.all(
+    Object.entries(configs)
+      .filter(([name, value]) => !PROTECTED_CONFIG_KEYS.has(name) && !isMaskedConfigValue(value))
+      .map(async ([name, value]): Promise<[string, string]> =>
+        isSecretConfigKey(name) ? [name, await encryptSecret(value)] : [name, value]
+      )
   );
   if (entries.length === 0) {
     return;
@@ -106,6 +161,21 @@ export async function saveConfigs(configs: ConfigMap) {
 export async function getConfig(name: string): Promise<string | undefined> {
   const configs = await getAllConfigs();
   return configs[name];
+}
+
+/**
+ * Configs sanitized for the admin settings UI: protected keys removed,
+ * secret values masked. Never send getAllConfigs() to a client — it
+ * contains every env secret in plaintext.
+ */
+export async function getAdminConfigs(): Promise<ConfigMap> {
+  const configs = await getAllConfigs();
+  const result: ConfigMap = {};
+  for (const [name, value] of Object.entries(configs)) {
+    if (PROTECTED_CONFIG_KEYS.has(name)) continue;
+    result[name] = isSecretConfigKey(name) && value ? maskConfigValue(value) : value;
+  }
+  return result;
 }
 
 /**

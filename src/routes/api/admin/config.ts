@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { respData, respOk, respErr } from '@/lib/resp';
 import { getAuth } from '@/core/auth';
 import { hasPermission } from '@/modules/rbac/service';
-import { getAllConfigs, saveConfigs } from '@/modules/config/service';
+import { getAdminConfigs, saveConfigs } from '@/modules/config/service';
 
 async function GET({ request }: { request: Request }) {
   try {
@@ -13,7 +13,8 @@ async function GET({ request }: { request: Request }) {
     const isAdmin = await hasPermission(session.user.id, 'admin.settings.read');
     if (!isAdmin) return respErr('Forbidden');
 
-    const configs = await getAllConfigs();
+    // Masked + protected-keys-stripped view — never send raw configs to a client.
+    const configs = await getAdminConfigs();
     return respData(configs);
   } catch (error: any) {
     return respErr(error.message || 'Internal error');

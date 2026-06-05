@@ -16,7 +16,13 @@ export enum PostStatus {
   ARCHIVED = 'archived',
 }
 
+type Post = typeof post.$inferSelect;
 type NewPost = typeof post.$inferInsert;
+
+export type PublishedArticleItem = Pick<
+  Post,
+  'id' | 'slug' | 'title' | 'description' | 'image' | 'authorName' | 'authorImage' | 'createdAt'
+>;
 
 export async function list(params: {
   type?: string;
@@ -60,6 +66,38 @@ export async function list(params: {
     .offset(offset);
 
   return { items, total };
+}
+
+export async function listPublishedArticles(
+  params: { limit?: number } = {}
+): Promise<PublishedArticleItem[]> {
+  const { limit = 100 } = params;
+  return db()
+    .select({
+      id: post.id,
+      slug: post.slug,
+      title: post.title,
+      description: post.description,
+      image: post.image,
+      authorName: post.authorName,
+      authorImage: post.authorImage,
+      createdAt: post.createdAt,
+    })
+    .from(post)
+    .where(and(eq(post.type, PostType.ARTICLE), eq(post.status, PostStatus.PUBLISHED)))
+    .orderBy(desc(post.createdAt))
+    .limit(limit);
+}
+
+export async function findPublishedBySlug(
+  slug: string
+): Promise<Post | undefined> {
+  const [result] = await db()
+    .select()
+    .from(post)
+    .where(and(eq(post.slug, slug.toLowerCase()), eq(post.status, PostStatus.PUBLISHED)))
+    .limit(1);
+  return result;
 }
 
 export async function getById(id: string) {
