@@ -28,10 +28,11 @@ src/paraglide/
 # deploy
 .vercel
 
-# editors
+# editors (keep .cursor/skills — cross-agent symlink to .claude/skills)
 .idea
 .vscode
-.cursor
+.cursor/*
+!.cursor/skills
 
 # misc
 .DS_Store

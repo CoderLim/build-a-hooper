@@ -24,6 +24,8 @@ drizzle
 .idea
 .cursor
 .claude
+.agents
+.codex
 .vercel
 .wrangler
 

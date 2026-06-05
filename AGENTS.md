@@ -366,6 +366,25 @@ The split is not cosmetic — it's **what survives a rebrand**. Primitives survi
 
 Or use skills: `/new-module`, `/new-page`, `/new-static-page`
 
+## Agent Skills
+
+Project skills live in `.claude/skills/` (canonical) with cross-agent symlinks
+at `.agents/skills`, `.codex/skills`, and `.cursor/skills` — all four resolve to
+the same files (SKILL.md open standard, agentskills.io). If your agent runtime
+doesn't auto-discover skills, read `.claude/skills/<name>/SKILL.md` and follow
+it when the task matches:
+
+| Skill | When to use |
+|-------|-------------|
+| `quick-start` | Build a complete SaaS project from a brief/reference URL |
+| `clone-website` | Clone/rebuild an existing website pixel-perfect |
+| `new-module` | New backend service + API following the module pattern |
+| `new-page` | New dashboard page with API wiring + nav entry |
+| `new-static-page` | Static MDX page (legal, about, etc.) |
+| `generate-image` | AI-generate a decorative image for a page/block |
+| `security-scan` | **Before every git commit** — secrets, vulns, ignore gaps |
+| `sync-upstream` | Pull latest template updates; local changes win on conflict |
+
 ## Inlined Modules (src/core/ and src/lib/)
 
 All functionality is self-contained — no external packages needed.

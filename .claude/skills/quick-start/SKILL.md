@@ -261,6 +261,24 @@ Connect landing page elements to modules:
 
 ---
 
+## Git Remotes
+
+This project starts as a clone of the ShipAny Next template — rewire the remotes
+before handing off:
+
+1. **Wire the template as `upstream`** (enables `/sync-upstream` for future
+   template updates — local changes win on conflict):
+   ```bash
+   git remote get-url upstream 2>/dev/null \
+     || git remote add upstream git@github.com:shipany-ai/shipany-tanstack.git
+   ```
+2. **Point `origin` at the user's own repository.** If `origin` still points at
+   `shipany-ai/shipany-tanstack`, ask the user for their new repo URL and run
+   `git remote set-url origin <their-repo-url>`. If they haven't created one
+   yet, include the command in the completion report for them to run later.
+
+---
+
 ## Completion Report
 
 Report:
@@ -272,7 +290,10 @@ Report:
 - Modules kept/removed/wired
 - Assets downloaded (count)
 - Build status
+- Git remotes: origin (user's repo) + upstream (template); `/sync-upstream`
+  pulls future template updates, keeping their changes on conflict
 - Remaining TODOs for the user:
+  - `git remote set-url origin <url>` if not done yet
   - API keys to configure (Stripe, Resend, etc.)
   - Content to customize
   - `pnpm dev` to start iterating

@@ -533,6 +533,19 @@ Keep the overall color scheme minimal — the clone's monochrome aesthetic is pa
 
 ## Completion
 
+If this clone runs inside a fresh ShipAny Next project (origin still points at
+`shipany-ai/shipany-tanstack`), rewire the git remotes:
+
+```bash
+git remote get-url upstream 2>/dev/null \
+  || git remote add upstream git@github.com:shipany-ai/shipany-tanstack.git
+```
+
+Then ask the user for their own repository URL and run
+`git remote set-url origin <their-repo-url>` (or include the command in the
+report if they haven't created the repo yet). `/sync-upstream` pulls future
+template updates, keeping their changes on conflict.
+
 When done, report:
 - Total sections built
 - Total components created
@@ -540,4 +553,5 @@ When done, report:
 - Total assets downloaded (images, videos, SVGs, fonts)
 - Build status (`pnpm build` result)
 - Visual QA results (any remaining discrepancies)
+- Git remotes wired (origin → user's repo, upstream → template) if applicable
 - Any known gaps or limitations
