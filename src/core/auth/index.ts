@@ -231,7 +231,10 @@ export function getAuth(configs?: Record<string, string>) {
                   return;
                 }
                 const appName = all.app_name || envConfigs.app_name;
-                const logo = all.app_logo || '';
+                // Email clients don't render SVG <img>; only embed a raster logo,
+                // otherwise fall back to the text brand in the template.
+                const rawLogo = all.app_logo || '';
+                const logo = /\.svg(\?|#|$)/i.test(rawLogo) ? '' : rawLogo;
                 const logoUrl = logo.startsWith('http')
                   ? logo
                   : logo

@@ -524,7 +524,43 @@ If the user specified a theme/accent color, apply it to:
 
 Keep the overall color scheme minimal — the clone's monochrome aesthetic is part of the design. The accent color should be used sparingly, only where the original site used its own accent.
 
-### 6.4 Verify
+### 6.4 Logo & favicon
+
+The clone replaces the original site's branding with the user's product, so the
+original site's downloaded favicon/logo (from the Foundation "Favicons & Meta" step)
+must not ship. Replace them with the user's product mark.
+
+The ShipAny template ships **placeholder** `public/logo.svg` + `public/favicon.svg`
+(a single letter on a rounded square), already wired: `app_logo` defaults to `/logo.svg`
+(`src/config/index.ts`) and the root route head (`src/routes/__root.tsx`) links the
+favicon → `/favicon.svg`. There is no committed `logo.png`/`favicon.ico`.
+
+- **User provided a logo/favicon** → drop their files into `public/`, point `app_logo` +
+  the `__root.tsx` head favicon link at them, and skip generation.
+- **Otherwise, generate a letter mark from the product name** — overwrite the two
+  placeholder files (no code change needed):
+  1. **Letter** = first character of the product name, uppercased (`Acme` → `A`; CJK-only
+     name → first character, or its English initial if one exists).
+  2. **Color** = the theme's primary color (read `--primary` from `src/app/globals.css`),
+     falling back to `#0a0a0a` bg + `#ffffff` letter. Ensure the letter contrasts.
+  3. Write `public/logo.svg` + `public/favicon.svg` (favicon uses a larger `font-size` so
+     the glyph reads at 16px):
+
+     ```svg
+     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+       <rect width="512" height="512" rx="112" fill="#0a0a0a"/>
+       <text x="50%" y="50%" dy="0.04em" text-anchor="middle" dominant-baseline="central"
+             font-family="Inter, ui-sans-serif, system-ui, sans-serif"
+             font-size="300" font-weight="700" fill="#ffffff">A</text>
+     </svg>
+     ```
+- Remove the original site's downloaded icons that are no longer referenced (e.g. files
+  under `public/seo/`) and any leftover demo binaries (`rm -f public/logo.png public/favicon.ico`).
+
+SVG favicons work in all modern browsers. For a classic `.ico`, convert with
+`magick public/favicon.svg -define icon:auto-resize=64,32,16 public/favicon.ico` and add it to `icons`.
+
+### 6.5 Verify
 
 - `pnpm build` passes
 - Take screenshots at 1440px and 390px

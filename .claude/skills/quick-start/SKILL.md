@@ -113,6 +113,43 @@ Translations are flat, dot-keyed JSON in `messages/en.json` and `messages/zh.jso
 
 Decide which modules to keep based on user's features. Default: keep all. Only remove if the user explicitly doesn't need something.
 
+### 0.6 Generate logo & favicon
+
+The template ships **placeholder** `public/logo.svg` + `public/favicon.svg` (a single
+letter on a rounded square), already wired up: `app_logo` defaults to `/logo.svg`
+(`src/config/index.ts`) and the root route head (`src/routes/__root.tsx`) links the
+favicon → `/favicon.svg`. There is **no** committed `logo.png`/`favicon.ico` — don't
+re-introduce a heavy binary.
+
+**If the user provided their own logo/favicon:** drop their files into `public/`
+(`logo.svg`/`logo.png`, `favicon.svg`/`favicon.ico`), point `app_logo` + the
+`__root.tsx` head favicon link at them, and skip generation.
+
+**Otherwise, generate a letter mark from the product name** — overwrite the two
+placeholder files (no code change needed):
+
+1. **Letter** = first character of the app name, uppercased (e.g. `Acme` → `A`). For a
+   CJK-only name, use the first character as-is, or the initial of its English name if one exists.
+2. **Color** = the theme's primary color (read `--primary` from `src/app/globals.css`); fall
+   back to `#0a0a0a` background + `#ffffff` letter. Ensure the letter contrasts the background.
+3. Write `public/logo.svg` and `public/favicon.svg` from this template (swap the letter,
+   `fill`, and text color; favicon uses a larger `font-size` so the glyph reads at 16px):
+
+   ```svg
+   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+     <rect width="512" height="512" rx="112" fill="#0a0a0a"/>
+     <text x="50%" y="50%" dy="0.04em" text-anchor="middle" dominant-baseline="central"
+           font-family="Inter, ui-sans-serif, system-ui, sans-serif"
+           font-size="300" font-weight="700" fill="#ffffff">A</text>
+   </svg>
+   ```
+4. Delete any leftover demo binaries if present: `rm -f public/logo.png public/favicon.ico`.
+
+SVG favicons work in all modern browsers. If the user needs a classic `.ico` (older
+browsers / strict `/favicon.ico` requests), convert with a tool like ImageMagick
+(`magick public/favicon.svg -define icon:auto-resize=64,32,16 public/favicon.ico`) and add
+it to `icons`.
+
 ---
 
 ## Phase 1 & 2: Landing Page Build (Mode A & B — delegate to /clone-website)
