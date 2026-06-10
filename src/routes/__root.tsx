@@ -40,7 +40,15 @@ const getAnalyticsConfigs = createServerFn().handler(async () => {
 export const Route = createRootRoute({
   loader: () => getAnalyticsConfigs(),
   head: () => {
-    const appUrl = envConfigs.app_url || '';
+    // head() runs on the SSR server AND again on the client during hydration.
+    // On the client, app_url falls back to the localhost dev default when
+    // VITE_APP_URL wasn't inlined into the client bundle at build — which would
+    // emit a second, localhost set of hreflang links. Prefer the live origin
+    // on the client so it always matches; the server uses the configured URL.
+    const appUrl =
+      (typeof window !== 'undefined' && window.location?.origin) ||
+      envConfigs.app_url ||
+      '';
     return {
       meta: [
         { charSet: 'utf-8' },
