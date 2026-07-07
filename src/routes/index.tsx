@@ -3,57 +3,48 @@ import { createFileRoute } from '@tanstack/react-router';
 import { envConfigs } from '@/config';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
-import { Blog } from '@/blocks/blog';
-import { CTA } from '@/blocks/cta';
+import { Disclaimer } from '@/blocks/disclaimer';
 import { FAQ } from '@/blocks/faq';
 import { Features } from '@/blocks/features';
 import { Footer } from '@/blocks/footer';
+import { Guide } from '@/blocks/guide';
 import { Header } from '@/blocks/header';
 import { Hero } from '@/blocks/hero';
-import { Pricing } from '@/blocks/pricing';
-import { SupportWidget } from '@/blocks/support-widget';
-import { getBlogPostsFn } from '@/content/posts/server';
+import { HowItWorks } from '@/blocks/how-it-works';
 
-/**
- * Default landing page — demo content. Rewrite this file (and the blocks in
- * src/blocks/) for your project. The primitives in src/components/ stay.
- * See /quick-start or /clone-website to automate the rewrite.
- */
 function HomePage() {
-  const { posts } = Route.useLoaderData();
-
   return (
     <div className="bg-background text-foreground flex min-h-screen flex-col">
       <Header />
       <main>
         <Hero />
         <Features />
-        <Pricing />
+        <HowItWorks />
+        <Guide />
         <FAQ />
-        <Blog posts={posts} />
-        <CTA />
+        <Disclaimer />
       </main>
       <Footer />
-      <SupportWidget />
     </div>
   );
 }
 
 export const Route = createFileRoute('/')({
-  loader: async () => {
+  loader: () => {
     const locale = getLocale();
-    const posts = await getBlogPostsFn({ data: { locale, limit: 3 } });
-    return { locale, posts };
+    return { locale };
   },
   head: ({ loaderData }) => {
     const locale = loaderData?.locale ?? 'en';
     const urlFor = (loc: string) =>
       localizeUrl(`${envConfigs.app_url}/`, { locale: loc as any }).href;
+
     return {
       meta: [
+        { title: m['landing.meta.title']({}, { locale: locale as any }) },
         {
           name: 'description',
-          content: m['landing.hero.subheadline']({}, { locale: locale as any }),
+          content: m['landing.meta.description']({}, { locale: locale as any }),
         },
       ],
       links: [
