@@ -11,6 +11,7 @@ import { Guide } from '@/blocks/guide';
 import { Header } from '@/blocks/header';
 import { Hero } from '@/blocks/hero';
 import { HowItWorks } from '@/blocks/how-it-works';
+import { Screenshots } from '@/blocks/screenshots';
 
 function HomePage() {
   return (
@@ -19,6 +20,7 @@ function HomePage() {
       <main>
         <Hero />
         <Features />
+        <Screenshots />
         <HowItWorks />
         <Guide />
         <FAQ />
