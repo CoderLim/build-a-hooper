@@ -6,7 +6,10 @@ export function Footer() {
     {
       title: m['landing.footer.explore'](),
       links: [
-        { label: m['landing.nav.play'](), href: '/#play' },
+        {
+          label: m['landing.nav.play'](),
+          href: 'https://build-a-hooper.pages.dev/',
+        },
         { label: m['landing.nav.guide'](), href: '/#guide' },
         { label: m['landing.nav.faq'](), href: '/#faq' },
       ],
