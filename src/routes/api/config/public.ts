@@ -27,6 +27,7 @@ const publicKeys = [
   'alipay_enabled',
   'wechat_enabled',
   'google_analytics_id',
+  'google_adsense_client',
   'plausible_domain',
   'plausible_src',
 ];
