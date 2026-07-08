@@ -185,6 +185,12 @@ export function getSettingGroups(): SettingGroup[] {
       description: 'Inject plausible.js for self-hosted or cloud Plausible',
       tab: 'analytics',
     },
+    {
+      name: 'google_adsense',
+      title: 'Google AdSense',
+      description: 'Inject the AdSense loader with the configured publisher ID',
+      tab: 'analytics',
+    },
 
     // Customer Service
     {
@@ -834,6 +840,17 @@ export function getSettings(): Setting[] {
       placeholder: 'https://plausible.io/js/script.js',
       tip: 'Use https://plausible.io/js/script.js for cloud, or your self-hosted URL',
       group: 'plausible',
+      tab: 'analytics',
+    },
+
+    // ─── Analytics / Google AdSense ──────────────────────────────────
+    {
+      name: 'google_adsense_client',
+      title: 'Publisher ID',
+      type: 'text',
+      placeholder: 'ca-pub-XXXXXXXXXXXXXXXX',
+      tip: 'Your AdSense publisher ID, e.g. ca-pub-8028656293202971',
+      group: 'google_adsense',
       tab: 'analytics',
     },
 
