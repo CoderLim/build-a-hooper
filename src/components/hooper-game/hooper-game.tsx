@@ -1,25 +1,7 @@
 import { useEffect, useReducer, useState } from 'react';
 
-import { GameBadge, GameConfirmDialog, GameShell } from './game-ui';
-import { GameStepper } from './game-stepper';
-import {
-  createInitialState,
-  gameReducer,
-  type GameAction,
-} from './game-reducer';
-import { BuildRoomScreen } from './screens/build-room-screen';
-import { CareerTeamScreen } from './screens/career-team-screen';
-import { GameCastScreen } from './screens/gamecast-screen';
-import { LandingScreen } from './screens/landing-screen';
-import { ModeSelectScreen } from './screens/mode-select-screen';
-import { MyCardScreen } from './screens/my-card-screen';
-import {
-  PositionRollScreen,
-  PositionSelectScreen,
-} from './screens/position-screen';
-import { PlayoffsScreen } from './screens/playoffs-screen';
-import { RevealScreen } from './screens/reveal-screen';
-import { SeasonHubScreen } from './screens/season-hub-screen';
+import { Link } from '@/core/i18n/navigation';
+import { envConfigs } from '@/config';
 import {
   getGameStep,
   getOverallRating,
@@ -29,6 +11,27 @@ import {
 import { loadGameState, saveGameState } from '@/lib/hooper-game/persistence';
 import type { AttributeKey } from '@/lib/hooper-game/types';
 import { m } from '@/paraglide/messages.js';
+
+import {
+  createInitialState,
+  gameReducer,
+  type GameAction,
+} from './game-reducer';
+import { GameStepper } from './game-stepper';
+import { GameConfirmDialog, GameShell } from './game-ui';
+import { BuildRoomScreen } from './screens/build-room-screen';
+import { CareerTeamScreen } from './screens/career-team-screen';
+import { GameCastScreen } from './screens/gamecast-screen';
+import { LandingScreen } from './screens/landing-screen';
+import { ModeSelectScreen } from './screens/mode-select-screen';
+import { MyCardScreen } from './screens/my-card-screen';
+import { PlayoffsScreen } from './screens/playoffs-screen';
+import {
+  PositionRollScreen,
+  PositionSelectScreen,
+} from './screens/position-screen';
+import { RevealScreen } from './screens/reveal-screen';
+import { SeasonHubScreen } from './screens/season-hub-screen';
 
 function initState() {
   return loadGameState() ?? createInitialState();
@@ -65,10 +68,22 @@ export function HooperGame() {
     <GameShell>
       <main className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-4 flex items-center justify-between gap-3">
-          <GameBadge>
-            <span className="font-semibold text-white">Build a Hooper</span>
-            <span className="text-white/40">v1.7</span>
-          </GameBadge>
+          <Link
+            href="/"
+            className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 transition hover:border-white/20 hover:bg-white/8"
+          >
+            <img
+              src={envConfigs.app_logo}
+              alt=""
+              className="size-9 shrink-0 object-contain"
+              width={36}
+              height={36}
+              decoding="async"
+            />
+            <span className="font-serif text-lg text-white italic">
+              {envConfigs.app_name}
+            </span>
+          </Link>
 
           {state.screen !== 'landing' && (
             <button

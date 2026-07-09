@@ -1,17 +1,14 @@
 'use client';
 
 import { useState } from 'react';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 
 import { useSession } from '@/core/auth/client';
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
-import { cn } from '@/lib/utils';
-import { m } from '@/paraglide/messages.js';
 import { LocaleSelector } from '@/components/locale-selector';
 import { SiteUserMenu } from '@/components/site-user-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
-import { buttonVariants } from '@/components/ui/button';
 
 export interface NavLink {
   href: string;
@@ -32,7 +29,15 @@ export function SiteHeader({ navLinks }: { navLinks?: NavLink[] }) {
     <header className="bg-background/80 sticky top-0 z-50 w-full backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center gap-2.5">
+          <img
+            src={envConfigs.app_logo}
+            alt=""
+            className="size-9 shrink-0 object-contain"
+            width={36}
+            height={36}
+            decoding="async"
+          />
           <span className="font-serif text-lg italic">
             {envConfigs.app_name}
           </span>
@@ -74,12 +79,7 @@ export function SiteHeader({ navLinks }: { navLinks?: NavLink[] }) {
               email={user.email}
               image={user.image}
             />
-          ) : (
-            <Link href="/settings" className={cn(buttonVariants(), 'gap-1.5')}>
-              {m['common.nav.get_started']()}
-              <ArrowRight className="size-4" />
-            </Link>
-          )}
+          ) : null}
         </div>
 
         {/* Mobile toggle */}
@@ -125,22 +125,16 @@ export function SiteHeader({ navLinks }: { navLinks?: NavLink[] }) {
           <div className="border-border mt-3 flex items-center gap-2 border-t pt-3">
             <LocaleSelector />
             <ThemeToggle />
-            <div className="flex-1" />
             {user ? (
-              <SiteUserMenu
-                name={user.name || 'User'}
-                email={user.email}
-                image={user.image}
-              />
-            ) : (
-              <Link
-                href="/settings"
-                className={cn(buttonVariants(), 'gap-1.5')}
-                onClick={() => setMobileOpen(false)}
-              >
-                {m['common.nav.get_started']()}
-              </Link>
-            )}
+              <>
+                <div className="flex-1" />
+                <SiteUserMenu
+                  name={user.name || 'User'}
+                  email={user.email}
+                  image={user.image}
+                />
+              </>
+            ) : null}
           </div>
         </div>
       )}

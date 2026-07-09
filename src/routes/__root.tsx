@@ -35,7 +35,6 @@ const getAnalyticsConfigs = createServerFn().handler(async () => {
   const configs = await getAllConfigs();
   return {
     gaId: configs.google_analytics_id?.trim() || '',
-    adsenseClient: configs.google_adsense_client?.trim() || '',
     plausibleDomain: configs.plausible_domain?.trim() || '',
     plausibleSrc: configs.plausible_src?.trim() || '',
     crispWebsiteId:
@@ -73,8 +72,8 @@ export const Route = createRootRoute({
         { name: 'description', content: envConfigs.app_description },
       ],
       links: [
-        { rel: 'icon', href: '/favicon.svg', type: 'image/svg+xml' },
-        { rel: 'apple-touch-icon', href: '/favicon.svg' },
+        { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
+        { rel: 'apple-touch-icon', href: '/logo.png' },
         ...locales.map((loc) => ({
           rel: 'alternate',
           hrefLang: loc,
@@ -106,9 +105,7 @@ function RootComponent() {
         {analytics?.gaId ? (
           <GoogleAnalytics measurementId={analytics.gaId} />
         ) : null}
-        {analytics?.adsenseClient ? (
-          <GoogleAdsense clientId={analytics.adsenseClient} />
-        ) : null}
+        <GoogleAdsense clientId="ca-pub-8028656293202971" />
         {analytics?.plausibleDomain ? (
           <Plausible
             domain={analytics.plausibleDomain}

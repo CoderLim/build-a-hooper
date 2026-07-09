@@ -12,6 +12,11 @@ export function Footer() {
         },
         { label: m['landing.nav.guide'](), href: '/#guide' },
         { label: m['landing.nav.faq'](), href: '/#faq' },
+        { label: m['landing.footer.blog'](), href: '/blog' },
+        {
+          label: m['landing.footer.chrome_extension'](),
+          href: 'https://chromewebstore.google.com/detail/build-a-hooper-launcher/dccnpagebnanngljphnfbbfefnmhlckm',
+        },
       ],
     },
     {
