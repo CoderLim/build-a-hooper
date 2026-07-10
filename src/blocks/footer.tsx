@@ -17,6 +17,10 @@ export function Footer() {
           label: m['landing.footer.chrome_extension'](),
           href: 'https://chromewebstore.google.com/detail/build-a-hooper-launcher/dccnpagebnanngljphnfbbfefnmhlckm',
         },
+        {
+          label: m['landing.footer.github'](),
+          href: 'https://github.com/CoderLim/build-a-hooper-extension',
+        },
       ],
     },
     {
