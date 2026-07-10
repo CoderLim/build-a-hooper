@@ -1,12 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+import { useSession } from '@/core/auth/client';
+import { Link } from '@/core/i18n/navigation';
+import { apiPost } from '@/lib/api-client';
+import { getOverallRating } from '@/lib/hooper-game/engine';
+import type {
+  BuildSlot,
+  GameMode,
+  Position,
+  SeasonStats,
+  TeamSeason,
+} from '@/lib/hooper-game/types';
+import {
+  buildRunFingerprint,
+  buildSubmitRunInput,
+} from '@/lib/hooper/build-run-payload';
+import { m } from '@/paraglide/messages.js';
 
 import { AttributeGrid } from '../attribute-grid';
 import { GameButton, GameEyebrow, GameTitle } from '../game-ui';
-import { getOverallRating } from '@/lib/hooper-game/engine';
-import type { BuildSlot, Position, SeasonStats, TeamSeason } from '@/lib/hooper-game/types';
-import { m } from '@/paraglide/messages.js';
 
 interface MyCardScreenProps {
+  mode: GameMode | null;
   buildSlots: BuildSlot[];
   position: Position | null;
   showPosition: boolean;
@@ -29,7 +44,9 @@ function buildShareText(
     `Record: ${seasonStats.wins}-${seasonStats.losses}`,
     `Stats: ${seasonStats.ppg} PPG / ${seasonStats.apg} APG / ${seasonStats.rpg} RPG`,
     `Playoffs: ${seasonStats.playoffResult}`,
-    seasonStats.awards.length > 0 ? `Awards: ${seasonStats.awards.join(', ')}` : '',
+    seasonStats.awards.length > 0
+      ? `Awards: ${seasonStats.awards.join(', ')}`
+      : '',
     seasonStats.fmvp ? 'Finals MVP' : '',
     `https://buildahooper.org/game`,
   ]
@@ -37,7 +54,10 @@ function buildShareText(
     .join('\n');
 }
 
+type SaveState = 'idle' | 'pending' | 'saved' | 'error';
+
 export function MyCardScreen({
+  mode,
   buildSlots,
   position,
   showPosition,
@@ -46,10 +66,51 @@ export function MyCardScreen({
   onPlayAgain,
 }: MyCardScreenProps) {
   const [copied, setCopied] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>('idle');
+  const submittedRef = useRef(false);
+  const { data: session } = useSession();
   const overall = getOverallRating(buildSlots);
 
+  useEffect(() => {
+    if (!session?.user || !mode || submittedRef.current) return;
+
+    const payload = buildSubmitRunInput({
+      mode,
+      position,
+      careerTeam,
+      buildSlots,
+      seasonStats,
+    });
+    const fingerprint = buildRunFingerprint(payload);
+    const storageKey = `hooper-run-submitted:${session.user.id}:${fingerprint}`;
+    if (sessionStorage.getItem(storageKey)) {
+      setSaveState('saved');
+      submittedRef.current = true;
+      return;
+    }
+
+    submittedRef.current = true;
+    setSaveState('pending');
+
+    apiPost('/api/hooper/runs', payload)
+      .then(() => {
+        sessionStorage.setItem(storageKey, '1');
+        setSaveState('saved');
+      })
+      .catch(() => {
+        submittedRef.current = false;
+        setSaveState('error');
+      });
+  }, [session?.user, mode, position, careerTeam, buildSlots, seasonStats]);
+
   const handleShare = async () => {
-    const text = buildShareText(position, showPosition, careerTeam, seasonStats, overall);
+    const text = buildShareText(
+      position,
+      showPosition,
+      careerTeam,
+      seasonStats,
+      overall
+    );
     if (navigator.share) {
       try {
         await navigator.share({ title: 'My Build a Hooper Card', text });
@@ -85,7 +146,9 @@ export function MyCardScreen({
             <p className="text-3xl font-black text-emerald-400">
               {seasonStats.wins}-{seasonStats.losses}
             </p>
-            <p className="text-xs text-white/40 uppercase">{m['game.card.record']()}</p>
+            <p className="text-xs text-white/40 uppercase">
+              {m['game.card.record']()}
+            </p>
           </div>
         </div>
 
@@ -125,7 +188,9 @@ export function MyCardScreen({
           {seasonStats.awards.length > 0 && (
             <p>
               <span className="text-white/40">{m['game.card.awards']()}: </span>
-              <span className="font-semibold">{seasonStats.awards.join(', ')}</span>
+              <span className="font-semibold">
+                {seasonStats.awards.join(', ')}
+              </span>
             </p>
           )}
           {seasonStats.fmvp && (
@@ -135,6 +200,26 @@ export function MyCardScreen({
       </div>
 
       <div className="mx-auto w-full max-w-2xl">
+        {session?.user ? (
+          <p className="mb-4 text-center text-sm text-white/60">
+            {saveState === 'pending' && m['game.card.save_run_pending']()}
+            {saveState === 'saved' && m['game.card.save_run']()}
+            {saveState === 'error' && m['game.card.save_run_error']()}
+            {saveState === 'idle' && m['game.card.save_run_pending']()}
+          </p>
+        ) : (
+          <div className="mb-4 rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-center">
+            <p className="text-sm text-white/60">
+              {m['game.card.login_to_save']()}
+            </p>
+            <Link
+              href="/sign-in?callbackUrl=/game"
+              className="mt-3 inline-flex rounded-full bg-orange-300 px-5 py-2 text-xs font-black tracking-wide text-neutral-950 uppercase"
+            >
+              {m['game.card.login']()}
+            </Link>
+          </div>
+        )}
         <AttributeGrid slots={buildSlots} compact />
       </div>
 
@@ -142,7 +227,9 @@ export function MyCardScreen({
         <GameButton variant="secondary" onClick={handleShare}>
           {copied ? m['game.card.copied']() : m['game.card.share']()}
         </GameButton>
-        <GameButton onClick={onPlayAgain}>{m['game.card.play_again']()}</GameButton>
+        <GameButton onClick={onPlayAgain}>
+          {m['game.card.play_again']()}
+        </GameButton>
       </div>
     </section>
   );

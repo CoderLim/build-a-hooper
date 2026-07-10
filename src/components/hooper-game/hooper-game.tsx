@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useState } from 'react';
 
+import { useSession } from '@/core/auth/client';
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
 import {
@@ -39,6 +40,7 @@ function initState() {
 
 export function HooperGame() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initState);
+  const { data: session } = useSession();
 
   useEffect(() => {
     saveGameState(state);
@@ -85,15 +87,31 @@ export function HooperGame() {
             </span>
           </Link>
 
-          {state.screen !== 'landing' && (
-            <button
-              type="button"
-              onClick={() => setConfirmRestart(true)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
+          <div className="flex items-center gap-2">
+            <Link
+              href="/leaderboard"
+              className="hidden rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white sm:inline-flex"
             >
-              {m['game.restart']()}
-            </button>
-          )}
+              {m['landing.nav.leaderboard']()}
+            </Link>
+            {!session?.user && (
+              <Link
+                href="/sign-in?callbackUrl=/game"
+                className="rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
+              >
+                {m['landing.nav.login']()}
+              </Link>
+            )}
+            {state.screen !== 'landing' && (
+              <button
+                type="button"
+                onClick={() => setConfirmRestart(true)}
+                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
+              >
+                {m['game.restart']()}
+              </button>
+            )}
+          </div>
         </div>
 
         {showStepper && <GameStepper currentStep={currentStep} />}
@@ -203,6 +221,7 @@ export function HooperGame() {
 
         {state.screen === 'my-card' && state.seasonStats && (
           <MyCardScreen
+            mode={state.mode}
             buildSlots={state.buildSlots}
             position={state.position}
             showPosition={showPosition}

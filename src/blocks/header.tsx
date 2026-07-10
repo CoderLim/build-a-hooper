@@ -4,11 +4,12 @@ import { SiteHeader } from '@/components/site-header';
 export function Header() {
   const navLinks = [
     { href: '/game', label: m['landing.nav.play']() },
+    { href: '/leaderboard', label: m['landing.nav.leaderboard']() },
     { href: '/#guide', label: m['landing.nav.guide']() },
     { href: '/#faq', label: m['landing.nav.faq']() },
     { href: '/blog', label: m['landing.nav.blog']() },
     { href: '/privacy-policy', label: m['landing.nav.privacy']() },
   ];
 
-  return <SiteHeader navLinks={navLinks} />;
+  return <SiteHeader navLinks={navLinks} showAuthLinks />;
 }

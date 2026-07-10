@@ -695,3 +695,72 @@ export type InviteCode = typeof inviteCode.$inferSelect;
 export type NewInviteCode = typeof inviteCode.$inferInsert;
 export type UserInvite = typeof userInvite.$inferSelect;
 export type NewUserInvite = typeof userInvite.$inferInsert;
+
+// ─── Hooper Game ─────────────────────────────────────────────────────────────
+
+export const hooperRun = table(
+  'hooper_run',
+  {
+    id: text('id').primaryKey(),
+    userId: text('user_id')
+      .notNull()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    completedAt: integer('completed_at', { mode: 'timestamp_ms' })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    mode: text('mode').notNull(),
+    position: text('position'),
+    careerTeamAbbr: text('career_team_abbr'),
+    careerTeamName: text('career_team_name'),
+    overall: integer('overall').notNull(),
+    wins: integer('wins').notNull(),
+    losses: integer('losses').notNull(),
+    ppg: integer('ppg').notNull().default(0),
+    apg: integer('apg').notNull().default(0),
+    rpg: integer('rpg').notNull().default(0),
+    champion: integer('champion', { mode: 'boolean' }).notNull().default(false),
+    fmvp: integer('fmvp', { mode: 'boolean' }).notNull().default(false),
+    playoffResult: text('playoff_result').notNull().default(''),
+    awards: text('awards').notNull().default('[]'),
+    legacyPoints: integer('legacy_points').notNull().default(0),
+    buildSummary: text('build_summary').notNull().default('[]'),
+  },
+  (t) => [
+    index('idx_hooper_run_user_completed').on(t.userId, t.completedAt),
+    index('idx_hooper_run_overall').on(t.overall),
+    index('idx_hooper_run_champion').on(t.champion),
+  ]
+);
+
+export const hooperLegacy = table(
+  'hooper_legacy',
+  {
+    userId: text('user_id')
+      .primaryKey()
+      .references(() => user.id, { onDelete: 'cascade' }),
+    displayName: text('display_name').notNull(),
+    preferredPosition: text('preferred_position'),
+    totalRuns: integer('total_runs').notNull().default(0),
+    totalChampionships: integer('total_championships').notNull().default(0),
+    totalLegacyPoints: integer('total_legacy_points').notNull().default(0),
+    bestOverall: integer('best_overall').notNull().default(0),
+    totalAwards: integer('total_awards').notNull().default(0),
+    winRate: integer('win_rate').notNull().default(0),
+    lastRunAt: integer('last_run_at', { mode: 'timestamp_ms' }),
+    updatedAt: integer('updated_at', { mode: 'timestamp_ms' })
+      .default(sqliteNowMs)
+      .$onUpdate(() => new Date())
+      .notNull(),
+  },
+  (t) => [
+    index('idx_hooper_legacy_points').on(t.totalLegacyPoints),
+    index('idx_hooper_legacy_championships').on(t.totalChampionships),
+    index('idx_hooper_legacy_win_rate').on(t.winRate),
+    index('idx_hooper_legacy_best_overall').on(t.bestOverall),
+  ]
+);
+
+export type HooperRun = typeof hooperRun.$inferSelect;
+export type NewHooperRun = typeof hooperRun.$inferInsert;
+export type HooperLegacy = typeof hooperLegacy.$inferSelect;
+export type NewHooperLegacy = typeof hooperLegacy.$inferInsert;

@@ -6,6 +6,7 @@ import { Menu, X } from 'lucide-react';
 import { useSession } from '@/core/auth/client';
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
+import { m } from '@/paraglide/messages.js';
 import { LocaleSelector } from '@/components/locale-selector';
 import { SiteUserMenu } from '@/components/site-user-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -20,7 +21,13 @@ export interface NavLink {
 /** Off-site URLs render as plain <a>; internal paths use the locale-aware Link. */
 const isExternalHref = (href: string) => /^https?:\/\//.test(href);
 
-export function SiteHeader({ navLinks }: { navLinks?: NavLink[] }) {
+export function SiteHeader({
+  navLinks,
+  showAuthLinks = false,
+}: {
+  navLinks?: NavLink[];
+  showAuthLinks?: boolean;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
@@ -73,6 +80,22 @@ export function SiteHeader({ navLinks }: { navLinks?: NavLink[] }) {
         <div className="hidden items-center gap-3 md:flex">
           <LocaleSelector />
           <ThemeToggle />
+          {showAuthLinks && !user ? (
+            <>
+              <Link
+                href="/sign-in"
+                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+              >
+                {m['landing.nav.login']()}
+              </Link>
+              <Link
+                href="/sign-up"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-4 py-2 text-sm font-medium transition-colors"
+              >
+                {m['landing.nav.sign_up']()}
+              </Link>
+            </>
+          ) : null}
           {user ? (
             <SiteUserMenu
               name={user.name || 'User'}
@@ -125,6 +148,22 @@ export function SiteHeader({ navLinks }: { navLinks?: NavLink[] }) {
           <div className="border-border mt-3 flex items-center gap-2 border-t pt-3">
             <LocaleSelector />
             <ThemeToggle />
+            {showAuthLinks && !user ? (
+              <div className="ml-auto flex items-center gap-2">
+                <Link
+                  href="/sign-in"
+                  className="text-muted-foreground hover:text-foreground text-sm"
+                >
+                  {m['landing.nav.login']()}
+                </Link>
+                <Link
+                  href="/sign-up"
+                  className="bg-primary text-primary-foreground rounded-full px-3 py-1.5 text-sm"
+                >
+                  {m['landing.nav.sign_up']()}
+                </Link>
+              </div>
+            ) : null}
             {user ? (
               <>
                 <div className="flex-1" />

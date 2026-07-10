@@ -8,8 +8,9 @@ export function Footer() {
       links: [
         {
           label: m['landing.nav.play'](),
-          href: 'https://build-a-hooper.pages.dev/',
+          href: '/game',
         },
+        { href: '/leaderboard', label: m['landing.nav.leaderboard']() },
         { label: m['landing.nav.guide'](), href: '/#guide' },
         { label: m['landing.nav.faq'](), href: '/#faq' },
         { label: m['landing.footer.blog'](), href: '/blog' },
