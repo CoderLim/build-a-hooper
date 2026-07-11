@@ -8,7 +8,7 @@ import type {
   TeamSeason,
 } from '@/lib/hooper-game/types';
 import { m } from '@/paraglide/messages.js';
-import { getLocale } from '@/paraglide/runtime.js';
+import { localizeHref } from '@/paraglide/runtime.js';
 
 const CARD_WIDTH = 1080;
 const CARD_HEIGHT = 1350;
@@ -27,8 +27,7 @@ export function buildShareUrl(): string {
     envConfigs.app_url ||
     (typeof window !== 'undefined' ? window.location.origin : '')
   ).replace(/\/$/, '');
-  const prefix = getLocale() === 'zh' ? '/zh' : '';
-  return `${base}${prefix}/game`;
+  return `${base}${localizeHref('/game')}`;
 }
 
 function modeLabel(mode: GameMode | null): string {

@@ -105,10 +105,18 @@ export function mergePosts(
   return options.limit ? merged.slice(0, options.limit) : merged;
 }
 
+const POST_DATE_LOCALES: Record<string, string> = {
+  zh: 'zh-CN',
+  ja: 'ja-JP',
+  ko: 'ko-KR',
+};
+
 export function formatPostDate(dateIso: string, locale: string): string {
-  return new Intl.DateTimeFormat(locale === 'zh' ? 'zh-CN' : 'en-US', {
+  const intlLocale = POST_DATE_LOCALES[locale] ?? 'en-US';
+  const useLongMonth = locale in POST_DATE_LOCALES;
+  return new Intl.DateTimeFormat(intlLocale, {
     year: 'numeric',
-    month: locale === 'zh' ? 'long' : 'short',
+    month: useLongMonth ? 'long' : 'short',
     day: 'numeric',
   }).format(new Date(dateIso));
 }

@@ -743,7 +743,7 @@
   "landing.features.rbac.title": "角色与权限",
   "landing.features.rbac.description": "细粒度的 RBAC 权限控制，支持通配符匹配。完整的管理后台管理用户、角色和权限。",
   "landing.features.i18n.title": "国际化",
-  "landing.features.i18n.description": "内置中英文支持，路由感知语言切换，轻松扩展更多语言。",
+  "landing.features.i18n.description": "内置中、日、韩、英多语言支持，路由感知语言切换，轻松扩展更多语言。",
   "landing.features.cms.title": "内容管理",
   "landing.features.cms.description": "分类和文章的完整 CRUD，支持状态管理和管理后台 — 快速搭建博客或文档。",
   "landing.features.credits.title": "积分系统",

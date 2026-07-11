@@ -743,7 +743,7 @@
   "landing.features.rbac.title": "Roles & Permissions",
   "landing.features.rbac.description": "Fine-grained RBAC with wildcard matching. Full admin panel for managing users, roles, and permissions.",
   "landing.features.i18n.title": "Internationalization",
-  "landing.features.i18n.description": "English and Chinese built-in with locale-aware routing. Easy to extend with additional languages.",
+  "landing.features.i18n.description": "English, Chinese, Japanese, and Korean built-in with locale-aware routing. Easy to extend with additional languages.",
   "landing.features.cms.title": "Content Management",
   "landing.features.cms.description": "Categories and posts with full CRUD, status management, and admin panel — build your blog or docs.",
   "landing.features.credits.title": "Credit System",
