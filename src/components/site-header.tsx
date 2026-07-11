@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { useLocation } from '@tanstack/react-router';
 import { Menu, X } from 'lucide-react';
 
 import { useSession } from '@/core/auth/client';
@@ -31,6 +32,12 @@ export function SiteHeader({
   const [mobileOpen, setMobileOpen] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
+  const location = useLocation();
+  const authCallback = useMemo(() => {
+    const path = `${location.pathname}${location.searchStr ? `?${location.searchStr}` : ''}`;
+    const query = `?callbackUrl=${encodeURIComponent(path)}`;
+    return { signIn: `/sign-in${query}`, signUp: `/sign-up${query}` };
+  }, [location.pathname, location.searchStr]);
 
   return (
     <header className="bg-background/80 sticky top-0 z-50 w-full backdrop-blur-sm">
@@ -83,13 +90,13 @@ export function SiteHeader({
           {showAuthLinks && !user ? (
             <>
               <Link
-                href="/sign-in"
+                href={authCallback.signIn}
                 className="text-muted-foreground hover:text-foreground text-sm transition-colors"
               >
                 {m['landing.nav.login']()}
               </Link>
               <Link
-                href="/sign-up"
+                href={authCallback.signUp}
                 className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-4 py-2 text-sm font-medium transition-colors"
               >
                 {m['landing.nav.sign_up']()}
@@ -151,13 +158,13 @@ export function SiteHeader({
             {showAuthLinks && !user ? (
               <div className="ml-auto flex items-center gap-2">
                 <Link
-                  href="/sign-in"
+                  href={authCallback.signIn}
                   className="text-muted-foreground hover:text-foreground text-sm"
                 >
                   {m['landing.nav.login']()}
                 </Link>
                 <Link
-                  href="/sign-up"
+                  href={authCallback.signUp}
                   className="bg-primary text-primary-foreground rounded-full px-3 py-1.5 text-sm"
                 >
                   {m['landing.nav.sign_up']()}

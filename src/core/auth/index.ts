@@ -133,6 +133,43 @@ function isEmailConfigured(configs: Record<string, string>): boolean {
   return getEmailProvider(configs) !== null;
 }
 
+function hostsMatch(a: string, b: string) {
+  const stripWww = (host: string) => host.replace(/^www\./, '');
+  return stripWww(a) === stripWww(b);
+}
+
+function getTrustedOrigins(appUrl: string, request?: Request) {
+  const origins = new Set<string>();
+  if (appUrl) origins.add(appUrl.replace(/\/$/, ''));
+
+  try {
+    const origin = request?.headers?.get?.('origin');
+    if (!origin) return [...origins];
+
+    const originHost = new URL(origin).hostname;
+    origins.add(origin.replace(/\/$/, ''));
+
+    if (originHost === 'localhost' || originHost === '127.0.0.1') {
+      return [...origins];
+    }
+
+    if (appUrl) {
+      const appHost = new URL(appUrl).hostname;
+      if (hostsMatch(originHost, appHost)) {
+        origins.add(`https://${originHost}`);
+        origins.add(`https://www.${stripWww(originHost)}`);
+        origins.add(`http://${originHost}`);
+      }
+    }
+  } catch {}
+
+  return [...origins];
+}
+
+function stripWww(host: string) {
+  return host.replace(/^www\./, '');
+}
+
 function getAuthPlugins(configs: Record<string, string> | undefined) {
   if (!configs) return [];
   const plugins: any[] = [];
@@ -191,16 +228,7 @@ export function getAuth(configs?: Record<string, string>) {
     appName,
     baseURL: authUrl,
     secret: envConfigs.auth_secret,
-    trustedOrigins: (request) => {
-      const origins: string[] = [];
-      if (appUrl) origins.push(appUrl);
-      try {
-        const origin = request?.headers?.get?.('origin');
-        if (origin && new URL(origin).hostname === 'localhost')
-          origins.push(origin);
-      } catch {}
-      return origins;
-    },
+    trustedOrigins: (request) => getTrustedOrigins(appUrl, request),
     database: drizzleAdapter(db(), {
       provider: getDatabaseProvider(envConfigs.database_provider),
       schema,

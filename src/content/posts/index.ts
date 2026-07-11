@@ -11,7 +11,10 @@ import { baseLocale } from '@/paraglide/runtime.js';
  * fetched through the server functions in ./server.ts and merged with the
  * local posts via the pure helpers below.
  */
-export const BLOG_POST_SLUGS = ['introducing-buildahooper'] as const;
+export const BLOG_POST_SLUGS = [
+  'login-leaderboard-update',
+  'introducing-buildahooper',
+] as const;
 
 export type BlogPostMeta = {
   title: string;

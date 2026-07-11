@@ -21,6 +21,7 @@ src/paraglide/
 # the committed template is wrangler.example.jsonc
 /.wrangler/
 wrangler.jsonc
+wrangler.staging.jsonc
 
 # claude code local state
 .claude/scheduled_tasks.lock

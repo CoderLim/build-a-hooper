@@ -26,7 +26,17 @@ export function Footer() {
     },
     {
       title: m['landing.footer.legal'](),
-      links: [{ label: m['landing.nav.privacy'](), href: '/privacy-policy' }],
+      links: [
+        { label: m['landing.nav.privacy'](), href: '/privacy-policy' },
+        { label: m['landing.footer.terms'](), href: '/terms-of-service' },
+      ],
+    },
+    {
+      title: m['landing.footer.about_section'](),
+      links: [
+        { label: m['landing.footer.about'](), href: '/about' },
+        { label: m['landing.footer.contact'](), href: '/contact' },
+      ],
     },
   ];
 

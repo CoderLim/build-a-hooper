@@ -19,6 +19,8 @@ import { m } from '@/paraglide/messages.js';
 
 import { AttributeGrid } from '../attribute-grid';
 import { GameButton, GameEyebrow, GameTitle } from '../game-ui';
+import { ShareCardActions } from '../share-card-actions';
+import { ShareCardPreview } from '../share-card-preview';
 
 interface MyCardScreenProps {
   mode: GameMode | null;
@@ -28,30 +30,6 @@ interface MyCardScreenProps {
   careerTeam: TeamSeason | null;
   seasonStats: SeasonStats;
   onPlayAgain: () => void;
-}
-
-function buildShareText(
-  position: Position | null,
-  showPosition: boolean,
-  careerTeam: TeamSeason | null,
-  seasonStats: SeasonStats,
-  overall: number
-): string {
-  const pos = showPosition && position ? position : '??';
-  return [
-    `Build a Hooper — My Card`,
-    `${careerTeam?.name ?? 'Free Agent'} · ${pos} · OVR ${overall}`,
-    `Record: ${seasonStats.wins}-${seasonStats.losses}`,
-    `Stats: ${seasonStats.ppg} PPG / ${seasonStats.apg} APG / ${seasonStats.rpg} RPG`,
-    `Playoffs: ${seasonStats.playoffResult}`,
-    seasonStats.awards.length > 0
-      ? `Awards: ${seasonStats.awards.join(', ')}`
-      : '',
-    seasonStats.fmvp ? 'Finals MVP' : '',
-    `https://buildahooper.org/game`,
-  ]
-    .filter(Boolean)
-    .join('\n');
 }
 
 type SaveState = 'idle' | 'pending' | 'saved' | 'error';
@@ -65,9 +43,9 @@ export function MyCardScreen({
   seasonStats,
   onPlayAgain,
 }: MyCardScreenProps) {
-  const [copied, setCopied] = useState(false);
   const [saveState, setSaveState] = useState<SaveState>('idle');
   const submittedRef = useRef(false);
+  const previewRef = useRef<HTMLDivElement>(null);
   const { data: session } = useSession();
   const overall = getOverallRating(buildSlots);
 
@@ -102,27 +80,6 @@ export function MyCardScreen({
         setSaveState('error');
       });
   }, [session?.user, mode, position, careerTeam, buildSlots, seasonStats]);
-
-  const handleShare = async () => {
-    const text = buildShareText(
-      position,
-      showPosition,
-      careerTeam,
-      seasonStats,
-      overall
-    );
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: 'My Build a Hooper Card', text });
-        return;
-      } catch {
-        /* fall through */
-      }
-    }
-    await navigator.clipboard.writeText(text);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
     <section className="flex flex-1 flex-col gap-8 py-4">
@@ -205,7 +162,6 @@ export function MyCardScreen({
             {saveState === 'pending' && m['game.card.save_run_pending']()}
             {saveState === 'saved' && m['game.card.save_run']()}
             {saveState === 'error' && m['game.card.save_run_error']()}
-            {saveState === 'idle' && m['game.card.save_run_pending']()}
           </p>
         ) : (
           <div className="mb-4 rounded-2xl border border-white/10 bg-white/3 px-4 py-4 text-center">
@@ -223,13 +179,35 @@ export function MyCardScreen({
         <AttributeGrid slots={buildSlots} compact />
       </div>
 
-      <div className="flex flex-wrap justify-center gap-3">
-        <GameButton variant="secondary" onClick={handleShare}>
-          {copied ? m['game.card.copied']() : m['game.card.share']()}
-        </GameButton>
+      <ShareCardActions
+        previewRef={previewRef}
+        mode={mode}
+        position={position}
+        showPosition={showPosition}
+        careerTeam={careerTeam}
+        seasonStats={seasonStats}
+        overall={overall}
+      />
+
+      <div className="flex justify-center">
         <GameButton onClick={onPlayAgain}>
           {m['game.card.play_again']()}
         </GameButton>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed top-0 -left-[10000px]"
+      >
+        <ShareCardPreview
+          ref={previewRef}
+          buildSlots={buildSlots}
+          position={position}
+          showPosition={showPosition}
+          careerTeam={careerTeam}
+          seasonStats={seasonStats}
+          overall={overall}
+        />
       </div>
     </section>
   );

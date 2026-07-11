@@ -11,7 +11,12 @@ const metaEnv: Record<string, string | undefined> =
 const procEnv: Record<string, string | undefined> =
   typeof process !== 'undefined' && process.env ? process.env : {};
 
-const publicEnv = (key: string) => metaEnv[key] ?? procEnv[key];
+// On the server (Workers/Node), runtime env vars (wrangler vars) must win over
+// values baked into import.meta.env at build time — otherwise a stale localhost
+// URL breaks better-auth trustedOrigins in production.
+const isBrowser = typeof window !== 'undefined';
+const publicEnv = (key: string) =>
+  !isBrowser && procEnv[key] ? procEnv[key] : (metaEnv[key] ?? procEnv[key]);
 
 export const envConfigs: Record<string, string> = {
   // App (public)

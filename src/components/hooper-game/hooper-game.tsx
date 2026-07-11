@@ -1,8 +1,9 @@
 import { useEffect, useReducer, useState } from 'react';
 
-import { useSession } from '@/core/auth/client';
-import { Link } from '@/core/i18n/navigation';
-import { envConfigs } from '@/config';
+import {
+  createDevCardPreviewState,
+  isDevCardPreviewActive,
+} from '@/lib/hooper-game/dev-card-preview';
 import {
   getGameStep,
   getOverallRating,
@@ -35,14 +36,17 @@ import { RevealScreen } from './screens/reveal-screen';
 import { SeasonHubScreen } from './screens/season-hub-screen';
 
 function initState() {
+  if (isDevCardPreviewActive()) {
+    return createDevCardPreviewState();
+  }
   return loadGameState() ?? createInitialState();
 }
 
 export function HooperGame() {
   const [state, dispatch] = useReducer(gameReducer, undefined, initState);
-  const { data: session } = useSession();
 
   useEffect(() => {
+    if (isDevCardPreviewActive()) return;
     saveGameState(state);
   }, [state]);
 
@@ -67,52 +71,19 @@ export function HooperGame() {
   const [confirmRestart, setConfirmRestart] = useState(false);
 
   return (
-    <GameShell>
-      <main className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-4 flex items-center justify-between gap-3">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 transition hover:border-white/20 hover:bg-white/8"
-          >
-            <img
-              src={envConfigs.app_logo}
-              alt=""
-              className="size-9 shrink-0 object-contain"
-              width={36}
-              height={36}
-              decoding="async"
-            />
-            <span className="font-serif text-lg text-white italic">
-              {envConfigs.app_name}
-            </span>
-          </Link>
-
-          <div className="flex items-center gap-2">
-            <Link
-              href="/leaderboard"
-              className="hidden rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white sm:inline-flex"
+    <GameShell className="min-h-0 flex-1">
+      <main className="mx-auto flex min-h-0 max-w-6xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
+        {state.screen !== 'landing' && (
+          <div className="mb-4 flex justify-end">
+            <button
+              type="button"
+              onClick={() => setConfirmRestart(true)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
             >
-              {m['landing.nav.leaderboard']()}
-            </Link>
-            {!session?.user && (
-              <Link
-                href="/sign-in?callbackUrl=/game"
-                className="rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
-              >
-                {m['landing.nav.login']()}
-              </Link>
-            )}
-            {state.screen !== 'landing' && (
-              <button
-                type="button"
-                onClick={() => setConfirmRestart(true)}
-                className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
-              >
-                {m['game.restart']()}
-              </button>
-            )}
+              {m['game.restart']()}
+            </button>
           </div>
-        </div>
+        )}
 
         {showStepper && <GameStepper currentStep={currentStep} />}
 

@@ -1,0 +1,81 @@
+export const meta = {
+  title: 'Login, Legacy Leaderboard, and a Smoother Build a Hooper',
+  description:
+    'Guest play stays free. Log in to save completed seasons, climb the Legacy leaderboard, and share your profile — plus navigation and sign-in fixes shipped this week.',
+  created_at: '2026-07-11',
+  author_name: 'Build a Hooper',
+  author_image: '/logo.png',
+};
+
+Over the past two days we shipped the biggest gameplay-adjacent update since launch: **accounts, a cumulative Legacy leaderboard, and a cleaner path from “just playing” to “saving your run.”** Here is what changed and how to try it.
+
+## Play first, log in when it matters
+
+Build a Hooper still works as a **guest-first** game. You do not need an account to draft, build, sim the season, or reach **My Card**.
+
+Logging in unlocks one clear benefit: **your completed seasons can be saved to the cloud and counted toward the leaderboard.**
+
+|                               | Guest | Logged in |
+| ----------------------------- | ----- | --------- |
+| Full game loop                | Yes   | Yes       |
+| Local continue (same browser) | Yes   | Yes       |
+| Share My Card / Play again    | Yes   | Yes       |
+| Save run after a season       | No    | Yes       |
+| Legacy points & ranking       | No    | Yes       |
+
+If you finish a run without signing in, My Card shows a short prompt to log in so the result can be submitted. Everything else on that screen still works.
+
+## Legacy leaderboard — cumulative, not one-night stands
+
+The new [/leaderboard](/leaderboard) ranks players by **Legacy** — a long-term score built from every saved run, not just your best single season.
+
+You can sort by:
+
+- **Legacy points** (default)
+- **Championships**
+- **Win rate**
+- **Best overall**
+- **Total runs**
+- **Total awards**
+
+Tap a player to open their **profile** and see career-style totals. The board is meant to reward consistency over time: grinders, trophy collectors, and experimenters all have something to chase.
+
+## How a run gets saved
+
+When you are logged in and reach **My Card** after a completed season:
+
+1. The client builds a run payload from your mode, position, build slots, and season stats.
+2. It posts to `/api/hooper/runs`.
+3. The server writes the run and updates your **Legacy** row (points, wins, titles, etc.).
+
+Duplicate submissions for the same run are deduped in the browser so refreshing My Card does not double-count.
+
+## Navigation that matches the game
+
+We unified the site chrome so [/game](/game) uses the same header as the homepage — **Play**, **Leaderboard**, guide links, and sign-in / sign-up when you are logged out.
+
+The in-game bar is slimmer now (mainly **Restart**), so you spend less vertical space on duplicate navigation while playing.
+
+## Sign-in flow fixes
+
+Two pain points from early testing were addressed:
+
+**No more landing in Settings.** After sign-up or sign-in, you return to the page you came from (homepage, game, or leaderboard) instead of the generic account dashboard.
+
+**Production auth origin.** We fixed an `Invalid origin` error that could block registration on [buildahooper.org](https://buildahooper.org) when the deployed auth config did not match the live domain. Sign-up and sign-in should now work reliably on the production site.
+
+## Staging before production
+
+New features were validated on a separate **staging** Worker and database before going live, so production stayed on the previous build until we were confident. The live site at [buildahooper.org](https://buildahooper.org) now includes everything above.
+
+## Try it
+
+1. [Play a season](/game) — no account required.
+2. [Create an account](/sign-up) when you want runs to count.
+3. Finish a season and check [/leaderboard](/leaderboard) to see where you stand.
+
+## What is next
+
+Leaderboard and profiles are the foundation. Achievements, richer profiles, and more ways to compare builds are on the roadmap. If you hit a bug or have a ranking idea, reach us at [support@buildahooper.org](mailto:support@buildahooper.org).
+
+[Start a season](/game) · [View the leaderboard](/leaderboard)
