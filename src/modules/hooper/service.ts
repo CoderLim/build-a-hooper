@@ -69,6 +69,11 @@ function toLegacyView(row: HooperLegacy, rank?: number): HooperLegacyView {
   };
 }
 
+function computeWinRate(wins: number, losses: number): number {
+  const total = wins + losses;
+  return total > 0 ? Math.round((wins / total) * 100) : 0;
+}
+
 function sortColumn(sortBy: LeaderboardSortBy) {
   switch (sortBy) {
     case 'championships':
@@ -139,8 +144,19 @@ export async function submitRun(
     const totalLegacyPoints = (current?.totalLegacyPoints ?? 0) + legacyPoints;
     const bestOverall = Math.max(current?.bestOverall ?? 0, input.overall);
     const totalAwards = (current?.totalAwards ?? 0) + awardsCount;
-    const winRate =
-      totalRuns > 0 ? Math.round((totalChampionships / totalRuns) * 100) : 0;
+
+    const [totals] = await tx
+      .select({
+        totalWins: sum(hooperRun.wins),
+        totalLosses: sum(hooperRun.losses),
+      })
+      .from(hooperRun)
+      .where(eq(hooperRun.userId, userId));
+
+    const winRate = computeWinRate(
+      Number(totals?.totalWins ?? 0),
+      Number(totals?.totalLosses ?? 0)
+    );
 
     if (current) {
       await tx
@@ -334,4 +350,35 @@ export async function getPublicProfile(
     legacy: toLegacyView(legacy, rank),
     recentRuns,
   };
+}
+
+/** Recalculate win_rate for all legacy rows from hooper_run totals. */
+export async function backfillLegacyWinRates(): Promise<number> {
+  const legacyRows = await db().select().from(hooperLegacy);
+  let updated = 0;
+
+  for (const legacy of legacyRows) {
+    const [totals] = await db()
+      .select({
+        totalWins: sum(hooperRun.wins),
+        totalLosses: sum(hooperRun.losses),
+      })
+      .from(hooperRun)
+      .where(eq(hooperRun.userId, legacy.userId));
+
+    const winRate = computeWinRate(
+      Number(totals?.totalWins ?? 0),
+      Number(totals?.totalLosses ?? 0)
+    );
+
+    if (winRate !== legacy.winRate) {
+      await db()
+        .update(hooperLegacy)
+        .set({ winRate })
+        .where(eq(hooperLegacy.userId, legacy.userId));
+      updated += 1;
+    }
+  }
+
+  return updated;
 }

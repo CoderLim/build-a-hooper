@@ -20,6 +20,7 @@
     "db:studio": "tsx scripts/with-env.ts drizzle-kit studio --config=drizzle.config.ts",
     "rbac:init": "tsx scripts/with-env.ts tsx scripts/init-rbac.ts",
     "rbac:assign": "tsx scripts/with-env.ts tsx scripts/assign-role.ts",
+    "hooper:backfill-win-rate": "tsx scripts/with-env.ts tsx scripts/backfill-win-rate.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
