@@ -114,7 +114,19 @@ export function SiteFooter({
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-6 flex flex-col gap-3 border-t border-neutral-800 pt-5 sm:flex-row sm:items-center sm:justify-end">
+        <div className="mt-6 flex flex-col gap-3 border-t border-neutral-800 pt-5 sm:flex-row sm:items-center sm:justify-between">
+          <a
+            href="https://submito.net"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Listed on Submito"
+          >
+            <img
+              src="https://submito.net/badge/listed-light.svg"
+              alt="Listed on Submito"
+              className="h-7 w-auto"
+            />
+          </a>
           <span className="text-sm text-neutral-400">
             {copyright ||
               `© ${year} ${envConfigs.app_name}. All rights reserved.`}
