@@ -20,6 +20,64 @@ export interface FooterSocial {
   label: string;
 }
 
+const footerBadgeClass = 'h-7 w-auto';
+
+const footerPartnerLinks = [
+  {
+    href: 'https://submito.net',
+    title: 'Listed on Submito',
+    content: (
+      <img
+        src="https://submito.net/badge/listed-light.svg"
+        alt="Listed on Submito"
+        className={footerBadgeClass}
+      />
+    ),
+  },
+  {
+    href: 'https://lovableapp.org',
+    title: 'Lovable App Badge',
+    content: (
+      <img
+        src="https://lovableapp.org/lovable-app-badge.svg"
+        alt="Lovable App Badge"
+        className={footerBadgeClass}
+      />
+    ),
+  },
+  {
+    href: 'https://saastool.site/item/build-a-hooper-buildahooperorg',
+    title: 'Featured on SaaSTool.site',
+    content: (
+      <img
+        src="https://saastool.site/badges/saastool-dark.svg"
+        alt="Featured on SaaSTool.site"
+        className={footerBadgeClass}
+      />
+    ),
+  },
+  {
+    href: 'https://findly.tools/build-a-hooper-2?utm_source=build-a-hooper-2',
+    title: 'Featured on Findly.tools',
+    content: (
+      <img
+        src="https://findly.tools/badges/findly-tools-badge-light.svg"
+        alt="Featured on Findly.tools"
+        className={footerBadgeClass}
+      />
+    ),
+  },
+  {
+    href: 'https://aitop10.tools/',
+    title: 'AiTop10 Tools',
+    content: (
+      <span className="text-sm text-neutral-300 transition-colors hover:text-neutral-100">
+        AiTop10 Tools
+      </span>
+    ),
+  },
+] as const;
+
 export function SiteFooter({
   tagline,
   columns,
@@ -115,18 +173,19 @@ export function SiteFooter({
 
         {/* Bottom bar */}
         <div className="mt-6 flex flex-col gap-3 border-t border-neutral-800 pt-5 sm:flex-row sm:items-center sm:justify-between">
-          <a
-            href="https://submito.net"
-            target="_blank"
-            rel="noopener noreferrer"
-            title="Listed on Submito"
-          >
-            <img
-              src="https://submito.net/badge/listed-light.svg"
-              alt="Listed on Submito"
-              className="h-7 w-auto"
-            />
-          </a>
+          <div className="flex flex-wrap items-center gap-4">
+            {footerPartnerLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={link.title}
+              >
+                {link.content}
+              </a>
+            ))}
+          </div>
           <span className="text-sm text-neutral-400">
             {copyright ||
               `© ${year} ${envConfigs.app_name}. All rights reserved.`}
