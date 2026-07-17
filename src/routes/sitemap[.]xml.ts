@@ -6,7 +6,8 @@ import { getLocalPosts, mergePosts } from '@/content/posts';
 
 const STATIC_PATHS = [
   '',
-  '/pricing',
+  '/game',
+  '/leaderboard',
   '/blog',
   '/privacy-policy',
   '/terms-of-service',
@@ -53,8 +54,9 @@ export const Route = createFileRoute('/sitemap.xml')({
       GET: async () => {
         const entries: Entry[] = STATIC_PATHS.map((path) => ({
           path,
-          changeFrequency: path === '/blog' ? 'daily' : 'weekly',
-          priority: path === '' ? 1 : 0.8,
+          changeFrequency:
+            path === '/blog' || path === '/leaderboard' ? 'daily' : 'weekly',
+          priority: path === '' ? 1 : path === '/game' ? 0.9 : 0.8,
         }));
 
         // Blog posts: db posts merged with local MDX posts.

@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { Coins, MoreHorizontal, Shield } from 'lucide-react';
+import { MoreHorizontal, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -36,7 +36,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
 
 interface User {
   id: string;
@@ -44,7 +43,6 @@ interface User {
   email: string;
   image: string | null;
   createdAt: string;
-  credits: number;
 }
 
 interface RoleInfo {
@@ -69,14 +67,6 @@ function UsersPage() {
 
   // Role management dialog
   const [managingUser, setManagingUser] = useState<User | null>(null);
-
-  // Credits dialog
-  const [creditsUser, setCreditsUser] = useState<User | null>(null);
-  const [creditsAction, setCreditsAction] = useState<'grant' | 'deduct'>(
-    'grant'
-  );
-  const [creditsAmount, setCreditsAmount] = useState('');
-  const [creditsDesc, setCreditsDesc] = useState('');
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(search), 300);
@@ -120,47 +110,6 @@ function UsersPage() {
 
   function openRoleDialog(u: User) {
     setManagingUser(u);
-  }
-
-  function openCreditsDialog(u: User) {
-    setCreditsUser(u);
-    setCreditsAction('grant');
-    setCreditsAmount('');
-    setCreditsDesc('');
-  }
-
-  const creditsMutation = useMutation({
-    mutationFn: (vars: {
-      userId: string;
-      action: 'grant' | 'deduct';
-      credits: number;
-      description?: string;
-    }) => apiPost<{ balance: number }>('/api/admin/users/credits', vars),
-    onSuccess: (_data, vars) => {
-      toast.success(
-        vars.action === 'grant'
-          ? m['admin.users.credits_granted']()
-          : m['admin.users.credits_deducted']()
-      );
-      setCreditsUser(null);
-      queryClient.invalidateQueries({ queryKey: ['admin-users'] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  function submitCredits() {
-    if (!creditsUser) return;
-    const amount = Number(creditsAmount);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      toast.error(m['admin.users.credits_invalid_amount']());
-      return;
-    }
-    creditsMutation.mutate({
-      userId: creditsUser.id,
-      action: creditsAction,
-      credits: amount,
-      description: creditsDesc || undefined,
-    });
   }
 
   const assignRoleMutation = useMutation({
@@ -223,15 +172,6 @@ function UsersPage() {
       cell: (u) => u.email,
     },
     {
-      header: m['admin.users.credits_col'](),
-      className: 'w-[120px]',
-      cell: (u) => (
-        <span className="font-medium tabular-nums">
-          {u.credits.toLocaleString()}
-        </span>
-      ),
-    },
-    {
       header: m['admin.users.joined_col'](),
       cell: (u) => (
         <span className="text-muted-foreground">
@@ -252,10 +192,6 @@ function UsersPage() {
             }
           />
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onClick={() => openCreditsDialog(u)}>
-              <Coins className="size-4" />
-              {m['admin.users.manage_credits_title']()}
-            </DropdownMenuItem>
             <DropdownMenuItem onClick={() => openRoleDialog(u)}>
               <Shield className="size-4" />
               {m['admin.users.manage_roles_title']()}
@@ -334,91 +270,6 @@ function UsersPage() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setManagingUser(null)}>
               {m['admin.roles.cancel']()}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Credits Management Dialog */}
-      <Dialog
-        open={!!creditsUser}
-        onOpenChange={(v) => !v && setCreditsUser(null)}
-      >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{m['admin.users.manage_credits_title']()}</DialogTitle>
-            <DialogDescription>
-              {creditsUser
-                ? m['admin.users.manage_credits_for']({
-                    name: creditsUser.name || creditsUser.email,
-                    balance: creditsUser.credits.toLocaleString(),
-                  })
-                : ''}
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => setCreditsAction('grant')}
-                className={`rounded-md border px-3 py-2 text-sm font-medium transition-colors ${
-                  creditsAction === 'grant'
-                    ? 'border-foreground bg-foreground text-background'
-                    : 'border-border hover:bg-muted'
-                }`}
-              >
-                {m['admin.users.credits_action_grant']()}
-              </button>
-              <button
-                type="button"
-                onClick={() => setCreditsAction('deduct')}
-                className={`rounded-md border px-3 py-2 text-sm font-medium transition-colors ${
-                  creditsAction === 'deduct'
-                    ? 'border-foreground bg-foreground text-background'
-                    : 'border-border hover:bg-muted'
-                }`}
-              >
-                {m['admin.users.credits_action_deduct']()}
-              </button>
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium">
-                {m['admin.users.credits_amount_label']()}
-              </label>
-              <Input
-                type="number"
-                min="1"
-                value={creditsAmount}
-                onChange={(e) => setCreditsAmount(e.target.value)}
-                placeholder="0"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-sm font-medium">
-                {m['admin.users.credits_desc_label']()}
-              </label>
-              <Input
-                value={creditsDesc}
-                onChange={(e) => setCreditsDesc(e.target.value)}
-                placeholder={m['admin.users.credits_desc_placeholder']()}
-              />
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCreditsUser(null)}>
-              {m['admin.roles.cancel']()}
-            </Button>
-            <Button
-              onClick={submitCredits}
-              disabled={creditsMutation.isPending}
-            >
-              {creditsMutation.isPending
-                ? m['admin.users.credits_submitting']()
-                : m['admin.users.credits_submit']()}
             </Button>
           </DialogFooter>
         </DialogContent>

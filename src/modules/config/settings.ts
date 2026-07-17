@@ -33,7 +33,6 @@ export function getSettingTabs(): SettingTab[] {
   return [
     { name: 'general', title: 'General' },
     { name: 'auth', title: 'Auth' },
-    { name: 'payment', title: 'Payment' },
     { name: 'email', title: 'Email' },
     { name: 'storage', title: 'Storage' },
     { name: 'ai', title: 'AI' },
@@ -58,13 +57,6 @@ export function getSettingGroups(): SettingGroup[] {
       description: 'Default role for new users',
       tab: 'general',
     },
-    {
-      name: 'credit',
-      title: 'Credits',
-      description: 'Initial credits for new users',
-      tab: 'general',
-    },
-
     // Auth
     {
       name: 'email_auth',
@@ -205,7 +197,7 @@ export function getSettingGroups(): SettingGroup[] {
       description: 'Tawk.to live chat widget',
       tab: 'customer_service',
     },
-  ];
+  ].filter((group) => group.tab !== 'payment' && group.name !== 'credit');
 }
 
 export function getSettings(): Setting[] {
@@ -568,7 +560,7 @@ export function getSettings(): Setting[] {
       name: 'alipay_notify_url',
       title: 'Notify URL (Webhook)',
       type: 'text',
-      placeholder: 'https://hersoul.cn/api/payment/notify/alipay',
+      placeholder: 'https://example.com/webhook/alipay',
       group: 'alipay',
       tab: 'payment',
     },
@@ -633,7 +625,7 @@ export function getSettings(): Setting[] {
       name: 'wechat_notify_url',
       title: 'Notify URL (Webhook)',
       type: 'text',
-      placeholder: 'https://hersoul.cn/api/payment/notify/wechat',
+      placeholder: 'https://example.com/webhook/wechat',
       group: 'wechat',
       tab: 'payment',
     },
@@ -895,5 +887,7 @@ export function getSettings(): Setting[] {
       group: 'tawk',
       tab: 'customer_service',
     },
-  ];
+  ].filter(
+    (setting) => setting.tab !== 'payment' && setting.group !== 'credit'
+  );
 }

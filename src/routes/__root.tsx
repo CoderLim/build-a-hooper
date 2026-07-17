@@ -15,8 +15,7 @@ import { ThemeProvider } from 'next-themes';
 import { envConfigs } from '@/config';
 import { getQueryClient } from '@/lib/query-client';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
-import { GoogleAdsense } from '@/components/analytics/google-adsense';
-import { GoogleAnalytics } from '@/components/analytics/google-analytics';
+import { ConsentedMarketingScripts } from '@/components/analytics/consented-marketing-scripts';
 import { Plausible } from '@/components/analytics/plausible';
 import { CustomerService } from '@/components/customer-service';
 import { GoogleOneTap } from '@/components/google-one-tap';
@@ -102,10 +101,7 @@ function RootComponent() {
         <Outlet />
         <Toaster position="top-center" richColors />
         <GoogleOneTap />
-        {analytics?.gaId ? (
-          <GoogleAnalytics measurementId={analytics.gaId} />
-        ) : null}
-        <GoogleAdsense clientId="ca-pub-8028656293202971" />
+        <ConsentedMarketingScripts gaId={analytics?.gaId || undefined} />
         {analytics?.plausibleDomain ? (
           <Plausible
             domain={analytics.plausibleDomain}
