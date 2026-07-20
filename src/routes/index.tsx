@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
+import { buildOpenGraphMeta } from '@/lib/seo/open-graph';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 import { Blog } from '@/blocks/blog';
@@ -46,17 +47,26 @@ export const Route = createFileRoute('/')({
     const locale = loaderData?.locale ?? 'en';
     const urlFor = (loc: string) =>
       localizeUrl(`${envConfigs.app_url}/`, { locale: loc as any }).href;
+    const title = m['landing.meta.title']({}, { locale: locale as any });
+    const description = m['landing.meta.description'](
+      {},
+      { locale: locale as any }
+    );
+    const canonical = urlFor(locale);
 
     return {
       meta: [
-        { title: m['landing.meta.title']({}, { locale: locale as any }) },
-        {
-          name: 'description',
-          content: m['landing.meta.description']({}, { locale: locale as any }),
-        },
+        { title },
+        { name: 'description', content: description },
+        ...buildOpenGraphMeta({
+          title,
+          description,
+          url: canonical,
+          locale,
+        }),
       ],
       links: [
-        { rel: 'canonical', href: urlFor(locale) },
+        { rel: 'canonical', href: canonical },
         ...locales.map((loc) => ({
           rel: 'alternate',
           hrefLang: loc,

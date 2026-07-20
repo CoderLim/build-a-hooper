@@ -14,6 +14,7 @@ import { ThemeProvider } from 'next-themes';
 
 import { envConfigs } from '@/config';
 import { getQueryClient } from '@/lib/query-client';
+import { buildDefaultOpenGraphMeta } from '@/lib/seo/open-graph';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 import { ConsentedMarketingScripts } from '@/components/analytics/consented-marketing-scripts';
 import { GoogleAnalytics } from '@/components/analytics/google-analytics';
@@ -70,6 +71,7 @@ export const Route = createRootRoute({
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { title: envConfigs.app_name },
         { name: 'description', content: envConfigs.app_description },
+        ...buildDefaultOpenGraphMeta(appUrl),
       ],
       links: [
         { rel: 'icon', href: '/favicon.ico', type: 'image/x-icon' },
