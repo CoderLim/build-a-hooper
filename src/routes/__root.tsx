@@ -16,6 +16,7 @@ import { envConfigs } from '@/config';
 import { getQueryClient } from '@/lib/query-client';
 import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 import { ConsentedMarketingScripts } from '@/components/analytics/consented-marketing-scripts';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 import { Plausible } from '@/components/analytics/plausible';
 import { CustomerService } from '@/components/customer-service';
 import { GoogleOneTap } from '@/components/google-one-tap';
@@ -101,7 +102,10 @@ function RootComponent() {
         <Outlet />
         <Toaster position="top-center" richColors />
         <GoogleOneTap />
-        <ConsentedMarketingScripts gaId={analytics?.gaId || undefined} />
+        {analytics?.gaId ? (
+          <GoogleAnalytics measurementId={analytics.gaId} />
+        ) : null}
+        <ConsentedMarketingScripts />
         {analytics?.plausibleDomain ? (
           <Plausible
             domain={analytics.plausibleDomain}

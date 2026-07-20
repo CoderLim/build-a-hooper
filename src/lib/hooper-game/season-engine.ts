@@ -56,14 +56,44 @@ function playerOvr(slots: BuildSlot[]): number {
   );
 }
 
-function genPlayerStats(ovr: number, won: boolean) {
+function genPlayerStats(ovr: number, won: boolean, buildSlots: BuildSlot[]) {
+  const pas = slotOverall(buildSlots, 'PAS');
+  const reb = slotOverall(buildSlots, 'REB');
+  const han = slotOverall(buildSlots, 'HAN');
   const base = ovr * 0.3;
-  const modifier = won ? 1.1 : 0.85;
+  const modifier = won ? 1.15 : 0.9;
   return {
-    pts: Math.max(8, Math.round(base + Math.random() * 12 * modifier)),
-    ast: Math.max(2, Math.round(ovr * 0.08 + Math.random() * 4)),
-    reb: Math.max(2, Math.round(ovr * 0.07 + Math.random() * 4)),
+    pts: Math.max(8, Math.round(base + Math.random() * 14 * modifier)),
+    ast: Math.max(
+      1,
+      Math.round((pas + han) * 0.06 + Math.random() * 8 * modifier)
+    ),
+    reb: Math.max(1, Math.round(reb * 0.05 + Math.random() * 6 * modifier)),
   };
+}
+
+function slotOverall(
+  slots: BuildSlot[],
+  attribute: import('./types').AttributeKey
+) {
+  const slot = slots.find(
+    (s) => s.attribute === attribute && s.locked && s.overall
+  );
+  return slot?.overall ?? 70;
+}
+
+function isTripleDouble(stats: { pts: number; ast: number; reb: number }) {
+  return stats.pts >= 10 && stats.ast >= 10 && stats.reb >= 10;
+}
+
+function countTripleDoubles(season: SeasonState) {
+  return season.games.filter(
+    (g) => g.playerStats && isTripleDouble(g.playerStats)
+  ).length;
+}
+
+function winsToCapture(round: PlayoffRound) {
+  return round === 'playin' ? 1 : 4;
 }
 
 function winChance(ovr: number): number {
@@ -103,8 +133,12 @@ function updateStandings(season: SeasonState): SeasonState {
     ...season,
     standings: { rank, wins, losses },
     awardRace: {
-      MVP: Math.round(wins * 1.2 + season.games.filter((g) => g.playerStats).length * 0.3),
-      DPOY: Math.round(season.games.filter((g) => g.result === 'W').length * 0.4),
+      MVP: Math.round(
+        wins * 1.2 + season.games.filter((g) => g.playerStats).length * 0.3
+      ),
+      DPOY: Math.round(
+        season.games.filter((g) => g.result === 'W').length * 0.4
+      ),
       Scoring: season.games.reduce((s, g) => s + (g.playerStats?.pts ?? 0), 0),
       Clutch: Math.round(wins * 0.8),
     },
@@ -120,7 +154,7 @@ export function simulateNextGame(
   const ovr = playerOvr(buildSlots);
   const won = Math.random() < winChance(ovr);
   const game = season.games[season.currentGameIndex]!;
-  const playerStats = genPlayerStats(ovr, won);
+  const playerStats = genPlayerStats(ovr, won, buildSlots);
 
   const games = season.games.map((g, i) =>
     i === season.currentGameIndex
@@ -213,8 +247,8 @@ export function simulatePlayoffGame(
     losses: current.losses + (won ? 0 : 1),
   };
 
-  const seriesWon = updated.wins >= 4;
-  const seriesLost = updated.losses >= 4;
+  const seriesWon = updated.wins >= winsToCapture(current.round);
+  const seriesLost = updated.losses >= winsToCapture(current.round);
 
   if (!seriesWon && !seriesLost) {
     return {
@@ -258,7 +292,11 @@ export function simulatePlayoffGame(
 
   return {
     ...season,
-    playoffSeries: [...season.playoffSeries.slice(0, -1), completed, nextSeries],
+    playoffSeries: [
+      ...season.playoffSeries.slice(0, -1),
+      completed,
+      nextSeries,
+    ],
   };
 }
 
@@ -271,30 +309,42 @@ export function buildSeasonStats(
   const ppg =
     played.length > 0
       ? Math.round(
-          played.reduce((s, g) => s + (g.playerStats?.pts ?? 0), 0) / played.length
+          played.reduce((s, g) => s + (g.playerStats?.pts ?? 0), 0) /
+            played.length
         )
       : 0;
   const apg =
     played.length > 0
       ? Math.round(
-          played.reduce((s, g) => s + (g.playerStats?.ast ?? 0), 0) / played.length
+          played.reduce((s, g) => s + (g.playerStats?.ast ?? 0), 0) /
+            played.length
         )
       : 0;
   const rpg =
     played.length > 0
       ? Math.round(
-          played.reduce((s, g) => s + (g.playerStats?.reb ?? 0), 0) / played.length
+          played.reduce((s, g) => s + (g.playerStats?.reb ?? 0), 0) /
+            played.length
         )
       : 0;
 
+  const tripleDoubles = countTripleDoubles(season);
   const ovr = playerOvr(buildSlots);
   const lastSeries = season.playoffSeries[season.playoffSeries.length - 1];
-  const champion =
-    lastSeries?.round === 'finals' && lastSeries.won === true;
+  const champion = lastSeries?.round === 'finals' && lastSeries.won === true;
   const madePlayoffs = season.inPlayoffs || wins >= 38;
+  const enteredViaPlayIn = season.playoffSeries[0]?.round === 'playin';
+  const wonPlayIn =
+    season.playoffSeries.some((s) => s.round === 'playin' && s.won) ?? false;
+  const finalsSeries = season.playoffSeries.find((s) => s.round === 'finals');
+  const finalsComeback =
+    champion === true &&
+    finalsSeries?.won === true &&
+    (finalsSeries.losses ?? 0) >= 3;
 
   const playoffPath = season.playoffSeries.map(
-    (s) => `${s.round.toUpperCase()}: ${s.won ? 'W' : 'L'} vs ${s.opponentAbbr} (${s.wins}-${s.losses})`
+    (s) =>
+      `${s.round.toUpperCase()}: ${s.won ? 'W' : 'L'} vs ${s.opponentAbbr} (${s.wins}-${s.losses})`
   );
 
   let playoffResult = 'Missed Playoffs';
@@ -307,10 +357,21 @@ export function buildSeasonStats(
   else if (madePlayoffs && wins >= 42) playoffResult = 'First Round Exit';
 
   const awards: string[] = [];
-  if (ovr >= 88 && wins >= 50) awards.push('MVP Candidate');
-  if (ovr >= 85) awards.push('All-NBA Team');
-  if (ppg >= 25) awards.push('Scoring Title Race');
-  if (season.awardRace.Clutch >= 40) awards.push('Clutch Player');
+  if (ppg >= 26 || season.awardRace.Scoring >= played.length * 24) {
+    awards.push('Scoring Title');
+  }
+  if (ovr >= 92 && wins >= 55) {
+    awards.push('MVP');
+  } else if (ovr >= 90 && wins >= 50) {
+    awards.push('MVP');
+  }
+  if (ovr >= 88 && season.awardRace.DPOY >= wins * 0.35) {
+    awards.push('DPOY');
+  }
+  const fmvp = champion && ovr >= 84;
+  if (fmvp) {
+    awards.push('Finals MVP');
+  }
 
   return {
     wins,
@@ -321,8 +382,11 @@ export function buildSeasonStats(
     awards,
     playoffResult,
     champion,
-    fmvp: champion,
+    fmvp,
     playoffPath,
+    tripleDoubles,
+    madeThroughPlayIn: champion && enteredViaPlayIn && wonPlayIn,
+    finalsComeback,
   };
 }
 
@@ -336,7 +400,7 @@ export function startGameCast(
   const won = game?.result
     ? game.result === 'W'
     : Math.random() < winChance(ovr);
-  const playerStats = game?.playerStats ?? genPlayerStats(ovr, won);
+  const playerStats = game?.playerStats ?? genPlayerStats(ovr, won, buildSlots);
 
   const homeScore = won
     ? 95 + Math.floor(Math.random() * 20)
@@ -350,7 +414,9 @@ export function startGameCast(
     quarter: 1,
     homeScore: Math.floor(homeScore * 0.2),
     awayScore: Math.floor(awayScore * 0.2),
-    plays: [`Q1 · ${PLAY_BY_PLAY[Math.floor(Math.random() * PLAY_BY_PLAY.length)]}`],
+    plays: [
+      `Q1 · ${PLAY_BY_PLAY[Math.floor(Math.random() * PLAY_BY_PLAY.length)]}`,
+    ],
     complete: false,
     won,
     playerStats,

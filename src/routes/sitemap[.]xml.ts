@@ -7,6 +7,7 @@ import { getLocalPosts, mergePosts } from '@/content/posts';
 const STATIC_PATHS = [
   '',
   '/game',
+  '/achievements',
   '/leaderboard',
   '/blog',
   '/privacy-policy',
@@ -55,7 +56,11 @@ export const Route = createFileRoute('/sitemap.xml')({
         const entries: Entry[] = STATIC_PATHS.map((path) => ({
           path,
           changeFrequency:
-            path === '/blog' || path === '/leaderboard' ? 'daily' : 'weekly',
+            path === '/blog' ||
+            path === '/leaderboard' ||
+            path === '/achievements'
+              ? 'daily'
+              : 'weekly',
           priority: path === '' ? 1 : path === '/game' ? 0.9 : 0.8,
         }));
 

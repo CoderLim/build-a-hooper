@@ -31,6 +31,7 @@ export interface SubmitRunInput {
   overall: number;
   buildSlots: BuildSlot[];
   seasonStats: SeasonStats;
+  rookieCount: number;
 }
 
 export interface HooperRunView {
@@ -52,6 +53,11 @@ export interface HooperRunView {
   awards: string[];
   legacyPoints: number;
   buildSummary: BuildSummaryItem[];
+  rookieCount: number;
+  tripleDoubles: number;
+  madeThroughPlayIn: boolean;
+  finalsComeback: boolean;
+  playoffPath: string[];
 }
 
 export interface HooperLegacyView {

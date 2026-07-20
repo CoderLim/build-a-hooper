@@ -1,5 +1,11 @@
 import { clearGameState } from '@/lib/hooper-game/persistence';
-import { ATTRIBUTE_KEYS, GRADE_VALUES, POSITIONS, REROLLS_BY_MODE } from './constants';
+
+import {
+  ATTRIBUTE_KEYS,
+  GRADE_VALUES,
+  POSITIONS,
+  REROLLS_BY_MODE,
+} from './constants';
 import { CAREER_TEAMS, TEAM_SEASONS } from './data';
 import { createSeasonState } from './season-engine';
 import type {
@@ -25,7 +31,10 @@ export function createInitialState(): GameState {
     spinDisplayAbbr: null,
     rerollsLeft: 0,
     lockedPicks: [],
-    buildSlots: ATTRIBUTE_KEYS.map((attribute) => ({ attribute, locked: false })),
+    buildSlots: ATTRIBUTE_KEYS.map((attribute) => ({
+      attribute,
+      locked: false,
+    })),
     usedPlayerNames: new Set(),
     selectedPlayerId: null,
     selectedAttribute: null,
@@ -76,7 +85,10 @@ export function confirmMode(state: GameState): GameState {
   };
 }
 
-export function selectPosition(state: GameState, position: Position): GameState {
+export function selectPosition(
+  state: GameState,
+  position: Position
+): GameState {
   return { ...state, position };
 }
 
@@ -131,7 +143,10 @@ export function rerollTeam(state: GameState): GameState {
   };
 }
 
-export function isPlayerNameUsed(state: GameState, playerName: string): boolean {
+export function isPlayerNameUsed(
+  state: GameState,
+  playerName: string
+): boolean {
   return state.usedPlayerNames.has(playerName);
 }
 
@@ -202,6 +217,7 @@ export function lockPick(state: GameState): GameState {
           overall,
           playerName: player.name,
           round,
+          isRookie: player.rookie ?? false,
         }
       : slot
   );
@@ -302,7 +318,9 @@ export function positionVisible(
   return positionRevealed;
 }
 
-export function getGameStep(screen: GameState['screen']): import('./types').GameStep {
+export function getGameStep(
+  screen: GameState['screen']
+): import('./types').GameStep {
   switch (screen) {
     case 'landing':
     case 'mode-select':

@@ -17,6 +17,9 @@ const seasonStatsSchema = z.object({
   champion: z.boolean(),
   fmvp: z.boolean(),
   playoffPath: z.array(z.string()).optional(),
+  tripleDoubles: z.number().int().min(0).default(0),
+  madeThroughPlayIn: z.boolean().default(false),
+  finalsComeback: z.boolean().default(false),
 });
 
 const buildSlotSchema = z.object({
@@ -26,6 +29,7 @@ const buildSlotSchema = z.object({
   overall: z.number().optional(),
   playerName: z.string().optional(),
   round: z.number().optional(),
+  isRookie: z.boolean().optional(),
 });
 
 const submitRunSchema = z.object({
@@ -40,6 +44,7 @@ const submitRunSchema = z.object({
   overall: z.number().int().min(0).max(99),
   buildSlots: z.array(buildSlotSchema),
   seasonStats: seasonStatsSchema,
+  rookieCount: z.number().int().min(0).default(0),
 });
 
 async function GET({ request }: { request: Request }) {

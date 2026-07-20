@@ -120,7 +120,7 @@ const DEMO_SEASON_STATS: SeasonStats = {
   ppg: 26,
   apg: 9,
   rpg: 6,
-  awards: ['All-NBA First Team', 'MVP Finalist'],
+  awards: ['MVP', 'Finals MVP'],
   playoffResult: 'NBA Champion',
   champion: true,
   fmvp: true,
@@ -129,6 +129,9 @@ const DEMO_SEASON_STATS: SeasonStats = {
     'Semifinals: Beat Nuggets 4-1',
     'Finals: Beat Celtics 4-3',
   ],
+  tripleDoubles: 2,
+  madeThroughPlayIn: false,
+  finalsComeback: true,
 };
 
 export function isDevCardPreviewActive(): boolean {

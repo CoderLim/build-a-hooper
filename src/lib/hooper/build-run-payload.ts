@@ -27,6 +27,10 @@ export function buildSubmitRunInput(input: {
   buildSlots: BuildSlot[];
   seasonStats: SeasonStats;
 }): SubmitRunInput {
+  const rookieCount = input.buildSlots.filter(
+    (slot) => slot.locked && slot.isRookie
+  ).length;
+
   return {
     mode: input.mode,
     position: input.position,
@@ -36,6 +40,7 @@ export function buildSubmitRunInput(input: {
     overall: getOverallRating(input.buildSlots),
     buildSlots: input.buildSlots,
     seasonStats: input.seasonStats,
+    rookieCount,
   };
 }
 

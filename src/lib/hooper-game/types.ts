@@ -63,6 +63,7 @@ export interface RosterPlayer {
   positions: Position[];
   attributes: PlayerAttributes;
   overall: number;
+  rookie?: boolean;
 }
 
 export interface TeamSeason {
@@ -71,6 +72,8 @@ export interface TeamSeason {
   name: string;
   tagline: string;
   roster: RosterPlayer[];
+  hasWonTitle?: boolean;
+  championships?: number;
 }
 
 export interface LockedPick {
@@ -91,6 +94,7 @@ export interface BuildSlot {
   overall?: number;
   playerName?: string;
   round?: number;
+  isRookie?: boolean;
 }
 
 export interface SeasonGame {
@@ -144,6 +148,9 @@ export interface SeasonStats {
   champion: boolean;
   fmvp: boolean;
   playoffPath: string[];
+  tripleDoubles: number;
+  madeThroughPlayIn: boolean;
+  finalsComeback: boolean;
 }
 
 export interface GameState {

@@ -19,6 +19,11 @@ import type {
   SubmitRunInput,
 } from '@/modules/hooper/types';
 import { getUuid } from '@/lib/hash';
+import {
+  evaluateAchievements,
+  lockedAchievementCatalog,
+  type AchievementsResult,
+} from '@/lib/hooper/achievements';
 import { buildSummaryFromSlots } from '@/lib/hooper/build-run-payload';
 
 function parseJsonArray<T>(raw: string): T[] {
@@ -50,6 +55,11 @@ function toRunView(row: HooperRun): HooperRunView {
     awards: parseJsonArray<string>(row.awards),
     legacyPoints: row.legacyPoints,
     buildSummary: parseJsonArray(row.buildSummary),
+    rookieCount: row.rookieCount,
+    tripleDoubles: row.tripleDoubles,
+    madeThroughPlayIn: row.madeThroughPlayIn,
+    finalsComeback: row.finalsComeback,
+    playoffPath: parseJsonArray<string>(row.playoffPath),
   };
 }
 
@@ -129,6 +139,11 @@ export async function submitRun(
       awards: JSON.stringify(seasonStats.awards),
       legacyPoints,
       buildSummary: JSON.stringify(buildSummary),
+      rookieCount: input.rookieCount,
+      tripleDoubles: seasonStats.tripleDoubles,
+      madeThroughPlayIn: seasonStats.madeThroughPlayIn,
+      finalsComeback: seasonStats.finalsComeback,
+      playoffPath: JSON.stringify(seasonStats.playoffPath),
     });
 
     const existing = await tx
@@ -350,6 +365,27 @@ export async function getPublicProfile(
     legacy: toLegacyView(legacy, rank),
     recentRuns,
   };
+}
+
+export async function getAllUserRuns(userId: string): Promise<HooperRunView[]> {
+  const rows = await db()
+    .select()
+    .from(hooperRun)
+    .where(eq(hooperRun.userId, userId))
+    .orderBy(desc(hooperRun.completedAt));
+
+  return rows.map(toRunView);
+}
+
+export async function getMyAchievements(
+  userId: string | null
+): Promise<AchievementsResult> {
+  if (!userId) {
+    return lockedAchievementCatalog();
+  }
+
+  const runs = await getAllUserRuns(userId);
+  return evaluateAchievements(runs);
 }
 
 /** Recalculate win_rate for all legacy rows from hooper_run totals. */

@@ -724,6 +724,15 @@ export const hooperRun = table(
     awards: text('awards').notNull().default('[]'),
     legacyPoints: integer('legacy_points').notNull().default(0),
     buildSummary: text('build_summary').notNull().default('[]'),
+    rookieCount: integer('rookie_count').notNull().default(0),
+    tripleDoubles: integer('triple_doubles').notNull().default(0),
+    madeThroughPlayIn: integer('made_through_play_in', { mode: 'boolean' })
+      .notNull()
+      .default(false),
+    finalsComeback: integer('finals_comeback', { mode: 'boolean' })
+      .notNull()
+      .default(false),
+    playoffPath: text('playoff_path').notNull().default('[]'),
   },
   (t) => [
     index('idx_hooper_run_user_completed').on(t.userId, t.completedAt),
