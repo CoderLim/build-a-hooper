@@ -69,3 +69,4 @@ package-lock.json
 
 # local git worktrees
 .worktrees/
+.superpowers/
