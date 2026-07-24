@@ -14,6 +14,7 @@ function canShowAdsense(pathname: string): boolean {
   return (
     path === '/' ||
     path === '/game' ||
+    path === '/achievements' ||
     path === '/blog' ||
     path.startsWith('/blog/')
   );

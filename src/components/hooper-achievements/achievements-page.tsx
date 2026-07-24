@@ -14,6 +14,7 @@ import type {
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 import { useHooperAchievements } from '@/hooks/use-hooper-achievements';
+import { AchievementsGuide } from '@/blocks/achievements-guide';
 import {
   GameButton,
   GameEyebrow,
@@ -356,6 +357,10 @@ export function AchievementsPage() {
             ))}
           </div>
         )}
+
+        <div className="mt-12">
+          <AchievementsGuide />
+        </div>
       </main>
     </GameShell>
   );
