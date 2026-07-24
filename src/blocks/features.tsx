@@ -32,9 +32,9 @@ export function Features() {
           {FEATURES.map(({ key, icon: Icon }) => (
             <article
               key={key}
-              className="border-border bg-card/70 rounded-3xl border p-6 shadow-sm"
+              className="border-border bg-card rounded-3xl border p-6"
             >
-              <div className="bg-foreground text-background mb-5 inline-flex size-11 items-center justify-center rounded-2xl">
+              <div className="bg-primary text-primary-foreground mb-5 inline-flex size-11 items-center justify-center rounded-2xl">
                 <Icon className="size-5" />
               </div>
               <h3 className="text-lg font-semibold">

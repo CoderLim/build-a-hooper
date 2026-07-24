@@ -24,7 +24,7 @@ export function BlogCard({
   return (
     <Link
       href={href}
-      className="group border-border bg-card hover:border-foreground/20 relative flex flex-col overflow-hidden rounded-2xl border transition-all hover:shadow-sm"
+      className="group border-border bg-card hover:border-primary/50 relative flex flex-col overflow-hidden rounded-2xl border transition-all"
     >
       {image && (
         <img

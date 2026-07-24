@@ -19,7 +19,7 @@ export function HowItWorks() {
           {STEP_KEYS.map((key) => (
             <article
               key={key}
-              className="border-border bg-background rounded-3xl border p-6"
+              className="border-border bg-card rounded-3xl border p-6"
             >
               <h3 className="text-xl font-semibold">
                 {tDynamic(`landing.how.${key}.title`)}

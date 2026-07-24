@@ -23,9 +23,9 @@ export function Screenshots() {
           {SHOTS.map(({ key, src }) => (
             <figure
               key={key}
-              className="border-border bg-background overflow-hidden rounded-3xl border shadow-sm"
+              className="border-border bg-card overflow-hidden rounded-3xl border"
             >
-              <div className="bg-muted/40 aspect-[4/3] overflow-hidden">
+              <div className="bg-muted aspect-[4/3] overflow-hidden">
                 <img
                   src={src}
                   alt={tDynamic(`landing.screenshots.${key}.alt`)}
