@@ -1277,5 +1277,10 @@
   "achievements.guide.table.special_note": "稀有赛季故事——弱旅奇迹、特殊球队队史首冠等。",
   "achievements.guide.table.goat_pts": "300",
   "achievements.guide.table.goat_note": "天花板纪录，例如 73-9 俱乐部与总决赛 3-1 翻盘。",
-  "achievements.guide.table_outro": "全图总计 4200 点。成就点不会并入排行榜 Legacy——把本页当作清单生涯，把排行榜当作排名生涯。"
+  "achievements.guide.table_outro": "全图总计 4200 点。成就点不会并入排行榜 Legacy——把本页当作清单生涯，把排行榜当作排名生涯。",
+  "landing.nav.how_to_play": "上手指南",
+  "landing.nav.modes": "游戏模式",
+  "landing.nav.best_builds": "位置构筑",
+  "landing.nav.attributes": "属性指南",
+  "landing.footer.guides": "攻略"
 }

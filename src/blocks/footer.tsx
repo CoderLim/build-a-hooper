@@ -6,13 +6,9 @@ export function Footer() {
     {
       title: m['landing.footer.explore'](),
       links: [
-        {
-          label: m['landing.nav.play'](),
-          href: '/game',
-        },
+        { label: m['landing.nav.play'](), href: '/game' },
         { href: '/leaderboard', label: m['landing.nav.leaderboard']() },
-        { label: m['landing.nav.guide'](), href: '/#guide' },
-        { label: m['landing.nav.faq'](), href: '/#faq' },
+        { href: '/achievements', label: m['landing.nav.achievements']() },
         { label: m['landing.footer.blog'](), href: '/blog' },
         {
           label: m['landing.footer.chrome_extension'](),
@@ -22,6 +18,16 @@ export function Footer() {
           label: m['landing.footer.github'](),
           href: 'https://github.com/CoderLim/build-a-hooper-extension',
         },
+      ],
+    },
+    {
+      title: m['landing.footer.guides'](),
+      links: [
+        { label: m['landing.nav.how_to_play'](), href: '/how-to-play' },
+        { label: m['landing.nav.modes'](), href: '/modes' },
+        { label: m['landing.nav.best_builds'](), href: '/best-builds' },
+        { label: m['landing.nav.attributes'](), href: '/attributes' },
+        { label: m['landing.nav.faq'](), href: '/#faq' },
       ],
     },
     {

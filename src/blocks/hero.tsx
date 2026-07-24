@@ -27,11 +27,11 @@ export function Hero() {
         height={1081}
         decoding="async"
         fetchPriority="high"
-        className="absolute inset-0 -z-20 size-full object-cover object-[center_30%]"
+        className="absolute inset-0 -z-20 size-full object-cover object-[center_30%] opacity-60"
       />
       <div
         aria-hidden
-        className="to-background absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-black/40"
+        className="to-background absolute inset-0 -z-10 bg-gradient-to-b from-black/45 via-black/55"
       />
 
       <div className="relative mx-auto max-w-3xl space-y-8 text-center">

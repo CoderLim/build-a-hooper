@@ -1277,5 +1277,10 @@
   "achievements.guide.table.special_note": "Rare season stories — underdog miracles, specialty franchise banners.",
   "achievements.guide.table.goat_pts": "300",
   "achievements.guide.table.goat_note": "Ceiling records such as 73-9 Club and 3-1 Finals comebacks.",
-  "achievements.guide.table_outro": "Full board totals 4200 points. Achievement points do not add into leaderboard Legacy — treat this page as the checklist career, and the leaderboard as the ranked career."
+  "achievements.guide.table_outro": "Full board totals 4200 points. Achievement points do not add into leaderboard Legacy — treat this page as the checklist career, and the leaderboard as the ranked career.",
+  "landing.nav.how_to_play": "Play Guide",
+  "landing.nav.modes": "Game Modes",
+  "landing.nav.best_builds": "Position Builds",
+  "landing.nav.attributes": "Attribute Guide",
+  "landing.footer.guides": "Guides"
 }

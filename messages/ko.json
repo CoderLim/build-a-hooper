@@ -1130,5 +1130,10 @@
   "achievements.guide.table.special_note": "희귀 시즌 스토리 — 언더독 기적, 특수 프랜차이즈 첫 우승.",
   "achievements.guide.table.goat_pts": "300",
   "achievements.guide.table.goat_note": "73-9 Club, 3-1 파이널 역전 같은 천장 기록.",
-  "achievements.guide.table_outro": "전체 보드 합계 4200포인트. 업적 포인트는 리더보드 Legacy에 합산되지 않습니다 — 이 페이지는 체크리스트 커리어, 리더보드는 순위 커리어입니다."
+  "achievements.guide.table_outro": "전체 보드 합계 4200포인트. 업적 포인트는 리더보드 Legacy에 합산되지 않습니다 — 이 페이지는 체크리스트 커리어, 리더보드는 순위 커리어입니다.",
+  "landing.nav.how_to_play": "플레이 가이드",
+  "landing.nav.modes": "게임 모드",
+  "landing.nav.best_builds": "포지션 빌드",
+  "landing.nav.attributes": "능력치 가이드",
+  "landing.footer.guides": "가이드"
 }

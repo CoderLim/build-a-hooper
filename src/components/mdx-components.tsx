@@ -1,4 +1,8 @@
-import type { AnchorHTMLAttributes, HTMLAttributes } from 'react';
+import type {
+  AnchorHTMLAttributes,
+  HTMLAttributes,
+  ImgHTMLAttributes,
+} from 'react';
 import type { MDXComponents } from 'mdx/types';
 
 import { cn } from '@/lib/utils';
@@ -93,5 +97,57 @@ export const mdxComponents: MDXComponents = {
   ),
   hr: ({ className, ...props }: HTMLAttributes<HTMLHRElement>) => (
     <hr className={cn('border-border my-8', className)} {...props} />
+  ),
+  img: ({ className, ...props }: ImgHTMLAttributes<HTMLImageElement>) => (
+    // eslint-disable-next-line jsx-a11y/alt-text -- alt comes from MDX
+    <img
+      className={cn(
+        'border-border my-6 h-auto w-full rounded-xl border object-cover shadow-sm',
+        className
+      )}
+      loading="lazy"
+      {...props}
+    />
+  ),
+  table: ({ className, ...props }: HTMLAttributes<HTMLTableElement>) => (
+    <div className="border-border my-6 w-full overflow-x-auto rounded-lg border">
+      <table
+        className={cn(
+          'w-full min-w-[28rem] border-collapse text-sm',
+          className
+        )}
+        {...props}
+      />
+    </div>
+  ),
+  thead: ({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) => (
+    <thead className={cn('bg-muted/50', className)} {...props} />
+  ),
+  tbody: ({ className, ...props }: HTMLAttributes<HTMLTableSectionElement>) => (
+    <tbody className={cn('divide-border divide-y', className)} {...props} />
+  ),
+  tr: ({ className, ...props }: HTMLAttributes<HTMLTableRowElement>) => (
+    <tr
+      className={cn('border-border border-b last:border-0', className)}
+      {...props}
+    />
+  ),
+  th: ({ className, ...props }: HTMLAttributes<HTMLTableCellElement>) => (
+    <th
+      className={cn(
+        'text-foreground px-3 py-2.5 text-left text-xs font-semibold tracking-wide uppercase',
+        className
+      )}
+      {...props}
+    />
+  ),
+  td: ({ className, ...props }: HTMLAttributes<HTMLTableCellElement>) => (
+    <td
+      className={cn(
+        'text-foreground/85 px-3 py-2.5 align-top leading-6',
+        className
+      )}
+      {...props}
+    />
   ),
 };

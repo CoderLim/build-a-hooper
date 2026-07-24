@@ -1130,5 +1130,10 @@
   "achievements.guide.table.special_note": "希少シーズン物語 — アンダードッグ奇跡、特殊フランチャイズ初優勝。",
   "achievements.guide.table.goat_pts": "300",
   "achievements.guide.table.goat_note": "73-9 Club や 3-1 ファイナル逆転などの天井記録。",
-  "achievements.guide.table_outro": "全ボード合計 4200 ポイント。アチーブメント点はリーダーボード Legacy に加算されません — このページはチェックリストキャリア、リーダーボードは順位キャリアです。"
+  "achievements.guide.table_outro": "全ボード合計 4200 ポイント。アチーブメント点はリーダーボード Legacy に加算されません — このページはチェックリストキャリア、リーダーボードは順位キャリアです。",
+  "landing.nav.how_to_play": "プレイガイド",
+  "landing.nav.modes": "ゲームモード",
+  "landing.nav.best_builds": "ポジションビルド",
+  "landing.nav.attributes": "能力値ガイド",
+  "landing.footer.guides": "ガイド"
 }

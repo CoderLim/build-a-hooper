@@ -5,6 +5,7 @@ import mdx from '@mdx-js/rollup';
 import tailwindcss from '@tailwindcss/vite';
 import viteReact from '@vitejs/plugin-react';
 import { nitro } from 'nitro/vite';
+import remarkGfm from 'remark-gfm';
 import { defineConfig } from 'vite';
 
 import { loadEnvFiles } from './src/lib/env';
@@ -61,7 +62,14 @@ export default defineConfig({
   },
   plugins: [
     // MDX must run before the react plugin so JSX in compiled MDX gets transformed.
-    { enforce: 'pre', ...mdx({ providerImportSource: '@mdx-js/react' }) },
+    // remark-gfm enables GitHub-flavored markdown (tables, strikethrough, autolinks).
+    {
+      enforce: 'pre',
+      ...mdx({
+        providerImportSource: '@mdx-js/react',
+        remarkPlugins: [remarkGfm],
+      }),
+    },
     tailwindcss(),
     paraglideVitePlugin({
       project: './project.inlang',
