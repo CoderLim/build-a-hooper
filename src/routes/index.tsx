@@ -21,7 +21,7 @@ function HomePage() {
 
   return (
     <div className="bg-background text-foreground flex min-h-screen flex-col">
-      <Header />
+      <Header overlay />
       <main>
         <Hero />
         <Features />

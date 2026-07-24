@@ -4,7 +4,6 @@ import { Link } from '@/core/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 import { buttonVariants } from '@/components/ui/button';
-import { DotPattern } from '@/components/ui/dot-pattern';
 
 const STATS = [
   'landing.hero.stat.attributes',
@@ -19,22 +18,30 @@ export function Hero() {
   return (
     <section
       id="play"
-      className="relative isolate flex flex-col items-center justify-center overflow-hidden px-4 pt-20 pb-16 sm:pt-28 sm:pb-24"
+      className="relative isolate flex min-h-[min(100svh,56rem)] flex-col items-center justify-center overflow-hidden px-4 pt-24 pb-16 sm:pt-28 sm:pb-24"
     >
-      <DotPattern
-        className={cn(
-          '[mask-image:radial-gradient(ellipse_at_center,white,transparent_75%)]',
-          'text-foreground/10'
-        )}
+      <img
+        src="/imgs/hero-bg.webp"
+        alt=""
+        width={1920}
+        height={1081}
+        decoding="async"
+        fetchPriority="high"
+        className="absolute inset-0 -z-20 size-full object-cover object-[center_30%]"
       />
+      <div
+        aria-hidden
+        className="to-background absolute inset-0 -z-10 bg-gradient-to-b from-black/25 via-black/40"
+      />
+
       <div className="relative mx-auto max-w-3xl space-y-8 text-center">
         <p className="text-primary/90 text-xs font-bold tracking-[0.28em] uppercase">
           {m['landing.hero.eyebrow']()}
         </p>
-        <h1 className="font-serif text-4xl leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="font-serif text-4xl leading-[1.05] tracking-tight text-white drop-shadow-[0_2px_24px_rgba(0,0,0,0.55)] sm:text-5xl lg:text-6xl">
           {m['landing.hero.headline']()}
         </h1>
-        <p className="text-muted-foreground mx-auto max-w-2xl text-base leading-8 sm:text-lg">
+        <p className="mx-auto max-w-2xl text-base leading-8 text-white/80 sm:text-lg">
           {m['landing.hero.subheadline']()}
         </p>
         <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -54,7 +61,7 @@ export function Hero() {
             rel="noopener noreferrer"
             className={cn(
               buttonVariants({ variant: 'outline', size: 'lg' }),
-              'relative gap-2 rounded-full border-white/10 bg-white/[0.04] px-6 transition-transform hover:-translate-y-0.5 hover:border-orange-300/60 hover:bg-white/[0.08]'
+              'relative gap-2 rounded-full border-white/20 bg-black/30 px-6 text-white backdrop-blur-sm transition-transform hover:-translate-y-0.5 hover:border-orange-300/60 hover:bg-black/45'
             )}
           >
             <span className="absolute -top-2 -right-1 z-10">
@@ -81,7 +88,7 @@ export function Hero() {
           {STATS.map((key) => (
             <div
               key={key}
-              className="border-border bg-card rounded-2xl border px-4 py-4 text-center"
+              className="rounded-2xl border border-white/15 bg-black/35 px-4 py-4 text-center backdrop-blur-sm"
             >
               <div className="text-primary text-sm font-semibold sm:text-base">
                 {m[key]()}

@@ -1,12 +1,11 @@
-'use client';
-
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from '@tanstack/react-router';
 import { Menu, X } from 'lucide-react';
 
 import { useSession } from '@/core/auth/client';
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
+import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 import { LocaleSelector } from '@/components/locale-selector';
 import { SiteUserMenu } from '@/components/site-user-menu';
@@ -22,14 +21,20 @@ export interface NavLink {
 /** Off-site URLs render as plain <a>; internal paths use the locale-aware Link. */
 const isExternalHref = (href: string) => /^https?:\/\//.test(href);
 
+const SCROLL_OPAQUE_AT = 24;
+
 export function SiteHeader({
   navLinks,
   showAuthLinks = false,
+  /** Sit over the hero (fixed). Transparent at top, solid after scroll. */
+  overlay = false,
 }: {
   navLinks?: NavLink[];
   showAuthLinks?: boolean;
+  overlay?: boolean;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
   const location = useLocation();
@@ -39,8 +44,26 @@ export function SiteHeader({
     return { signIn: `/sign-in${query}`, signUp: `/sign-up${query}` };
   }, [location.pathname, location.searchStr]);
 
+  useEffect(() => {
+    if (!overlay) return;
+    const update = () => setScrolled(window.scrollY > SCROLL_OPAQUE_AT);
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    return () => window.removeEventListener('scroll', update);
+  }, [overlay]);
+
+  const solid = !overlay || scrolled || mobileOpen;
+
   return (
-    <header className="bg-background/80 sticky top-0 z-50 w-full backdrop-blur-sm">
+    <header
+      className={cn(
+        'z-50 w-full transition-[background-color,backdrop-filter,border-color] duration-300',
+        overlay ? 'fixed inset-x-0 top-0' : 'sticky top-0',
+        solid
+          ? 'border-border/60 bg-background/95 border-b backdrop-blur-md'
+          : 'border-b border-transparent bg-transparent backdrop-blur-none'
+      )}
+    >
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         {/* Brand */}
         <Link href="/" className="flex items-center gap-2.5">
