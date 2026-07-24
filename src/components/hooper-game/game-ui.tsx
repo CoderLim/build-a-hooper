@@ -11,11 +11,24 @@ export function GameShell({ children, className }: GameShellProps) {
   return (
     <div
       className={cn(
-        'min-h-screen bg-neutral-950 text-white selection:bg-orange-300/30',
+        'relative isolate min-h-screen overflow-hidden bg-neutral-950 text-white selection:bg-orange-300/30',
         className
       )}
     >
-      {children}
+      <img
+        src="/imgs/hero-bg.webp"
+        alt=""
+        width={1920}
+        height={1081}
+        decoding="async"
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-20 size-full scale-110 object-cover object-center opacity-50 blur-sm"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 bg-neutral-950/75"
+      />
+      <div className="relative">{children}</div>
     </div>
   );
 }
@@ -95,8 +108,9 @@ export function GameCard({
       className={cn(
         'rounded-2xl border border-white/10 bg-white/[0.03] p-5 text-left transition',
         onClick &&
-          'hover:border-orange-300/50 hover:bg-white/[0.06] cursor-pointer',
-        active && 'border-orange-300/70 bg-orange-300/[0.08] ring-1 ring-orange-300/30',
+          'cursor-pointer hover:border-orange-300/50 hover:bg-white/[0.06]',
+        active &&
+          'border-orange-300/70 bg-orange-300/[0.08] ring-1 ring-orange-300/30',
         className
       )}
     >
