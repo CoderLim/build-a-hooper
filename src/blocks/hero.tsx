@@ -3,6 +3,7 @@ import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { Link } from '@/core/i18n/navigation';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
+import { AdsterraBanner } from '@/components/ads/adsterra-banner';
 import { buttonVariants } from '@/components/ui/button';
 
 const STATS = [
@@ -96,6 +97,7 @@ export function Hero() {
             </div>
           ))}
         </div>
+        <AdsterraBanner />
       </div>
     </section>
   );
