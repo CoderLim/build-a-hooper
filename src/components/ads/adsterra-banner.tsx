@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 const ADSTERRA_KEY = '0f5070e54410fe3ddcbada4c0fd0d684';
 const ADSTERRA_INVOKE_URL = `https://www.highperformanceformat.com/${ADSTERRA_KEY}/invoke.js`;
 
@@ -9,40 +11,42 @@ const ADSTERRA_OPTIONS = {
   params: {},
 } as const;
 
-const ADSTERRA_FRAME_HTML = `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=320, initial-scale=1">
-    <style>
-      html, body {
-        width: 320px;
-        height: 50px;
-        margin: 0;
-        overflow: hidden;
-        background: transparent;
-      }
-    </style>
-  </head>
-  <body>
-    <script>window.atOptions = ${JSON.stringify(ADSTERRA_OPTIONS)};</script>
-    <script src="${ADSTERRA_INVOKE_URL}"></script>
-  </body>
-</html>`;
-
-const ADSTERRA_FRAME_SRC = `data:text/html;charset=utf-8,${encodeURIComponent(
-  ADSTERRA_FRAME_HTML
-)}`;
+declare global {
+  interface Window {
+    atOptions?: typeof ADSTERRA_OPTIONS;
+  }
+}
 
 export function AdsterraBanner() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    window.atOptions = ADSTERRA_OPTIONS;
+
+    const script = document.createElement('script');
+    script.src = ADSTERRA_INVOKE_URL;
+    script.async = false;
+    container.appendChild(script);
+
+    return () => {
+      script.remove();
+      container.replaceChildren();
+
+      if (window.atOptions === ADSTERRA_OPTIONS) {
+        delete window.atOptions;
+      }
+    };
+  }, []);
+
   return (
-    <iframe
-      title="Advertisement"
-      src={ADSTERRA_FRAME_SRC}
-      sandbox="allow-scripts allow-same-origin"
-      width={320}
-      height={50}
-      className="mx-auto block h-[50px] w-[320px] overflow-hidden border-0"
-    />
+    <div
+      className="mx-auto flex h-[50px] w-[320px] items-center justify-center overflow-hidden"
+      aria-label="Advertisement"
+    >
+      <div ref={containerRef} className="h-[50px] w-[320px]" />
+    </div>
   );
 }
