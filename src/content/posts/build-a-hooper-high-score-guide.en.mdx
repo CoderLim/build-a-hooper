@@ -1,0 +1,191 @@
+export const meta = {
+  title: 'Build a Hooper Basketball High-Score Guide',
+  description:
+    'Build a Hooper basketball scoring explained: build a player NBA-style, reach 95 OVR, win the title, and earn up to 160 Legacy points.',
+  created_at: '2026-07-27',
+  author_name: 'Build a Hooper',
+  author_image: '/logo.png',
+  image: '/imgs/screenshots/draft-spin.png',
+};
+
+# Build a Hooper Basketball High-Score Guide
+
+![Build a Hooper basketball draft room with a team spin, player list, and open attribute slots](/imgs/screenshots/draft-spin.png)
+
+There are two scores hiding inside every Build a Hooper run. Your **OVR** grades the 13 attributes on the finished card. Your **Legacy points** grade what that card did with an 82-game season.
+
+That distinction changes the whole strategy. A 95 OVR card is worth a 20-point rating bonus. An NBA championship is worth 120. If you came here through a **build a hooper basketball** search looking for one shortcut, this is it:
+
+> Build a card that can clear 38 wins, then chase the ring. The prettiest card is not always the highest-scoring run.
+
+## The maximum score is 160 Legacy points
+
+Every saved run starts with 10 Legacy points. From there, the game adds one regular-season bonus, one playoff-result bonus, and one OVR bonus.
+
+| Result                               | Legacy points |
+| ------------------------------------ | ------------: |
+| Finish and save the run              |            10 |
+| Win at least 38 regular-season games |           +10 |
+| Exit in the Play-In                  |           +20 |
+| Exit in the first round              |           +30 |
+| Reach the conference semifinals      |           +45 |
+| Reach the conference finals          |           +60 |
+| Lose in the NBA Finals               |           +90 |
+| Win the NBA championship             |          +120 |
+| Finish at 90–94 OVR                  |           +10 |
+| Finish at 95+ OVR                    |           +20 |
+
+The playoff bonuses do not stack. A champion gets the 120-point championship bonus, not every earlier round added together. The same rule applies to OVR: 95+ earns 20 points instead of the 90+ bonus.
+
+The best possible saved run is therefore:
+
+```text
+10 base + 10 for 38 wins + 120 for the title + 20 for 95+ OVR = 160
+```
+
+Awards such as MVP, DPOY, Scoring Title, and Finals MVP are tracked on your profile, but they do not add directly to Legacy points. Achievement points are also a separate system.
+
+## OVR controls your chance to win
+
+The current season engine takes the average rating of all 13 locked attributes and turns it into a game-by-game win chance. Regular-season games use:
+
+```text
+win chance = (OVR - 60) / 50
+```
+
+The result is limited to a 25% minimum and an 85% maximum. Playoff games add five percentage points. Each game still contains randomness, so the table below is a guide, not a promised record.
+
+| OVR | Regular-season win chance | Expected wins over 82 games |
+| --: | ------------------------: | --------------------------: |
+|  80 |                       40% |                          33 |
+|  85 |                       50% |                          41 |
+|  90 |                       60% |                          49 |
+|  95 |                       70% |                          57 |
+|  97 |                       74% |                          61 |
+
+This explains the two practical thresholds:
+
+- **38 wins** gets you into the postseason and adds 10 Legacy points.
+- **42 wins** skips the Play-In and starts you in the first round.
+
+An 85 OVR build sits close to the dangerous line. A 90 OVR build has more room for a bad stretch. A 95 OVR build is strong, but a 70% chance can still lose four games in a playoff series. There is no undefeated switch.
+
+## How to reach 90 or 95 OVR
+
+Build a Hooper gives every attribute equal weight in the displayed OVR. 3PT does not count more than REB. CLU does not receive a secret multiplier. The final number is the rounded average of these 13 grades:
+
+**3PT · MID · FIN · DNK · HAN · PAS · PDEF · IDEF · BLK · REB · ATH · STR · CLU**
+
+The grade values are:
+
+| Grade | Value | Grade | Value |
+| ----- | ----: | ----- | ----: |
+| A+    |    97 | B     |    83 |
+| A     |    93 | B-    |    80 |
+| A-    |    90 | C+    |    77 |
+| B+    |    87 | C     |    73 |
+
+Thirteen A- grades produce exactly 90 OVR. Reaching 95 is much tighter: six A+ grades and seven A grades average 94.85, which rounds to 95.
+
+That math leads to a simple draft rule:
+
+1. Take A+ and A grades early when they fill an open slot.
+2. Treat A- as a safe floor, not a disappointing result.
+3. Do not lock a B grade early just because it fits your favorite archetype.
+4. Patch the awkward attributes before the final rounds leave you no choice.
+
+The last point matters. It is easy to fill 3PT, FIN, HAN, and ATH because star guards and wings advertise those strengths. IDEF, BLK, REB, and STR become expensive when you ignore every big until the board is nearly full.
+
+## Build a player NBA-style: give the ratings a job
+
+Searches such as **build a player NBA** usually point to the same problem: how do you turn 13 disconnected ratings into a player with a recognizable role?
+
+For Legacy points, the average OVR drives wins. For the box score, the details still matter. PAS and HAN help generate assists. REB raises rebounds. Overall strength lifts scoring output and the season win probability.
+
+Start with one sentence:
+
+- **Lead guard:** handles and passing first, then shooting and perimeter defense.
+- **Scoring wing:** 3PT, MID, FIN, ATH, and enough HAN to create.
+- **Two-way forward:** PDEF, FIN, ATH, REB, then shooting.
+- **Interior anchor:** REB, IDEF, BLK, STR, and FIN.
+
+This is the useful version of “build a player NBA-style.” Pick the job, secure its core, then accept the best available grade when another slot offers obvious value. A role keeps the card readable; the grade average keeps it alive through the season.
+
+For position-specific routes, use the [/best-builds](/best-builds) hub and the full [/attributes](/attributes) guide.
+
+## Use rerolls differently in each mode
+
+The three modes do not change the scoring formula. They change how much information and control you have while building.
+
+### Classic
+
+Classic shows player grades and gives you three rerolls. It is the best mode for a first 90+ or 95+ attempt.
+
+Do not reroll a merely unfashionable team. Reroll when the visible roster cannot give you an A-/A/A+ grade in an attribute you still need. Saving one reroll for the final four slots protects you from a bad late board.
+
+### Blind
+
+Blind reveals your position but hides ratings, with one reroll. Choose players by known role rather than highlight reputation. A guard may be the obvious PAS or HAN donor; a center is the safer bet for REB, IDEF, or BLK.
+
+You cannot guarantee a 95 OVR sheet here. The goal is to avoid obvious role mismatches and keep the average from collapsing.
+
+### Chaos
+
+Chaos hides both the position and ratings until the reveal, with one reroll. Flexible attributes and players matter more because you cannot draft around a confirmed position.
+
+If you are chasing pure Legacy points, Classic offers the cleanest path. Blind and Chaos are better when you also want harder mode rings and achievements. See the full [/modes](/modes) comparison before spending a long run on the wrong target.
+
+## The high-score checklist
+
+Before you lock an attribute:
+
+- Is the grade A- or better in Classic?
+- Does this fill a slot that will be hard to source later?
+- Am I protecting my last reroll?
+- Have I already used this player name?
+- Does the pick raise the average, or does it only look good for the archetype?
+
+Before you start the season:
+
+- Is the finished OVR at least 90?
+- Did you reach 95 for the extra 10 Legacy points?
+- Are PAS/HAN/REB strong enough for the box-score line you want?
+- Are you signed in if you want the run saved?
+
+During the season:
+
+- Aim for 38 wins first.
+- Treat 42 wins as the cleaner playoff entry.
+- Remember that a title swings the score more than any OVR upgrade.
+- Finish the run and submit it from My Card.
+
+## Common high-score mistakes
+
+**Chasing one perfect attribute.** One A+ cannot rescue several C grades. The average uses all 13 slots.
+
+**Spending every reroll early.** A bad first spin feels urgent. An empty BLK or REB slot in round 12 is worse.
+
+**Confusing awards with Legacy points.** Awards improve your profile and unlock achievements, but the Legacy formula does not award extra points for them.
+
+**Stopping at a beautiful card.** OVR is only the entry ticket. The largest score is sitting in the playoff result.
+
+**Copying one build into every mode.** The scoring math stays fixed, but the information available to you changes. Draft behavior must change with it.
+
+## Bottom line
+
+The shortest **build a hooper basketball** high-score plan is:
+
+1. Use Classic while learning.
+2. Lock A- or better across all 13 attributes.
+3. Push for 90 OVR, then 95 when the board cooperates.
+4. Clear 38 wins.
+5. Win the championship.
+6. Save the run while signed in.
+
+A 95 OVR champion earns the full 160 Legacy points. It still takes luck, especially in the playoffs, but the priorities are no longer mysterious.
+
+[Build your player now](/game) · [Check the Legacy leaderboard](/leaderboard)
+
+## Unofficial note
+
+Build a Hooper is an unofficial browser basketball simulator. It is not affiliated with the NBA, NBA 2K, Take-Two, or any league, team, player, or brand rights holder. Phrases such as **build a player NBA** describe player search intent, not an official NBA product.

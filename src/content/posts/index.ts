@@ -12,6 +12,7 @@ import { baseLocale } from '@/paraglide/runtime.js';
  * local posts via the pure helpers below.
  */
 export const BLOG_POST_SLUGS = [
+  'build-a-hooper-high-score-guide',
   'build-your-hooper-guide',
   'hooper-achievements-guide',
   'login-leaderboard-update',
