@@ -25,11 +25,11 @@ export function Screenshots() {
               key={key}
               className="border-border bg-card overflow-hidden rounded-3xl border"
             >
-              <div className="bg-muted aspect-[4/3] overflow-hidden">
+              <div className="bg-muted aspect-[1200/733] overflow-hidden">
                 <img
                   src={src}
                   alt={tDynamic(`landing.screenshots.${key}.alt`)}
-                  className="h-full w-full object-cover object-top"
+                  className="h-full w-full object-contain"
                   loading="lazy"
                 />
               </div>
