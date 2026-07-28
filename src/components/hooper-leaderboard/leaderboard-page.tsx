@@ -4,7 +4,10 @@ import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { Link } from '@/core/i18n/navigation';
-import type { LeaderboardSortBy } from '@/modules/hooper/types';
+import type {
+  LeaderboardResult,
+  LeaderboardSortBy,
+} from '@/modules/hooper/types';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 import { useLeaderboard } from '@/hooks/use-hooper-leaderboard';
@@ -53,7 +56,11 @@ function statValue(
   }
 }
 
-export function LeaderboardPage() {
+export function LeaderboardPage({
+  initialData,
+}: {
+  initialData: LeaderboardResult;
+}) {
   const queryClient = useQueryClient();
   const [sortBy, setSortBy] = useState<LeaderboardSortBy>('points');
   const [search, setSearch] = useState('');
@@ -62,6 +69,7 @@ export function LeaderboardPage() {
   const { data, isLoading, isFetching } = useLeaderboard({
     sortBy,
     search: query,
+    initialData,
   });
 
   const topThree = useMemo(() => data?.items.slice(0, 3) ?? [], [data?.items]);

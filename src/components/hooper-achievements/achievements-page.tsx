@@ -10,6 +10,7 @@ import type {
   AchievementCatalogItem,
   AchievementCategory,
   AchievementRarity,
+  AchievementsResult,
 } from '@/lib/hooper/achievements';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
@@ -188,10 +189,14 @@ function AchievementCard({ item }: { item: AchievementCatalogItem }) {
   );
 }
 
-export function AchievementsPage() {
+export function AchievementsPage({
+  initialData,
+}: {
+  initialData: AchievementsResult;
+}) {
   const queryClient = useQueryClient();
   const { data: session } = useSession();
-  const { data, isLoading, isFetching } = useHooperAchievements();
+  const { data, isLoading, isFetching } = useHooperAchievements(initialData);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<
     AchievementCategory | 'all'

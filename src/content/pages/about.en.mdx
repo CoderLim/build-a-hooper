@@ -2,7 +2,7 @@ export const meta = {
   title: 'About Us',
   description:
     'What buildahooper.org is, how it relates to Build a Hooper, and what we are building for players.',
-  updated_at: '2026-07-11',
+  updated_at: '2026-07-28',
 };
 
 ## What This Site Is
@@ -11,16 +11,16 @@ export const meta = {
 
 We built this site to make the game easier to discover, understand, and revisit. That means:
 
-- A localized entry point with guides and FAQs
-- A blog for strategy notes and site updates
-- Leaderboards and profiles for players who want to compare runs
-- Links to the public game hosted at `https://build-a-hooper.pages.dev/`
+- A playable simulator served directly from `/game`
+- A documented OVR and Legacy scoring system with an interactive calculator
+- A 52-goal achievement catalog, saved careers, profiles, and leaderboards
+- Localized guides, FAQs, real screenshots, and code-grounded strategy notes
 
 ## Relationship to the Original Game
 
-Build a Hooper is a fan-made browser game created independently of this portal. `buildahooper.org` is **not** the official homepage of the game and is not affiliated with or endorsed by the original creator unless explicitly stated otherwise.
+Build a Hooper began as a fan-made browser game. An earlier public reference experience is available at `https://build-a-hooper.pages.dev/`. `buildahooper.org` is an independently maintained community deployment and is **not** an official NBA product or an endorsed homepage for the earlier project.
 
-Our role is to provide context, community features, and long-form content around the experience — not to replace the game itself.
+This deployment runs the simulator on its own `/game` route and adds account-based saves, achievements, Legacy rankings, profiles, a scoring calculator, and long-form documentation. Those additions are the site's main contribution beyond providing access to the game loop.
 
 ## What We Are Building Toward
 
@@ -31,6 +31,7 @@ That includes:
 - Clear onboarding through the homepage guide and FAQ
 - Practical strategy writing in the blog
 - Competitive comparison through leaderboards
+- Transparent scoring documentation tied to the running implementation
 - A Chrome extension that makes returning to the game faster
 
 ## Open Source and Extensions

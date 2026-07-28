@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 
-import { baseLocale } from '@/paraglide/runtime.js';
+import { baseLocale, locales } from '@/paraglide/runtime.js';
 
 /**
  * Local blog posts written as MDX files in this directory.
@@ -48,6 +48,10 @@ export type BlogPost = {
 export type BlogPostDetail = BlogPost & {
   /** Raw markdown — set for database posts */
   content?: string;
+  /** Locale of the content actually rendered after fallback resolution. */
+  resolvedLocale: string;
+  /** True when a locale URL is showing base-locale content. */
+  isFallback: boolean;
 };
 
 // Eagerly bundle the local MDX posts (small markdown files), mirroring the
@@ -56,14 +60,48 @@ const postModules = import.meta.glob<PostModule>('/src/content/posts/*.mdx', {
   eager: true,
 });
 
-export function loadLocalPost(slug: string, locale: string): PostModule | null {
+export type LocalPostResolution = {
+  module: PostModule;
+  resolvedLocale: string;
+  isFallback: boolean;
+};
+
+export function resolveLocalPost(
+  slug: string,
+  locale: string
+): LocalPostResolution | null {
   if (!BLOG_POST_SLUGS.includes(slug as (typeof BLOG_POST_SLUGS)[number])) {
     return null;
   }
-  return (
-    postModules[`/src/content/posts/${slug}.${locale}.mdx`] ??
-    postModules[`/src/content/posts/${slug}.${baseLocale}.mdx`] ??
-    null
+
+  const localizedModule =
+    postModules[`/src/content/posts/${slug}.${locale}.mdx`];
+  if (localizedModule) {
+    return {
+      module: localizedModule,
+      resolvedLocale: locale,
+      isFallback: false,
+    };
+  }
+
+  const fallbackModule =
+    postModules[`/src/content/posts/${slug}.${baseLocale}.mdx`];
+  if (!fallbackModule) return null;
+
+  return {
+    module: fallbackModule,
+    resolvedLocale: baseLocale,
+    isFallback: true,
+  };
+}
+
+export function loadLocalPost(slug: string, locale: string): PostModule | null {
+  return resolveLocalPost(slug, locale)?.module ?? null;
+}
+
+export function getAvailablePostLocales(slug: string): string[] {
+  return locales.filter(
+    (locale) => postModules[`/src/content/posts/${slug}.${locale}.mdx`]
   );
 }
 

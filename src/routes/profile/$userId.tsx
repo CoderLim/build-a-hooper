@@ -1,5 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
+import { noIndexHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { getLocale } from '@/paraglide/runtime.js';
 import { HooperProfilePage } from '@/components/hooper-leaderboard/profile-page';
@@ -17,7 +18,10 @@ export const Route = createFileRoute('/profile/$userId')({
     };
   },
   head: ({ loaderData }) => ({
-    meta: loaderData ? [{ title: loaderData.title }] : [],
+    meta: [
+      ...(loaderData ? [{ title: loaderData.title }] : []),
+      ...noIndexHead(true).meta,
+    ],
   }),
   component: ProfileRoutePage,
 });

@@ -2,11 +2,13 @@ import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { Home, Key, LayoutDashboard, LifeBuoy, User } from 'lucide-react';
 
 import { envConfigs } from '@/config';
+import { noIndexHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { SupportWidget } from '@/blocks/support-widget';
 import { AppLayout } from '@/components/app-layout';
 
 export const Route = createFileRoute('/settings')({
+  head: () => noIndexHead(),
   component: SettingsLayout,
 });
 
