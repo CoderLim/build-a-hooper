@@ -1,9 +1,9 @@
 import type { ComponentType } from 'react';
 import { notFound, useLoaderData } from '@tanstack/react-router';
 
-import { envConfigs } from '@/config';
+import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { baseLocale, getLocale, localizeUrl } from '@/paraglide/runtime.js';
+import { baseLocale, getLocale, locales } from '@/paraglide/runtime.js';
 
 type PageMeta = {
   title: string;
@@ -22,15 +22,42 @@ const pages = import.meta.glob<PageModule>('/src/content/pages/*.mdx', {
   eager: true,
 });
 
-function loadPage(slug: string, locale: string): PageModule | null {
-  return (
-    pages[`/src/content/pages/${slug}.${locale}.mdx`] ??
-    pages[`/src/content/pages/${slug}.${baseLocale}.mdx`] ??
-    null
+type ResolvedPage = {
+  page: PageModule;
+  resolvedLocale: string;
+  isFallback: boolean;
+};
+
+function resolvePage(slug: string, locale: string): ResolvedPage | null {
+  const localizedPage = pages[`/src/content/pages/${slug}.${locale}.mdx`];
+  if (localizedPage) {
+    return { page: localizedPage, resolvedLocale: locale, isFallback: false };
+  }
+
+  const fallbackPage = pages[`/src/content/pages/${slug}.${baseLocale}.mdx`];
+  if (!fallbackPage) return null;
+
+  return {
+    page: fallbackPage,
+    resolvedLocale: baseLocale,
+    isFallback: true,
+  };
+}
+
+function availablePageLocales(slug: string): string[] {
+  return locales.filter(
+    (locale) => pages[`/src/content/pages/${slug}.${locale}.mdx`]
   );
 }
 
-type LoaderData = { meta: PageMeta; slug: string; locale: string };
+type LoaderData = {
+  meta: PageMeta;
+  slug: string;
+  locale: string;
+  resolvedLocale: string;
+  isFallback: boolean;
+  availableLocales: string[];
+};
 
 // Shared route options for static MDX pages. Each page gets its own
 // explicit route file (e.g. privacy-policy.tsx) so static segments
@@ -40,35 +67,42 @@ export function staticPageRouteOptions(slug: string) {
   return {
     loader: (): LoaderData => {
       const locale = getLocale();
-      const page = loadPage(slug, locale);
-      if (!page) throw notFound();
-      return { meta: page.meta, slug, locale };
+      const resolved = resolvePage(slug, locale);
+      if (!resolved) throw notFound();
+      return {
+        meta: resolved.page.meta,
+        slug,
+        locale,
+        resolvedLocale: resolved.resolvedLocale,
+        isFallback: resolved.isFallback,
+        availableLocales: availablePageLocales(slug),
+      };
     },
     head: ({ loaderData }: { loaderData?: LoaderData }) => {
       if (!loaderData) return {};
-      const { meta, locale } = loaderData;
-      const canonical = localizeUrl(`${envConfigs.app_url}/${slug}`, {
-        locale: locale as ReturnType<typeof getLocale>,
-      }).href;
-      return {
-        meta: [
-          { title: meta.title },
-          { name: 'description', content: meta.description },
-        ],
-        links: [{ rel: 'canonical', href: canonical }],
-      };
+      const { meta, locale, resolvedLocale, isFallback, availableLocales } =
+        loaderData;
+      return buildPageHead({
+        title: meta.title,
+        description: meta.description,
+        path: `/${slug}`,
+        locale,
+        canonicalLocale: resolvedLocale,
+        alternateLocales: availableLocales,
+        indexable: !isFallback,
+      });
     },
     component: StaticPage,
   };
 }
 
 function StaticPage() {
-  const { meta, slug, locale } = useLoaderData({
+  const { meta, slug, resolvedLocale } = useLoaderData({
     strict: false,
   }) as LoaderData;
 
-  const page = loadPage(slug, locale)!;
-  const Content = page.default;
+  const page = resolvePage(slug, resolvedLocale)!;
+  const Content = page.page.default;
 
   return (
     <article>

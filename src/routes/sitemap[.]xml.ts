@@ -2,31 +2,55 @@ import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
-import { getLocalPosts, mergePosts } from '@/content/posts';
+import {
+  getAvailablePostLocales,
+  getLocalPosts,
+  mergePosts,
+} from '@/content/posts';
 
-const STATIC_PATHS = [
-  '',
-  '/game',
-  '/achievements',
-  '/leaderboard',
-  '/blog',
-  '/how-to-play',
-  '/modes',
-  '/attributes',
-  '/best-builds',
-  '/best-builds/point-guard',
-  '/best-builds/shooting-guard',
-  '/best-builds/small-forward',
-  '/best-builds/power-forward',
-  '/best-builds/center',
-  '/privacy-policy',
-  '/terms-of-service',
-  '/contact',
-  '/about',
+const ALL_UI_LOCALES = ['en', 'zh', 'ja', 'ko'] as const;
+const LONG_FORM_LOCALES = ['en', 'zh'] as const;
+
+const STATIC_PATHS: {
+  path: string;
+  availableLocales: readonly string[];
+}[] = [
+  { path: '', availableLocales: ALL_UI_LOCALES },
+  { path: '/game', availableLocales: ALL_UI_LOCALES },
+  { path: '/scoring-calculator', availableLocales: ALL_UI_LOCALES },
+  { path: '/achievements', availableLocales: ALL_UI_LOCALES },
+  { path: '/blog', availableLocales: LONG_FORM_LOCALES },
+  { path: '/how-to-play', availableLocales: LONG_FORM_LOCALES },
+  { path: '/modes', availableLocales: LONG_FORM_LOCALES },
+  { path: '/attributes', availableLocales: LONG_FORM_LOCALES },
+  { path: '/best-builds', availableLocales: LONG_FORM_LOCALES },
+  {
+    path: '/best-builds/point-guard',
+    availableLocales: LONG_FORM_LOCALES,
+  },
+  {
+    path: '/best-builds/shooting-guard',
+    availableLocales: LONG_FORM_LOCALES,
+  },
+  {
+    path: '/best-builds/small-forward',
+    availableLocales: LONG_FORM_LOCALES,
+  },
+  {
+    path: '/best-builds/power-forward',
+    availableLocales: LONG_FORM_LOCALES,
+  },
+  { path: '/best-builds/center', availableLocales: LONG_FORM_LOCALES },
+  { path: '/privacy-policy', availableLocales: LONG_FORM_LOCALES },
+  { path: '/terms-of-service', availableLocales: LONG_FORM_LOCALES },
+  { path: '/contact', availableLocales: LONG_FORM_LOCALES },
+  { path: '/about', availableLocales: LONG_FORM_LOCALES },
 ];
 
 type Entry = {
   path: string;
+  locale: string;
+  availableLocales: readonly string[];
   lastModified?: string;
   changeFrequency: string;
   priority: number;
@@ -39,16 +63,18 @@ function urlFor(path: string, locale: string): string {
 }
 
 function entryXml(e: Entry): string {
-  const alternates = locales
+  const alternates = e.availableLocales
     .map(
       (loc) =>
         `    <xhtml:link rel="alternate" hreflang="${loc}" href="${urlFor(e.path, loc)}"/>`
     )
     .join('\n');
+  const xDefault = `    <xhtml:link rel="alternate" hreflang="x-default" href="${urlFor(e.path, baseLocale)}"/>`;
   return [
     '  <url>',
-    `    <loc>${urlFor(e.path, baseLocale)}</loc>`,
+    `    <loc>${urlFor(e.path, e.locale)}</loc>`,
     alternates,
+    xDefault,
     e.lastModified ? `    <lastmod>${e.lastModified}</lastmod>` : null,
     `    <changefreq>${e.changeFrequency}</changefreq>`,
     `    <priority>${e.priority}</priority>`,
@@ -62,16 +88,19 @@ export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async () => {
-        const entries: Entry[] = STATIC_PATHS.map((path) => ({
-          path,
-          changeFrequency:
-            path === '/blog' ||
-            path === '/leaderboard' ||
-            path === '/achievements'
-              ? 'daily'
-              : 'weekly',
-          priority: path === '' ? 1 : path === '/game' ? 0.9 : 0.8,
-        }));
+        const entries: Entry[] = STATIC_PATHS.flatMap(
+          ({ path, availableLocales }) =>
+            availableLocales.map((locale) => ({
+              path,
+              locale,
+              availableLocales,
+              changeFrequency:
+                path === '/blog' || path === '/achievements'
+                  ? 'daily'
+                  : 'weekly',
+              priority: path === '' ? 1 : path === '/game' ? 0.9 : 0.8,
+            }))
+        );
 
         // Blog posts: db posts merged with local MDX posts.
         try {
@@ -87,22 +116,35 @@ export const Route = createFileRoute('/sitemap.xml')({
           }));
           const posts = mergePosts(dbPosts, getLocalPosts(baseLocale));
           for (const post of posts) {
-            entries.push({
-              path: `/blog/${post.slug}`,
-              lastModified: post.createdAt,
-              changeFrequency: 'monthly',
-              priority: 0.6,
-            });
+            const availableLocales =
+              post.source === 'local'
+                ? getAvailablePostLocales(post.slug)
+                : [baseLocale];
+            for (const locale of availableLocales) {
+              entries.push({
+                path: `/blog/${post.slug}`,
+                locale,
+                availableLocales,
+                lastModified: post.createdAt,
+                changeFrequency: 'monthly',
+                priority: 0.6,
+              });
+            }
           }
         } catch {
           // Database unreachable — static paths + local posts still listed.
           for (const post of getLocalPosts(baseLocale)) {
-            entries.push({
-              path: `/blog/${post.slug}`,
-              lastModified: post.createdAt,
-              changeFrequency: 'monthly',
-              priority: 0.6,
-            });
+            const availableLocales = getAvailablePostLocales(post.slug);
+            for (const locale of availableLocales) {
+              entries.push({
+                path: `/blog/${post.slug}`,
+                locale,
+                availableLocales,
+                lastModified: post.createdAt,
+                changeFrequency: 'monthly',
+                priority: 0.6,
+              });
+            }
           }
         }
 

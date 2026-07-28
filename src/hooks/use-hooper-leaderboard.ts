@@ -12,7 +12,9 @@ export function useLeaderboard(options: {
   page?: number;
   pageSize?: number;
   search?: string;
+  initialData?: LeaderboardResult;
 }) {
+  const { initialData, ...queryOptions } = options;
   const params = new URLSearchParams({
     sortBy: options.sortBy,
     page: String(options.page ?? 1),
@@ -23,9 +25,15 @@ export function useLeaderboard(options: {
   }
 
   return useQuery({
-    queryKey: ['hooper-leaderboard', options],
+    queryKey: ['hooper-leaderboard', queryOptions],
     queryFn: () =>
       apiGet<LeaderboardResult>(`/api/hooper/leaderboard?${params.toString()}`),
+    initialData:
+      options.sortBy === 'points' &&
+      (options.page ?? 1) === 1 &&
+      !options.search?.trim()
+        ? initialData
+        : undefined,
   });
 }
 

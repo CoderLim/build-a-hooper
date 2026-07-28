@@ -10,10 +10,12 @@ function normalizePathname(pathname: string): string {
 }
 
 function canShowAdsense(pathname: string): boolean {
+  if (/^\/(ja|ko)(\/|$)/.test(pathname)) return false;
   const path = normalizePathname(pathname);
   return (
     path === '/' ||
     path === '/game' ||
+    path === '/scoring-calculator' ||
     path === '/achievements' ||
     path === '/how-to-play' ||
     path === '/modes' ||

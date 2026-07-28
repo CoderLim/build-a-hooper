@@ -27,6 +27,10 @@ export function Footer() {
         { label: m['landing.nav.modes'](), href: '/modes' },
         { label: m['landing.nav.best_builds'](), href: '/best-builds' },
         { label: m['landing.nav.attributes'](), href: '/attributes' },
+        {
+          label: m['scoring.nav_label'](),
+          href: '/scoring-calculator',
+        },
         { label: m['landing.nav.faq'](), href: '/#faq' },
       ],
     },

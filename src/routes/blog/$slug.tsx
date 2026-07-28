@@ -4,13 +4,18 @@ import { ArrowLeft, Calendar } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
+import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
+import { baseLocale, getLocale } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
 import { MarkdownContent } from '@/components/markdown-content';
 import { mdxComponents } from '@/components/mdx-components';
-import { formatPostDate, loadLocalPost } from '@/content/posts';
+import {
+  formatPostDate,
+  getAvailablePostLocales,
+  loadLocalPost,
+} from '@/content/posts';
 import { getBlogPostFn } from '@/content/posts/server';
 
 export const Route = createFileRoute('/blog/$slug')({
@@ -25,16 +30,21 @@ export const Route = createFileRoute('/blog/$slug')({
   head: ({ loaderData }) => {
     if (!loaderData) return {};
     const { locale, post } = loaderData;
-    const canonical = localizeUrl(`${envConfigs.app_url}/blog/${post.slug}`, {
-      locale: locale as any,
-    }).href;
-    return {
-      meta: [
-        { title: `${post.title} | ${envConfigs.app_name}` },
-        { name: 'description', content: post.description },
-      ],
-      links: [{ rel: 'canonical', href: canonical }],
-    };
+    const availableLocales =
+      post.source === 'local'
+        ? getAvailablePostLocales(post.slug)
+        : [baseLocale];
+    return buildPageHead({
+      title: `${post.title} | ${envConfigs.app_name}`,
+      description: post.description,
+      path: `/blog/${post.slug}`,
+      locale,
+      canonicalLocale: post.resolvedLocale,
+      alternateLocales: availableLocales,
+      indexable: !post.isFallback,
+      image: post.image,
+      type: 'article',
+    });
   },
   component: BlogPostPage,
 });
@@ -45,7 +55,9 @@ function BlogPostPage() {
   // Local posts render their bundled MDX component; database posts render
   // raw markdown through MarkdownContent.
   const LocalContent =
-    post.source === 'local' ? loadLocalPost(post.slug, locale)?.default : null;
+    post.source === 'local'
+      ? loadLocalPost(post.slug, post.resolvedLocale)?.default
+      : null;
 
   return (
     <div className="bg-background text-foreground flex min-h-screen flex-col">

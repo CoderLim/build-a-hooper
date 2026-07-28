@@ -1,11 +1,7 @@
+import { ChevronDownIcon } from 'lucide-react';
+
 import { tDynamic } from '@/core/i18n/dynamic';
 import { m } from '@/paraglide/messages.js';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
 
 const FAQ_KEYS = [
   'what',
@@ -27,18 +23,25 @@ export function FAQ() {
             {m['landing.faq.description']()}
           </p>
         </div>
-        <Accordion className="w-full">
+        <div className="w-full">
           {FAQ_KEYS.map((key) => (
-            <AccordionItem key={key} value={key}>
-              <AccordionTrigger className="cursor-pointer py-6 text-left text-base font-medium hover:no-underline">
-                {tDynamic(`landing.faq.${key}.question`)}
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground pb-6 leading-8">
+            <details
+              key={key}
+              className="group border-border not-last:border-b"
+            >
+              <summary className="text-foreground flex cursor-pointer list-none items-start justify-between gap-4 py-6 text-left text-base font-medium">
+                <span>{tDynamic(`landing.faq.${key}.question`)}</span>
+                <ChevronDownIcon
+                  aria-hidden="true"
+                  className="text-muted-foreground mt-0.5 size-4 shrink-0 transition-transform group-open:rotate-180"
+                />
+              </summary>
+              <p className="text-muted-foreground pb-6 leading-8">
                 {tDynamic(`landing.faq.${key}.answer`)}
-              </AccordionContent>
-            </AccordionItem>
+              </p>
+            </details>
           ))}
-        </Accordion>
+        </div>
       </div>
     </section>
   );

@@ -7,6 +7,7 @@ import { authClient, signIn, signUp, useSession } from '@/core/auth/client';
 import { Link, useRouter } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
 import { apiPost } from '@/lib/api-client';
+import { noIndexHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { localizeHref } from '@/paraglide/runtime.js';
 import { usePublicConfig } from '@/hooks/use-public-config';
@@ -352,5 +353,6 @@ function SignUpPage() {
 }
 
 export const Route = createFileRoute('/(auth)/sign-up')({
+  head: () => noIndexHead(),
   component: SignUpPage,
 });
