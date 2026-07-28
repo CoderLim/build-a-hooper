@@ -4,7 +4,8 @@ import { baseLocale, locales } from '@/paraglide/runtime.js';
 
 /**
  * Local blog posts written as MDX files in this directory.
- * File naming: `<slug>.<locale>.mdx` (falls back to the base locale).
+ * File naming: `<slug>.<locale>.mdx` (detail pages may fall back to the base
+ * locale, while localized indexes only list exact-locale posts).
  * Register every local post slug here — it drives loading and the sitemap.
  *
  * This module is isomorphic (safe in client bundles). Database posts are
@@ -121,7 +122,7 @@ function localPostToItem(slug: string, meta: BlogPostMeta): BlogPost {
 export function getLocalPosts(locale: string): BlogPost[] {
   return BLOG_POST_SLUGS.map((slug) => ({
     slug: slug as string,
-    mod: loadLocalPost(slug, locale),
+    mod: postModules[`/src/content/posts/${slug}.${locale}.mdx`] ?? null,
   }))
     .filter((m): m is { slug: string; mod: PostModule } => m.mod !== null)
     .map(({ slug, mod }) => localPostToItem(slug, mod.meta));
