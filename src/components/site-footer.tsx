@@ -2,8 +2,9 @@ import type { ComponentType, SVGProps } from 'react';
 
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
+import { localeNames } from '@/config/locale';
 import { cn } from '@/lib/utils';
-import { LocaleSelector } from '@/components/locale-selector';
+import { getLocale, locales, setLocale } from '@/paraglide/runtime.js';
 
 export interface FooterColumn {
   title: string;
@@ -165,10 +166,22 @@ export function SiteFooter({
           ) : (
             <div />
           )}
-          <LocaleSelector
-            variant="pill"
-            className="border-neutral-700 text-neutral-200 hover:bg-white/5 hover:text-neutral-50"
-          />
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            {locales.map((loc) => (
+              <button
+                key={loc}
+                onClick={() => setLocale(loc)}
+                className={cn(
+                  'text-sm transition-colors',
+                  loc === getLocale()
+                    ? 'font-semibold text-neutral-100'
+                    : 'text-neutral-400 hover:text-neutral-200'
+                )}
+              >
+                {localeNames[loc] || loc}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Bottom bar */}
