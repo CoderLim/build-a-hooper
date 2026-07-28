@@ -19,7 +19,7 @@ const STATIC_PATHS: {
   { path: '/game', availableLocales: ALL_UI_LOCALES },
   { path: '/scoring-calculator', availableLocales: ALL_UI_LOCALES },
   { path: '/achievements', availableLocales: ALL_UI_LOCALES },
-  { path: '/blog', availableLocales: LONG_FORM_LOCALES },
+  { path: '/blog', availableLocales: ALL_UI_LOCALES },
   { path: '/how-to-play', availableLocales: LONG_FORM_LOCALES },
   { path: '/modes', availableLocales: LONG_FORM_LOCALES },
   { path: '/attributes', availableLocales: LONG_FORM_LOCALES },
