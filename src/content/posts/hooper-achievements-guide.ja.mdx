@@ -1,0 +1,99 @@
+export const meta = {
+  title: 'Hooperバスケットボールゲームの実績ガイド：優勝、ビルド、Legacy',
+  description:
+    'Build a Hooperの52個の実績が、モード、優勝、ルーキー、受賞、GOAT級記録をどのように追跡するかを説明します。',
+  created_at: '2026-07-20',
+  author_name: 'Build a Hooper',
+  author_image: '/logo.png',
+};
+
+Build a Hooper に**実績ページ**が追加されました。1シーズンのMy Cardだけでなく、優勝、受賞、特徴的なビルド、長期記録をキャリア全体で追跡できます。
+
+ここでは、何を解除できるのか、ログイン後に進行状況がどのように保存されるのかを説明します。
+
+## 実績で追跡する内容
+
+[/achievements](/achievements) には **Legacy Builder** の下に合計**52個の目標**があり、8つのカテゴリーに分かれています。
+
+- **モード** — Classic、Blind、Chaosを完了し、各モードで優勝する
+- **競争タイトル** — ChaosとBlindで5回、11回、25回、50回優勝する
+- **ポジション** — PG、SG、SF、PF、Cで優勝し、5ポジションすべてを完成する
+- **ルーキー** — ルーキーを含むビルド、ルーキー中心、全員ルーキーで結果を残す
+- **アンダードッグ** — A-以下のOVRでChaosまたはBlindを完了、あるいは優勝する
+- **ビルド** — Sniper、Defensive Wall、GOAT Blueprintなど特定の能力値構成を作る
+- **受賞** — 得点王、MVP、DPOY、Finals MVPなどのシーズン表彰
+- **Legacy** — トリプルダブル、60・70・73勝、初優勝、プレイインからの優勝、ファイナル3-1逆転など
+
+レアリティはCommonの10ポイントからSpecialの200ポイント、最高の**GOAT 300ポイント**まであります。実績ボード全体は**4200ポイント**で、1晩ではなく長期キャリアとして遊ぶための目標です。
+
+## 実績が解除される仕組み
+
+実績はシミュレーション途中では確定しません。シーズンが**My Card**で終了し、ログイン状態でランが保存されると、実績ページがキャリア記録から進行度を再計算します。
+
+1. [/game](/game) でシーズンを最後までプレイします。
+2. ログインした状態で結果を送信します。
+3. [/achievements](/achievements) を開きます。
+
+ゲストでも実績一覧を確認できますが、進行バーや解除日は保存済みランがある場合に表示されます。
+
+一部の優勝段階は**ChaosとBlind**だけを数えます。Classicでもモード、ポジション、多くのビルド実績は進みますが、Dynasty、Complete Hooper、アンダードッグ、Future GOATsなどは難しいモードを要求します。これは不具合ではなく意図したルールです。
+
+## モード、優勝、ポジション
+
+各モードはドラフト中に見える情報を変えます。
+
+- **Classic** — ポジションを選び、能力評価を見ながら3回リロールできます。
+- **Blind** — ポジションは見えますが、評価は隠されます。
+- **Chaos** — ポジションと評価の両方が最後まで隠されます。
+
+最初の完了実績は比較的簡単で、モードごとの優勝はその次の段階です。競争タイトルではChaosとBlindの優勝数を累積し、Ring Collector、Eleven Rings、Dynasty Builder、Immortal Legacyへ進みます。
+
+ポジション優勝はどのモードでも達成できますが、Complete Hooperには5ポジションすべてでChaosまたはBlindの優勝が必要です。同じ慣れたビルドだけでボード全体を終わらせないためのルールです。
+
+## ビルド、ルーキー、アンダードッグ
+
+ビルド実績は、ロックした13項目の能力値構成を確認します。代表例は次のとおりです。
+
+- **Sniper Build** — 3PTとMIDが両方A以上
+- **Floor General** — PASとHANが両方A以上
+- **Defensive Wall** — PDEF、IDEF、BLK、REBがすべてB+以上
+- **Perfect Balance** — 全能力値がA以上
+- **GOAT Blueprint** — 最終OVRが97以上
+
+ルーキー実績では、各元ロスターの下位3人をルーキーとして数えます。Trust the Kidは1人、All-Rookie Buildは全枠、Future GOATsはChaosまたはBlindで全員ルーキーのビルドを使って優勝する必要があります。
+
+Underdog RunとUnderdog Miracleは、ChaosまたはBlindで最終OVR A-以下が条件です。高評価だけを集める遊び方とは異なる挑戦として用意されています。
+
+## 受賞とLegacy記録
+
+シーズンの表彰はScoring King、Season MVP、Defensive Anchor、Finals MVPにつながります。同じランで複数の賞を獲得すると、Complete Superstar、Offensive Takeover、Two-Way Monster、Perfect Resumeなどの組み合わせ実績も解除できます。
+
+Legacy記録には次のようなシーズンストーリーがあります。
+
+- 1シーズンでトリプルダブル1回 → キャリア5回 → 1シーズン10回以上
+- 60勝 → 70勝 → **73-9 Club**
+- BKNで優勝するBrooklyn Guy
+- 未優勝フランチャイズに初タイトルをもたらすFirst Banner
+- プレイインから優勝するPlay-In Miracle
+- ファイナルで3敗してから逆転優勝する**3-1 Finals Comeback**
+
+こうしたGOAT級目標が、最初の優勝後にも遊び続ける理由になります。
+
+## 実績ページの使い方
+
+[/achievements](/achievements) では、解除済み・未解除、カテゴリー、レアリティで絞り込み、名前で検索できます。カードにはポイント、進行度、解除日が表示されます。ラン保存後に更新すると最新のキャリア記録が反映されます。
+
+実績ポイントは [/leaderboard](/leaderboard) のLegacyポイントとは別です。実績はチェックリスト型のキャリア、Legacyは順位型のキャリアで、両者は合算されません。
+
+## 初めて挑戦する場合
+
+1. ログインしてClassic、Blind、Chaosを1回ずつ完了します。
+2. ClassicでSniper、Wall、Clutch Geneなどのビルドを試します。
+3. ChaosとBlindで優勝段階、Complete Hooper、アンダードッグ、Future GOATsに挑戦します。
+4. 受賞と勝利数を確認し、73勝やファイナル逆転を長期目標にします。
+
+実績は、完了したシーズンを永久に残る記録へ変えます。すべての目標が簡単とは限りませんが、難しい目標ほど印象に残ります。
+
+## 非公式ゲームについて
+
+Build a Hooper は非公式ブラウザバスケットボールゲームであり、NBA、公式リーグ、チーム、ブランドの権利者とは関係ありません。[buildahooper.org](https://buildahooper.org) でシーズンを保存した後、[/achievements](/achievements) で長期目標を確認してください。

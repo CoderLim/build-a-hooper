@@ -3,7 +3,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { envConfigs } from '@/config';
 import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { baseLocale, getLocale } from '@/paraglide/runtime.js';
+import { baseLocale, getLocale, locales } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
 import { BlogCard } from '@/components/blog-card';
@@ -18,15 +18,14 @@ export const Route = createFileRoute('/blog/')({
   },
   head: ({ loaderData }) => {
     const locale = loaderData?.locale ?? baseLocale;
-    const indexable = locale === 'en' || locale === 'zh';
     return buildPageHead({
       title: `${m['blog.title']({}, { locale: locale as any })} | ${envConfigs.app_name}`,
       description: m['blog.description']({}, { locale: locale as any }),
       path: '/blog',
       locale,
-      canonicalLocale: indexable ? locale : baseLocale,
-      alternateLocales: ['en', 'zh'],
-      indexable,
+      canonicalLocale: locale,
+      alternateLocales: [...locales],
+      indexable: true,
     });
   },
   component: BlogPage,
