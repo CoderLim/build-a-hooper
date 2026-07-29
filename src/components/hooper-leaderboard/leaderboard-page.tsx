@@ -77,13 +77,7 @@ export function LeaderboardPage({
   return (
     <GameShell>
       <main className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link
-            href="/"
-            className="text-sm text-white/60 transition hover:text-white"
-          >
-            ← {m['landing.nav.play']()}
-          </Link>
+        <div className="mb-6 flex justify-end">
           <GameButton
             variant="ghost"
             className="px-4 py-2 text-xs"

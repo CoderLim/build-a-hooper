@@ -5,6 +5,7 @@ import type { LeaderboardResult } from '@/modules/hooper/types';
 import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales } from '@/paraglide/runtime.js';
+import { Header } from '@/blocks/header';
 import { LeaderboardPage } from '@/components/hooper-leaderboard/leaderboard-page';
 
 const EMPTY_LEADERBOARD: LeaderboardResult = {
@@ -36,7 +37,13 @@ const getLeaderboardSnapshotFn = createServerFn().handler(
 
 function LeaderboardRoutePage() {
   const { initialData } = Route.useLoaderData();
-  return <LeaderboardPage initialData={initialData} />;
+
+  return (
+    <div className="bg-background text-foreground flex min-h-screen flex-col">
+      <Header />
+      <LeaderboardPage initialData={initialData} />
+    </div>
+  );
 }
 
 export const Route = createFileRoute('/leaderboard')({

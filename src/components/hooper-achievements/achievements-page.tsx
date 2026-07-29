@@ -233,34 +233,26 @@ export function AchievementsPage({
   return (
     <GameShell>
       <main className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 py-8 sm:px-6 lg:px-8">
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <Link
-            href="/"
-            className="text-sm text-white/60 transition hover:text-white"
+        <div className="mb-6 flex flex-wrap justify-end gap-2">
+          {session?.user && (
+            <Link href="/settings/profile">
+              <GameButton variant="ghost" className="px-4 py-2 text-xs">
+                {m['achievements.profile']()}
+              </GameButton>
+            </Link>
+          )}
+          <GameButton
+            variant="ghost"
+            className="px-4 py-2 text-xs"
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ['hooper-achievements'],
+              })
+            }
           >
-            ← {m['landing.nav.play']()}
-          </Link>
-          <div className="flex flex-wrap items-center gap-2">
-            {session?.user && (
-              <Link href="/settings/profile">
-                <GameButton variant="ghost" className="px-4 py-2 text-xs">
-                  {m['achievements.profile']()}
-                </GameButton>
-              </Link>
-            )}
-            <GameButton
-              variant="ghost"
-              className="px-4 py-2 text-xs"
-              onClick={() =>
-                queryClient.invalidateQueries({
-                  queryKey: ['hooper-achievements'],
-                })
-              }
-            >
-              {m['achievements.refresh']()}
-              {isFetching ? '…' : ''}
-            </GameButton>
-          </div>
+            {m['achievements.refresh']()}
+            {isFetching ? '…' : ''}
+          </GameButton>
         </div>
 
         <div className="mb-8">
