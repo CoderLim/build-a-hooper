@@ -4,11 +4,18 @@ import { lockedAchievementCatalog } from '@/lib/hooper/achievements';
 import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales } from '@/paraglide/runtime.js';
+import { Header } from '@/blocks/header';
 import { AchievementsPage } from '@/components/hooper-achievements/achievements-page';
 
 function AchievementsRoutePage() {
   const { initialData } = Route.useLoaderData();
-  return <AchievementsPage initialData={initialData} />;
+
+  return (
+    <div className="bg-background text-foreground flex min-h-screen flex-col">
+      <Header />
+      <AchievementsPage initialData={initialData} />
+    </div>
+  );
 }
 
 export const Route = createFileRoute('/achievements')({
