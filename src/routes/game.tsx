@@ -11,8 +11,10 @@ function GamePage() {
   return (
     <div className="bg-background text-foreground flex min-h-screen flex-col">
       <Header />
-      <HooperGame />
-      <GameGuide />
+      <main className="flex flex-1 flex-col">
+        <HooperGame />
+        <GameGuide />
+      </main>
     </div>
   );
 }
