@@ -7,6 +7,7 @@ import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
+import { locales } from '@/paraglide/runtime.js';
 import { LocaleSelector } from '@/components/locale-selector';
 import { SiteUserMenu } from '@/components/site-user-menu';
 import { ThemeToggle } from '@/components/theme-toggle';
@@ -22,6 +23,24 @@ export interface NavLink {
 const isExternalHref = (href: string) => /^https?:\/\//.test(href);
 
 const SCROLL_OPAQUE_AT = 24;
+const localeSet = new Set<string>(locales);
+
+function normalizePathname(pathname: string) {
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments[0] && localeSet.has(segments[0])) {
+    segments.shift();
+  }
+  return segments.length ? `/${segments.join('/')}` : '/';
+}
+
+function isActiveNavLink(pathname: string, href: string) {
+  if (isExternalHref(href)) return false;
+
+  const hrefPath = href.split(/[?#]/)[0] || '/';
+  if (hrefPath === '/') return pathname === '/';
+
+  return pathname === hrefPath || pathname.startsWith(`${hrefPath}/`);
+}
 
 export function SiteHeader({
   navLinks,
@@ -38,6 +57,7 @@ export function SiteHeader({
   const { data: session } = useSession();
   const user = session?.user;
   const location = useLocation();
+  const activePathname = normalizePathname(location.pathname);
   const authCallback = useMemo(() => {
     const path = `${location.pathname}${location.searchStr ? `?${location.searchStr}` : ''}`;
     const query = `?callbackUrl=${encodeURIComponent(path)}`;
@@ -81,15 +101,17 @@ export function SiteHeader({
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden items-center gap-5 md:flex">
-          {navLinks?.map((link) =>
-            isExternalHref(link.href) ? (
+        <nav className="hidden h-16 items-center gap-5 md:flex">
+          {navLinks?.map((link) => {
+            const active = isActiveNavLink(activePathname, link.href);
+
+            return isExternalHref(link.href) ? (
               <a
                 key={link.href}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                className="text-muted-foreground hover:text-foreground flex h-16 items-center text-sm transition-colors"
               >
                 {link.label}
               </a>
@@ -98,12 +120,24 @@ export function SiteHeader({
                 key={link.href}
                 href={link.href}
                 target={link.external ? '_blank' : undefined}
-                className="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                aria-current={active ? 'page' : undefined}
+                className={cn(
+                  'relative flex h-16 items-center text-sm transition-colors',
+                  active
+                    ? 'text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                )}
               >
                 {link.label}
+                {active && (
+                  <span
+                    aria-hidden
+                    className="bg-primary absolute inset-x-0 bottom-0 h-0.5 rounded-full"
+                  />
+                )}
               </Link>
-            )
-          )}
+            );
+          })}
         </nav>
 
         {/* Desktop actions */}
@@ -150,8 +184,10 @@ export function SiteHeader({
       {mobileOpen && (
         <div className="border-border border-t px-4 pt-2 pb-4 md:hidden">
           <nav className="flex flex-col gap-2">
-            {navLinks?.map((link) =>
-              isExternalHref(link.href) ? (
+            {navLinks?.map((link) => {
+              const active = isActiveNavLink(activePathname, link.href);
+
+              return isExternalHref(link.href) ? (
                 <a
                   key={link.href}
                   href={link.href}
@@ -167,13 +203,25 @@ export function SiteHeader({
                   key={link.href}
                   href={link.href}
                   target={link.external ? '_blank' : undefined}
-                  className="text-muted-foreground hover:bg-accent hover:text-foreground rounded-md px-3 py-2 text-sm transition-colors"
+                  aria-current={active ? 'page' : undefined}
+                  className={cn(
+                    'relative rounded-md px-3 py-2 text-sm transition-colors',
+                    active
+                      ? 'bg-accent text-foreground'
+                      : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  )}
                   onClick={() => setMobileOpen(false)}
                 >
                   {link.label}
+                  {active && (
+                    <span
+                      aria-hidden
+                      className="bg-primary absolute inset-y-2 left-0 w-0.5 rounded-full"
+                    />
+                  )}
                 </Link>
-              )
-            )}
+              );
+            })}
           </nav>
           <div className="border-border mt-3 flex items-center gap-2 border-t pt-3">
             <LocaleSelector />
