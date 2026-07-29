@@ -13,7 +13,6 @@ export function getSiteNavLinks(): NavLink[] {
   const locale = getLocale();
 
   return [
-    { href: '/#play', label: m['landing.nav.play']() },
     { href: '/leaderboard', label: m['landing.nav.leaderboard']() },
     {
       href: '/achievements',
