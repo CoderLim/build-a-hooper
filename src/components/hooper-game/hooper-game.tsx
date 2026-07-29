@@ -12,6 +12,7 @@ import {
 } from '@/lib/hooper-game/engine';
 import { loadGameState, saveGameState } from '@/lib/hooper-game/persistence';
 import type { AttributeKey } from '@/lib/hooper-game/types';
+import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 
 import {
@@ -42,7 +43,11 @@ function initState() {
   return loadGameState() ?? createInitialState();
 }
 
-export function HooperGame() {
+interface HooperGameProps {
+  embedded?: boolean;
+}
+
+export function HooperGame({ embedded = false }: HooperGameProps = {}) {
   const [state, dispatch] = useReducer(gameReducer, undefined, initState);
 
   useEffect(() => {
@@ -71,8 +76,18 @@ export function HooperGame() {
   const [confirmRestart, setConfirmRestart] = useState(false);
 
   return (
-    <GameShell className="min-h-0 flex-1">
-      <main className="mx-auto flex min-h-0 max-w-6xl flex-1 flex-col px-4 py-8 sm:px-6 lg:px-8">
+    <GameShell
+      className={cn(
+        'flex-1',
+        embedded ? 'min-h-[100svh]' : 'min-h-0'
+      )}
+    >
+      <div
+        className={cn(
+          'mx-auto flex min-h-0 max-w-6xl flex-1 flex-col px-4 sm:px-6 lg:px-8',
+          embedded ? 'pt-24 pb-10 sm:pt-28 sm:pb-14' : 'py-8'
+        )}
+      >
         {state.screen !== 'landing' && (
           <div className="mb-4 flex justify-end">
             <button
@@ -205,7 +220,7 @@ export function HooperGame() {
         <p className="mt-auto pt-8 text-center text-[11px] text-white/30">
           {m['game.disclaimer']()}
         </p>
-      </main>
+      </div>
 
       <GameConfirmDialog
         open={confirmRestart}
