@@ -1,11 +1,12 @@
 // Cloudflare Workers deploy config — TEMPLATE.
-// The /deploy-cloudflare skill copies this to wrangler.jsonc (gitignored, your
-// working copy) and fills in the real values (D1 database_id, production URL).
+// Production values live in the committed wrangler.jsonc (used by Workers Builds).
+// For a fresh clone, copy this file: cp wrangler.example.jsonc wrangler.jsonc
 // `pnpm cf:build` (NITRO_PRESET=cloudflare_module) merges wrangler.jsonc into
 // the generated .output/server/wrangler.json; deploy with `pnpm cf:deploy`.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "shipany-tanstack",
+  "name": "build-a-hooper",
+  "compatibility_date": "2026-07-08",
   "compatibility_flags": ["nodejs_compat"],
   "observability": {
     "enabled": true,
@@ -14,14 +15,14 @@
     "DATABASE_PROVIDER": "d1",
     // Server-side runtime fallbacks for the build-time VITE_* values — keep in
     // sync with .env.production (better-auth trustedOrigins, payment callbacks).
-    "VITE_APP_URL": "https://<worker>.<your-subdomain>.workers.dev",
-    "VITE_APP_NAME": "My App",
+    "VITE_APP_URL": "https://buildahooper.org",
+    "VITE_APP_NAME": "Build a Hooper",
   },
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "shipany-db",
-      "database_id": "REPLACE_WITH_OUTPUT_OF_WRANGLER_D1_CREATE",
+      "database_name": "build-a-hooper-db",
+      "database_id": "dde74bab-ed2c-49db-9957-e5b0386f8c6c",
       "migrations_dir": "drizzle",
     },
   ],

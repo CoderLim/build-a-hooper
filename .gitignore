@@ -17,10 +17,9 @@
 src/routeTree.gen.ts
 src/paraglide/
 
-# cloudflare — wrangler.jsonc is your working copy (real D1 id, URLs);
-# the committed template is wrangler.example.jsonc
+# cloudflare — wrangler.jsonc is committed for Workers Builds / CI.
+# wrangler.staging.jsonc stays local for staging deploys.
 /.wrangler/
-wrangler.jsonc
 wrangler.staging.jsonc
 
 # claude code local state

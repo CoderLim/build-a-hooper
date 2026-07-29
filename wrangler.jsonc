@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "build-a-hooper",
+  "compatibility_date": "2026-07-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "observability": {
+    "enabled": true,
+  },
+  "vars": {
+    "DATABASE_PROVIDER": "d1",
+    "VITE_APP_URL": "https://buildahooper.org",
+    "VITE_APP_NAME": "Build a Hooper",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "build-a-hooper-db",
+      "database_id": "dde74bab-ed2c-49db-9957-e5b0386f8c6c",
+      "migrations_dir": "drizzle",
+    },
+  ],
+}
