@@ -32,16 +32,20 @@ export function LandingScreen({
   return (
     <section className="flex flex-1 flex-col items-center justify-center text-center">
       <GameEyebrow>{m['game.landing.eyebrow']()}</GameEyebrow>
-      <GameTitle className="mt-4 max-w-4xl">
-        {embedded
-          ? m['landing.hero.headline']()
-          : m['game.landing.title']()}
-      </GameTitle>
-      <p className="mt-6 max-w-2xl text-base leading-8 text-white/60 sm:text-lg">
-        {embedded
-          ? m['landing.hero.subheadline']()
-          : m['game.landing.subtitle']()}
-      </p>
+      {embedded ? (
+        <h2 className="mt-4 text-4xl font-black tracking-tight uppercase sm:text-5xl">
+          {m['game.landing.title']()}
+        </h2>
+      ) : (
+        <>
+          <GameTitle className="mt-4 max-w-3xl">
+            {m['game.landing.title']()}
+          </GameTitle>
+          <p className="mt-6 max-w-2xl text-base leading-8 text-white/60 sm:text-lg">
+            {m['game.landing.subtitle']()}
+          </p>
+        </>
+      )}
       <div className="mt-10">
         <GameButton onClick={onStart}>
           {m['game.landing.choose_mode']()}

@@ -13,6 +13,7 @@ import { Guide } from '@/blocks/guide';
 import { Header } from '@/blocks/header';
 import { Hero } from '@/blocks/hero';
 import { HowItWorks } from '@/blocks/how-it-works';
+import { PlayIntro } from '@/blocks/play-intro';
 import { Screenshots } from '@/blocks/screenshots';
 import { getBlogPostsFn } from '@/content/posts/server';
 
@@ -24,6 +25,7 @@ function HomePage() {
       <Header overlay />
       <main>
         <Hero />
+        <PlayIntro />
         <Features />
         <Screenshots />
         <HowItWorks />
@@ -47,7 +49,10 @@ export const Route = createFileRoute('/')({
     const locale = loaderData?.locale ?? 'en';
     const urlFor = (loc: string) =>
       localizeUrl(`${envConfigs.app_url}/`, { locale: loc as any }).href;
-    const title = m['landing.meta.title']({}, { locale: locale as any });
+    const title =
+      locale === 'en'
+        ? 'Build a Hooper - Play Online & Master the Season'
+        : m['landing.meta.title']({}, { locale: locale as any });
     const description = m['landing.meta.description'](
       {},
       { locale: locale as any }
