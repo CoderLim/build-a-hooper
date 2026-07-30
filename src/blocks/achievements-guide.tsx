@@ -84,7 +84,6 @@ function LocalizedAchievementsGuide() {
           {m['achievements.guide.intro']()}
         </p>
       </header>
-
       <section className="space-y-3">
         <h3 className="text-base font-bold text-white">
           {m['achievements.guide.unlock_title']()}
@@ -97,11 +96,7 @@ function LocalizedAchievementsGuide() {
           <li>{m['achievements.guide.unlock_2']()}</li>
           <li>{m['achievements.guide.unlock_3']()}</li>
         </ol>
-        <p className="text-sm leading-7 text-white/60">
-          {m['achievements.guide.unlock_note']()}
-        </p>
       </section>
-
       <section className="space-y-3">
         <h3 className="text-base font-bold text-white">
           {m['achievements.guide.categories_title']()}
@@ -110,18 +105,11 @@ function LocalizedAchievementsGuide() {
           {m['achievements.guide.categories_body']()}
         </p>
       </section>
-
       <section className="space-y-3">
         <h3 className="text-base font-bold text-white">
           {m['achievements.guide.table_title']()}
         </h3>
-        <p className="text-sm leading-7 text-white/60">
-          {m['achievements.guide.table_intro']()}
-        </p>
         <RewardTable />
-        <p className="text-sm leading-7 text-white/60">
-          {m['achievements.guide.table_outro']()}
-        </p>
       </section>
     </article>
   );
@@ -178,9 +166,8 @@ function EnglishAchievementsGuide() {
 
       <section className="space-y-4">
         <h2 className="text-xl font-black text-white">
-          Build a Hooper Achievements categories
+          Build a Hooper Achievements mode challenges
         </h2>
-        <h3 className="text-base font-bold text-white">Modes</h3>
         <p className="text-sm leading-7 sm:text-base">
           Mode achievements are the best starting point. First Classic, First
           Blind, and First Chaos ask you to complete a run in each mode. Ring
@@ -193,19 +180,21 @@ function EnglishAchievementsGuide() {
           </Link>{' '}
           before attempting the harder Build a Hooper Achievements challenges.
         </p>
-
-        <h3 className="text-base font-bold text-white">Competitive titles</h3>
         <p className="text-sm leading-7 sm:text-base">
-          Competitive-title achievements measure sustained championship success.
-          Ring Collector, Eleven Rings, Dynasty Builder, and Immortal Legacy
-          require increasing numbers of titles in Blind or Chaos. These Build a
-          Hooper Achievements cannot be rushed with one perfect build. They reward
-          a repeatable process: choose portable attributes, avoid
-          position-breaking holes, save the reroll for a truly dead board, and
-          finish every season that still has a credible playoff path.
+          Competitive-title objectives such as Ring Collector, Eleven Rings,
+          Dynasty Builder, and Immortal Legacy require increasing numbers of
+          titles in Blind or Chaos. These Build a Hooper Achievements cannot be
+          rushed with one perfect build. They reward a repeatable process: choose
+          portable attributes, avoid position-breaking holes, save the reroll for
+          a truly dead board, and finish every season that still has a credible
+          playoff path.
         </p>
+      </section>
 
-        <h3 className="text-base font-bold text-white">Positions</h3>
+      <section className="space-y-4">
+        <h2 className="text-xl font-black text-white">
+          Build a Hooper Achievements by position
+        </h2>
         <p className="text-sm leading-7 sm:text-base">
           Position achievements ask you to win with PG, SG, SF, PF, and C. The
           Build a Hooper Achievements catalog includes individual position titles
@@ -222,8 +211,45 @@ function EnglishAchievementsGuide() {
           perimeter defense support wings; rebounding and interior defense
           stabilize bigs.
         </p>
+        <div className="overflow-x-auto rounded-xl border border-white/10">
+          <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
+            <thead className="bg-white/5 text-xs tracking-wider text-white/50 uppercase">
+              <tr>
+                <th className="px-4 py-3 font-bold">Position</th>
+                <th className="px-4 py-3 font-bold">Foundation</th>
+                <th className="px-4 py-3 font-bold">Compatible targets</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/10">
+              <tr>
+                <td className="px-4 py-3 font-semibold text-white/80">PG</td>
+                <td className="px-4 py-3">HAN, PAS, 3PT or MID</td>
+                <td className="px-4 py-3">Floor General, MVP, 60 wins</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-semibold text-white/80">SG</td>
+                <td className="px-4 py-3">3PT, MID, FIN, HAN</td>
+                <td className="px-4 py-3">Sniper Build, Scoring King</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-semibold text-white/80">SF</td>
+                <td className="px-4 py-3">3PT, PDEF, FIN, ATH</td>
+                <td className="px-4 py-3">Balanced Monster, two-way awards</td>
+              </tr>
+              <tr>
+                <td className="px-4 py-3 font-semibold text-white/80">PF / C</td>
+                <td className="px-4 py-3">REB, IDEF, FIN, BLK or STR</td>
+                <td className="px-4 py-3">Defensive Wall, DPOY, underdog title</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-        <h3 className="text-base font-bold text-white">Rookies</h3>
+      <section className="space-y-4">
+        <h2 className="text-xl font-black text-white">
+          Rookie and underdog Build a Hooper Achievements
+        </h2>
         <p className="text-sm leading-7 sm:text-base">
           Rookie achievements create a different drafting puzzle. Some Build a
           Hooper Achievements require at least one rookie, five rookies, an
@@ -234,8 +260,6 @@ function EnglishAchievementsGuide() {
           Achievements rewards the constraint only when the season result proves
           the build worked.
         </p>
-
-        <h3 className="text-base font-bold text-white">Underdog</h3>
         <p className="text-sm leading-7 sm:text-base">
           Underdog Run and Underdog Miracle focus on A- or lower builds in Blind
           or Chaos. These Build a Hooper Achievements teach one of the most useful
@@ -243,8 +267,12 @@ function EnglishAchievementsGuide() {
           lower-rated player can outperform a shiny build with empty creation,
           weak finishing, or no defensive foundation.
         </p>
+      </section>
 
-        <h3 className="text-base font-bold text-white">Builds</h3>
+      <section className="space-y-4">
+        <h2 className="text-xl font-black text-white">
+          Build and award Build a Hooper Achievements
+        </h2>
         <p className="text-sm leading-7 sm:text-base">
           Build achievements examine the attribute sheet itself. Floor General
           asks for strong passing and handles. Sniper Build requires high
@@ -255,16 +283,14 @@ function EnglishAchievementsGuide() {
           further. The Build a Hooper Achievements filters make it easy to isolate
           these construction targets before you start a new run.
         </p>
-
-        <h3 className="text-base font-bold text-white">Awards and legacy</h3>
         <p className="text-sm leading-7 sm:text-base">
           Award achievements depend on season outcomes. Scoring King, Defensive
           Anchor, Season MVP, Finals MVP, Complete Superstar, Offensive Takeover,
           Two-Way Monster, and Perfect Resume require individual awards or
-          specific combinations. Legacy achievements cover unusual records,
-          team stories, playoff paths, and repeated career production. Build a
-          Hooper Achievements uses these objectives to encourage routes that
-          would not appear in a simple “make the highest OVR” challenge.
+          specific combinations. These Build a Hooper Achievements are easier
+          when the build has a clear identity. A scoring route needs a reliable
+          shot diet, while a defensive route needs attributes that affect
+          possessions across the season.
         </p>
       </section>
 
@@ -273,13 +299,13 @@ function EnglishAchievementsGuide() {
           Build a Hooper Achievements rarity and points
         </h2>
         <p className="text-sm leading-7 sm:text-base">
-          Rarity and achievement points help show the expected effort. Common
+          Rarity and achievement points show the expected effort. Common
           objectives introduce the system. Rare and Epic milestones usually
-          require stronger runs or more deliberate construction. Legendary,
-          Special, and GOAT objectives represent long grinds, difficult
-          combinations, or near-perfect outcomes. Build a Hooper Achievements
-          points are separate from leaderboard legacy points: achievement points
-          measure catalog completion, while the{' '}
+          require stronger runs or deliberate construction. Legendary, Special,
+          and GOAT objectives represent long grinds, difficult combinations, or
+          near-perfect outcomes. Build a Hooper Achievements points are separate
+          from leaderboard legacy points: achievement points measure catalog
+          completion, while the{' '}
           <Link href="/leaderboard" className={linkClass}>
             Build a Hooper Leaderboard
           </Link>{' '}
@@ -304,11 +330,11 @@ function EnglishAchievementsGuide() {
         </p>
         <p className="text-sm leading-7 sm:text-base">
           Before each run, choose one primary Build a Hooper Achievements target
-          and two compatible secondary targets. For example, a PG Floor General
-          attempt can also pursue Season MVP and a 60-win season. A Center
-          Defensive Wall attempt can chase Defensive Player of the Year and a
-          title. This planning prevents the common mistake of locking unrelated
-          A+ grades that do not support the same result.
+          and two compatible secondary targets. A PG Floor General attempt can
+          also pursue Season MVP and a 60-win season. A Center Defensive Wall
+          attempt can chase Defensive Player of the Year and a title. This
+          planning prevents the common mistake of locking unrelated A+ grades
+          that do not support the same result.
         </p>
         <p className="text-sm leading-7 sm:text-base">
           Do not abandon a run just because one target becomes impossible. The
@@ -318,45 +344,6 @@ function EnglishAchievementsGuide() {
           a record, or leaderboard points. Finish credible runs and read the
           result as feedback.
         </p>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-black text-white">
-          Build a Hooper Achievements strategy by build type
-        </h2>
-        <div className="overflow-x-auto rounded-xl border border-white/10">
-          <table className="w-full min-w-[42rem] border-collapse text-left text-sm">
-            <thead className="bg-white/5 text-xs tracking-wider text-white/50 uppercase">
-              <tr>
-                <th className="px-4 py-3 font-bold">Target route</th>
-                <th className="px-4 py-3 font-bold">Core attributes</th>
-                <th className="px-4 py-3 font-bold">Compatible goals</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-white/10">
-              <tr>
-                <td className="px-4 py-3 font-semibold text-white/80">Floor General</td>
-                <td className="px-4 py-3">HAN, PAS, one scoring axis</td>
-                <td className="px-4 py-3">PG title, MVP, 60-win season</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 font-semibold text-white/80">Sniper Build</td>
-                <td className="px-4 py-3">3PT, MID, HAN, CLU</td>
-                <td className="px-4 py-3">Scoring King, SG title, awards</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 font-semibold text-white/80">Defensive Wall</td>
-                <td className="px-4 py-3">PDEF, IDEF, BLK, REB</td>
-                <td className="px-4 py-3">DPOY, PF/C title, underdog run</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 font-semibold text-white/80">Balanced Monster</td>
-                <td className="px-4 py-3">No attribute below B</td>
-                <td className="px-4 py-3">Chaos title, Complete Hooper, high wins</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
       </section>
 
       <section className="space-y-4">
@@ -380,11 +367,7 @@ function EnglishAchievementsGuide() {
           <Link href="/best-builds" className={linkClass}>
             Best builds
           </Link>{' '}
-          provides PG, SG, SF, PF, and C templates. The{' '}
-          <Link href="/leaderboard" className={linkClass}>
-            leaderboard
-          </Link>{' '}
-          shows how completed careers compare. Return to the{' '}
+          provides PG, SG, SF, PF, and C templates. Return to the{' '}
           <Link href="/" className={linkClass}>
             playable homepage
           </Link>{' '}
@@ -434,8 +417,8 @@ function EnglishAchievementsGuide() {
   );
 }
 
-export function AchievementsGuide({ locale }: { locale: string }) {
-  return locale === 'en' ? (
+export function AchievementsGuide() {
+  return m['achievements.title']() === 'Achievements' ? (
     <EnglishAchievementsGuide />
   ) : (
     <LocalizedAchievementsGuide />
