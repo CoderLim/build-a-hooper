@@ -3,7 +3,6 @@
 import { useMemo, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 
-import { Link } from '@/core/i18n/navigation';
 import type {
   LeaderboardResult,
   LeaderboardSortBy,
@@ -165,12 +164,7 @@ export function LeaderboardPage({
             {topThree.map((player) => (
               <GamePanel key={player.userId} className="text-center">
                 <p className="text-xs text-white/40">#{player.rank}</p>
-                <Link
-                  href={`/profile/${player.userId}`}
-                  className="mt-2 block text-lg font-black hover:text-orange-300"
-                >
-                  {player.displayName}
-                </Link>
+                <p className="mt-2 text-lg font-black">{player.displayName}</p>
                 <p className="mt-1 text-sm text-orange-300">
                   {player.preferredPosition ?? '—'}
                 </p>
@@ -219,12 +213,7 @@ export function LeaderboardPage({
                         #{player.rank}
                       </td>
                       <td className="px-3 py-3">
-                        <Link
-                          href={`/profile/${player.userId}`}
-                          className="font-semibold hover:text-orange-300"
-                        >
-                          {player.displayName}
-                        </Link>
+                        <span className="font-semibold">{player.displayName}</span>
                         <p className="text-xs text-white/40">
                           {player.preferredPosition ?? '—'}
                         </p>
