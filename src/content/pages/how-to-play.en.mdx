@@ -1,98 +1,289 @@
 export const meta = {
-  title: 'How to Play Build a Hooper',
+  title: 'How to Play Build a Hooper: Complete Beginner Guide',
   description:
-    'Full Build a Hooper loop: modes, 13 attribute drafts, rerolls, career team, and the 82-game season — a practical first-run guide on buildahooper.org.',
-  updated_at: '2026-07-24',
+    'Learn how to play Build a Hooper from mode selection and 13 attribute picks to rerolls, the final reveal, an 82-game season, playoffs, and titles.',
+  heading: 'How to Play Build a Hooper: Complete Step-by-Step Guide',
+  updated_at: '2026-07-30',
 };
-
-## How to Play Build a Hooper
 
 ![Retro tactical poster showing the five-stage Build a Hooper game loop](/imgs/generated/how-to-play-tactical-poster.webp)
 
-Build a Hooper is an unofficial browser basketball simulator. You do not start with a finished player. You assemble one skill at a time from team-season rosters, then prove the sheet across an **82-game** season. This guide is the full loop — not a slogan.
+Learning **how to play Build a Hooper** is easier once you understand that the game has two connected parts. First, you build a basketball player by drafting one attribute at a time from team-season rosters. Second, you place that player on a career team and test the build across an 82-game season and playoffs. The final overall rating matters, but the real objective is creating a player whose skills fit together well enough to win consistently.
 
-If you only want the live game, open [/game](/game). If you want to understand _why_ a draft works before you burn rerolls, stay here.
+This complete guide explains how to play Build a Hooper from the first mode choice to the final championship result. It covers all thirteen attributes, position selection, team spins, player selection, rerolls, the reveal, career simulation, common mistakes, and a beginner-friendly first-run strategy. You can also open the [Build a Hooper homepage](/) to play while following the steps.
 
-## The full loop in five stages
+## How to play Build a Hooper in seven steps
 
-Every run follows the same spine. Modes change how much information you see. They do not change the order.
+Every run follows the same basic structure:
 
-1. **Choose a mode** — Classic, Blind, or Chaos ([modes guide](/modes)).
-2. **Lock a position** — Classic lets you pick; Blind reveals it; Chaos hides it until the end.
-3. **Draft 13 attributes** — each round: spin a team-season → pick one player → lock one open attribute from that player’s grades.
-4. **Reveal the hooper** — overall rating and the full sheet appear together.
-5. **Join a career team and simulate 82 games** — awards, seeding, playoffs, and (if you win) a title.
+1. Choose Classic, Blind, or Chaos mode.
+2. Select or reveal a position, depending on the mode.
+3. Spin a team-season roster.
+4. Choose one player from that roster.
+5. Lock one unused attribute from the chosen player.
+6. Repeat until all thirteen attribute slots are complete.
+7. Reveal the player, select a career team, simulate 82 games, and enter the playoffs.
 
-That is the entire product loop. Tips exist to help you survive stages 3–5 with a coherent identity instead of thirteen unrelated letter grades.
+The draft creates the player. The season judges whether the build is balanced, specialized, or incomplete.
 
-## What you are actually drafting
+## Step 1: choose a Build a Hooper mode
 
-The sheet always uses the same thirteen skills:
+Before learning the detailed draft controls, decide how much information you want.
+
+| Mode | Position | Attribute ratings | Rerolls | Recommended for |
+| --- | --- | --- | --- | --- |
+| Classic | You choose | Visible | 3 | First runs and testing specific builds |
+| Blind | Revealed before draft | Hidden | 1 | Players who understand position roles |
+| Chaos | Hidden until reveal | Hidden | 1 | Experienced players who can draft adaptable skills |
+
+Classic is the best place to learn how to play Build a Hooper because every rating is visible. Blind keeps the position but hides the grades. Chaos hides both, so you must build with incomplete information. Read the full [Build a Hooper modes guide](/modes) for mode-specific strategy.
+
+## Step 2: understand the position
+
+Build a Hooper uses five traditional positions: point guard, shooting guard, small forward, power forward, and center. Each position has different responsibilities, so the same A-grade attribute can be essential for one position and optional for another.
+
+### Point guard
+
+A point guard normally needs **HAN** for ball security, **PAS** for playmaking, and one scoring option such as **3PT** or **MID**. FIN, CLU, PDEF, and ATH are useful support ratings. See the [point guard build guide](/best-builds/point-guard).
+
+### Shooting guard
+
+A shooting guard should establish a scoring axis through **3PT**, **MID**, or both. FIN and HAN help when defenders close out, while PDEF and ATH create a two-way route. See the [shooting guard build guide](/best-builds/shooting-guard).
+
+### Small forward
+
+Small forwards are versatile wings. Common priorities include **3PT**, **PDEF**, **FIN**, and **ATH**, with optional REB, HAN, or PAS depending on whether the player is a 3-and-D wing, slasher, or point forward. See the [small forward build guide](/best-builds/small-forward).
+
+### Power forward
+
+Power forwards usually need **REB** and **IDEF**, then choose an offensive route through FIN, STR, 3PT, or ATH. See the [power forward build guide](/best-builds/power-forward).
+
+### Center
+
+Centers should protect the paint and finish possessions. **REB** and **IDEF** are the foundation, followed by BLK, FIN, STR, DNK, ATH, or a specialty 3PT/PAS route. See the [center build guide](/best-builds/center).
+
+When learning how to play Build a Hooper, do not think of position as a label added at the end. Position determines which jobs the player must perform every game.
+
+## Step 3: learn the thirteen attributes
+
+Every run fills the same thirteen ratings:
 
 **3PT · MID · FIN · DNK · HAN · PAS · PDEF · IDEF · BLK · REB · ATH · STR · CLU**
 
-A full glossary lives on [/attributes](/attributes). For a first run, treat them as four jobs:
+They can be grouped into four clusters:
 
-| Cluster          | Attributes           | Job on the floor                                                    |
-| ---------------- | -------------------- | ------------------------------------------------------------------- |
-| Scoring          | 3PT, MID, FIN, DNK   | Put the ball in the basket from deep, mid, paint, and above the rim |
-| Creation         | HAN, PAS             | Keep possessions alive and create for teammates                     |
-| Defense / glass  | PDEF, IDEF, BLK, REB | Stop wings, protect paint, contest, rebound                         |
-| Physical / close | ATH, STR, CLU        | Burst, contact strength, late-game execution                        |
+| Cluster | Ratings | What the cluster does |
+| --- | --- | --- |
+| Scoring | 3PT, MID, FIN, DNK | Produces points from different areas and finish types |
+| Creation | HAN, PAS | Protects the ball and creates advantages |
+| Defense and glass | PDEF, IDEF, BLK, REB | Stops attacks and ends possessions |
+| Physical and closing | ATH, STR, CLU | Adds movement, contact power, and late-game execution |
 
-Modern basketball analysis often drops rigid “five positions” language and talks in **roles** — floor general, shot creator, 3-and-D wing, stretch big, rim anchor ([Basketball Index offensive roles](https://www.bball-index.com/offensive-archetypes/), [theScore on hybrid roles](https://www.thescore.com/nba/news/1974726/forget-the-5-positions-inside-a-new-way-to-classify-nba-players)). Build a Hooper still asks you to draft at PG / SG / SF / PF / C, but the sheet rewards the same idea: **pick a role, then feed the attributes that role needs**.
+The [complete Build a Hooper attributes guide](/attributes) explains every rating in detail. For a first run, remember one rule: a strong cluster is more valuable than thirteen unrelated good grades.
 
-## Round-by-round draft (the part that decides everything)
+## Step 4: spin a team-season and read the roster
 
-Each of the 13 rounds is one decision:
+Each draft round begins with a team-season spin. The roster gives you a new group of possible attribute donors. In Classic, you can compare visible letter grades. In Blind and Chaos, you rely on player role, position logic, and the attributes still open.
 
-1. Spin a **team-season** (legendary and modern squads from the pool).
-2. Read the roster grades for the attributes you still need.
-3. Pick **one** player.
-4. Lock **one** unused attribute from that player onto your sheet.
-5. That player and that attribute are spent for this run.
+When the roster appears:
 
-You cannot stack five attributes from the same spin. You also cannot “save” a player for later once you leave the round. The game forces trade-offs: take the A+ handle now, or wait and hope another creator appears.
+1. Check which attribute slots are still empty.
+2. Identify the two or three ratings most important to the build.
+3. Compare players who can reasonably supply those skills.
+4. Consider whether the board is good enough or deserves a reroll.
+5. Select one player, then choose one open attribute to lock.
 
-### Rerolls (do not waste them)
+You cannot take every rating from one player. The game forces one player and one attribute per round, so every decision has an opportunity cost.
 
-Reroll counts by mode:
+## Step 5: choose a player and lock one attribute
 
-- **Classic** — 3 team rerolls
-- **Blind** — 1
-- **Chaos** — 1
+The most important action when learning how to play Build a Hooper is the attribute lock. Once you select the player and confirm a rating, that slot becomes part of the final build. You then move to a new team-season spin.
 
-Reroll when the roster cannot support the role you named out loud after three locks. Do not reroll just because you missed a single A+. Seasons punish empty clusters more than a B+ in a secondary skill.
+Use this decision order:
 
-## First-run recipe (Classic only)
+### First, protect the position’s essential job
 
-New players should stay in Classic until they can name a role without looking at a tip sheet.
+A PG without HAN or PAS, a C without REB, or a wing with no scoring option has a structural problem. Position-critical ratings deserve priority over luxury ratings.
 
-1. Pick a position you understand — **PG** (creation) or **SF** (versatile wing) are forgiving teachers. See [/best-builds](/best-builds).
-2. After three locks, say the role: “floor general,” “two-way wing,” “paint anchor.” If you cannot name it, you are collecting grades.
-3. Spend early rounds on the **primary cluster** for that role. Cover one clear weakness before round 10.
-4. Save at least one reroll for a dead spin that offers nothing in your identity.
-5. Simulate the season and read game 40–60, not only the highlight box score. Consistency beats a loud opening week.
+### Second, strengthen the primary identity
 
-When Classic feels readable, move to Blind, then Chaos. Harder [achievement](/achievements) ladders lean on those darker drafts — that is intentional.
+By the fourth or fifth lock, name the player’s role. Examples include:
 
-## After the reveal: season logic
+- Floor general
+- Shot creator
+- Movement shooter
+- 3-and-D wing
+- Slashing forward
+- Stretch four
+- Interior enforcer
+- Paint anchor
+- Power finisher
 
-Publishing the card is not the finish line. The **82-game** schedule grades average nights. Ask:
+If you cannot name the role, you may be collecting grades without building a player.
 
-- Does this player still make sense in game 40 and game 60?
-- Did I leave a zero in a job my position must do every night?
-- Am I hoping for miracles from CLU while the rest of the sheet is hollow?
+### Third, add a second way to help
 
-Sign in before you finish if you want the run saved for achievements and legacy tracking. Guests can learn the loop; progress sticks after login.
+A scorer needs a second level, creation, or defense. A paint defender needs rebounding and enough finishing. A passer needs ball security and a scoring threat. The secondary cluster prevents the player from becoming predictable.
 
-## Where to go next
+### Fourth, repair dangerous weaknesses
 
-- Mode comparison and strategy: [/modes](/modes)
-- Attribute encyclopedia: [/attributes](/attributes)
-- Position-first build routes: [/best-builds](/best-builds)
-- Play now: [/game](/game)
+Before the last three rounds, look for empty categories that the position must use every night. A low-priority rating can remain average; an essential rating should not remain empty.
+
+## How rerolls work
+
+Rerolls replace the current team-season roster with another spin.
+
+- Classic provides three rerolls.
+- Blind provides one reroll.
+- Chaos provides one reroll.
+
+A reroll is valuable because it changes every available donor, but it should not be used only to hunt an A+. Good reroll reasons include:
+
+- No player can support an essential open attribute.
+- The board duplicates skills you already completed.
+- The remaining rounds are running out and a position-critical hole is still open.
+- The current roster forces you to abandon the build without creating a useful alternative route.
+
+Poor reroll reasons include disliking a team, missing one favorite player, or refusing a B+ that completes the role. When learning how to play Build a Hooper, save at least one Classic reroll for the later rounds.
+
+## A round-by-round Build a Hooper plan
+
+### Rounds 1–4: create the foundation
+
+Secure two or three attributes that define the player. For a PG, that might be HAN, PAS, and 3PT. For a C, it might be REB, IDEF, and BLK or FIN. Do not try to complete every cluster immediately.
+
+### Rounds 5–9: finish the primary role
+
+This phase decides most runs. Complete the main cluster, add a secondary strength, and choose whether the build is offensive, defensive, or balanced. Use a reroll if the board repeatedly refuses the identity.
+
+### Rounds 10–13: cover weaknesses
+
+Use the final rounds for missing essentials and supporting ratings such as ATH, STR, CLU, secondary defense, or another scoring level. Do not begin a completely new archetype at round eleven.
+
+## Step 6: read the final reveal
+
+After all thirteen slots are filled, Build a Hooper reveals the complete rating sheet, position information that was hidden by the mode, and the overall rating. The reveal is not only a score screen. It is a diagnosis of the decisions made during the draft.
+
+Review the build in this order:
+
+1. **Role clarity:** Can you describe what the player does?
+2. **Position fit:** Does the build handle the position’s nightly responsibilities?
+3. **Primary cluster:** Is the central strength actually complete?
+4. **Secondary value:** Can the player contribute when the first option is stopped?
+5. **Weaknesses:** Is any essential category dangerously low?
+6. **Overall rating:** Does the number reflect a useful player or inflated unrelated grades?
+
+A lower overall with a clear job can produce a better season than a higher overall with no coherent identity.
+
+## Step 7: choose a career team and simulate the season
+
+After the reveal, you select or spin into a career team and begin the 82-game simulation. The season tests consistency rather than one highlight possession. A specialized player can succeed if the specialization fits the position and team context. An unbalanced player may begin strongly but struggle when the schedule exposes the missing skill.
+
+During the season, pay attention to:
+
+- Win-loss record
+- Individual production
+- Awards
+- Team seeding
+- Playoff qualification
+- Series results
+- Championship result
+
+The regular season is long enough to reveal whether the build has a dependable scoring path, enough creation, a defensive role, and the physical tools required by the position.
+
+## How the playoffs change the evaluation
+
+Playoff games concentrate pressure. Weaknesses that looked manageable in the regular season can become decisive in a series. A one-dimensional shooter may be chased off the line. A center with BLK but poor REB may fail to finish defensive possessions. A high-CLU player with no reliable offensive identity may still struggle to create a good late-game shot.
+
+Winning a title means the build survived both the long schedule and the shorter, more demanding playoff environment. Achievements and legacy scoring may reward championships, strong records, difficult modes, and complete careers. Check the [achievements page](/achievements) and [leaderboard](/leaderboard) after you understand the basic loop.
+
+## Beginner first-run recipe
+
+For a reliable first game, use this plan:
+
+1. Choose **Classic** mode.
+2. Pick **PG** or **SF**, because both teach several parts of the attribute system.
+3. Name a role before the first spin.
+4. Lock the two most important attributes for that role during rounds 1–4.
+5. Add a second scoring, creation, or defensive tool during rounds 5–9.
+6. Keep one reroll for a late dead board.
+7. Repair the largest weakness during rounds 10–13.
+8. Read the reveal before judging the overall rating.
+9. Simulate the full season and notice where the build succeeds or fails.
+10. Repeat the same role once before changing modes, so you can compare decisions.
+
+A first-run PG can use **HAN + PAS + 3PT/MID**, then add FIN, CLU, PDEF, and ATH. A first-run SF can use **3PT + PDEF + FIN/ATH**, then add REB, CLU, or secondary HAN.
+
+## Common mistakes when learning how to play Build a Hooper
+
+### Taking the largest visible grade
+
+Classic players often choose every A+ without checking role fit. The result looks impressive but may fail basic position responsibilities.
+
+### Using rerolls too early
+
+A mediocre round-three board is usually survivable. A bad round-eleven board with a critical hole is much more dangerous.
+
+### Building only offense
+
+Even elite scorers need enough creation, physical ability, or defense to survive 82 games. Two-way builds are often more stable.
+
+### Building only highlights
+
+DNK, BLK, and CLU are exciting, but they need FIN, IDEF, REB, creation, or a scoring axis to become useful.
+
+### Entering Chaos before understanding Classic
+
+Chaos hides the feedback that teaches why a pick worked. Learn position priorities in Classic, practice role recognition in Blind, then accept the uncertainty of Chaos.
+
+### Judging only the overall rating
+
+Overall rating summarizes the sheet; it does not explain the role. Read the attributes and season outcome together.
+
+## How to improve after each run
+
+After the season, write down three observations:
+
+1. Which early lock defined the successful part of the build?
+2. Which missing rating repeatedly hurt the player?
+3. Which reroll or pivot decision would you change?
+
+Then repeat the same position with one adjustment. This is the fastest way to learn how to play Build a Hooper because you isolate one decision instead of changing the position, mode, and role at the same time.
+
+## How to play Build a Hooper FAQ
+
+### Is Build a Hooper free to play?
+
+The browser game on buildahooper.org can be opened directly from the homepage. Account features may affect saved progress, achievements, or leaderboard participation, but the core draft can be learned in the browser.
+
+### How many attributes are in a build?
+
+Every player receives thirteen attributes: 3PT, MID, FIN, DNK, HAN, PAS, PDEF, IDEF, BLK, REB, ATH, STR, and CLU.
+
+### How many rounds are in the draft?
+
+There are thirteen attribute locks, one for each rating slot.
+
+### What is the best mode for beginners?
+
+Classic is the best beginner mode because position and ratings are visible and three rerolls are available.
+
+### What is the best first position?
+
+PG teaches creation and scoring balance, while SF teaches versatility. C is also clear if you understand that REB and IDEF come before specialty skills.
+
+### Can I restart a run?
+
+Reloading or re-entering the homepage begins a fresh game. Completed players can use the available play-again flow.
+
+### What should I do after learning the rules?
+
+Compare the [three modes](/modes), study all [thirteen attributes](/attributes), and choose a detailed route from the [best builds hub](/best-builds).
+
+## Start playing
+
+Open the [Build a Hooper game](/), choose Classic, and use this guide during the first thirteen picks. The objective is not a perfect sheet on the first attempt. The objective is understanding why each attribute belongs in the final player.
 
 ## Unofficial note
 
-Build a Hooper on buildahooper.org is an unofficial fan project. It is not affiliated with, endorsed by, or connected to the NBA, NBA 2K, Take-Two, or any league, team, or brand rights holder. Player names and team seasons are used descriptively for a fan simulation. Ratings are illustrative — not official data.
+Build a Hooper on buildahooper.org is an unofficial fan project. It is not affiliated with, endorsed by, or connected to the NBA, NBA 2K, Take-Two, or any league, team, or brand rights holder. Player and team references are descriptive, and ratings are illustrative fan-simulation values.
