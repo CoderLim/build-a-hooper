@@ -21,10 +21,19 @@ function AchievementsRoutePage() {
 export const Route = createFileRoute('/achievements')({
   loader: () => {
     const locale = getLocale();
+    const title =
+      locale === 'en'
+        ? 'Build a Hooper Achievements: Complete Unlock Guide'
+        : m['achievements.meta.title']({}, { locale });
+    const description =
+      locale === 'en'
+        ? 'Use this Build a Hooper Achievements guide to understand categories, rarity, points, unlock tracking, and efficient paths to every milestone.'
+        : m['achievements.meta.description']({}, { locale });
+
     return {
       locale,
-      title: m['achievements.meta.title']({}, { locale }),
-      description: m['achievements.meta.description']({}, { locale }),
+      title,
+      description,
       initialData: lockedAchievementCatalog(),
     };
   },
