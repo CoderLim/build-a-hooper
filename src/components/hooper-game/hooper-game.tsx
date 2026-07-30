@@ -1,16 +1,14 @@
-import { useEffect, useReducer, useState } from 'react';
+import { useReducer } from 'react';
 
 import {
   createDevCardPreviewState,
   isDevCardPreviewActive,
 } from '@/lib/hooper-game/dev-card-preview';
 import {
-  getGameStep,
   getOverallRating,
   positionVisible,
   ratingsVisible,
 } from '@/lib/hooper-game/engine';
-import { loadGameState, saveGameState } from '@/lib/hooper-game/persistence';
 import type { AttributeKey } from '@/lib/hooper-game/types';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
@@ -20,8 +18,7 @@ import {
   gameReducer,
   type GameAction,
 } from './game-reducer';
-import { GameStepper } from './game-stepper';
-import { GameConfirmDialog, GameShell } from './game-ui';
+import { GameShell } from './game-ui';
 import { BuildRoomScreen } from './screens/build-room-screen';
 import { CareerTeamScreen } from './screens/career-team-screen';
 import { GameCastScreen } from './screens/gamecast-screen';
@@ -40,7 +37,7 @@ function initState() {
   if (isDevCardPreviewActive()) {
     return createDevCardPreviewState();
   }
-  return loadGameState() ?? createInitialState();
+  return createInitialState();
 }
 
 interface HooperGameProps {
@@ -50,15 +47,9 @@ interface HooperGameProps {
 export function HooperGame({ embedded = false }: HooperGameProps = {}) {
   const [state, dispatch] = useReducer(gameReducer, undefined, initState);
 
-  useEffect(() => {
-    if (isDevCardPreviewActive()) return;
-    saveGameState(state);
-  }, [state]);
-
   const showRatings = ratingsVisible(state.mode);
   const showPosition = positionVisible(state.mode, state.positionRevealed);
   const progress = state.lockedPicks.length;
-  const currentStep = getGameStep(state.screen);
   const overall = getOverallRating(state.buildSlots);
 
   const lockedAttributes = state.buildSlots
@@ -70,10 +61,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
   );
 
   const act = (action: GameAction) => () => dispatch(action);
-
-  const showStepper = state.screen !== 'landing';
-
-  const [confirmRestart, setConfirmRestart] = useState(false);
 
   return (
     <GameShell
@@ -88,22 +75,11 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
           embedded ? 'pt-24 pb-10 sm:pt-28 sm:pb-14' : 'py-8'
         )}
       >
-        {state.screen !== 'landing' && (
-          <div className="mb-4 flex justify-end">
-            <button
-              type="button"
-              onClick={() => setConfirmRestart(true)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/4 px-4 py-2 text-xs font-bold tracking-[0.15em] text-white/60 uppercase transition hover:border-orange-300/50 hover:text-white"
-            >
-              {m['game.restart']()}
-            </button>
-          </div>
-        )}
-
-        {showStepper && <GameStepper currentStep={currentStep} />}
-
         {state.screen === 'landing' && (
-          <LandingScreen onStart={act({ type: 'START' })} />
+          <LandingScreen
+            embedded={embedded}
+            onStart={act({ type: 'START' })}
+          />
         )}
 
         {state.screen === 'mode-select' && (
@@ -221,19 +197,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
           {m['game.disclaimer']()}
         </p>
       </div>
-
-      <GameConfirmDialog
-        open={confirmRestart}
-        title={m['game.restart']()}
-        description={m['game.restart_confirm']()}
-        confirmLabel={m['game.restart']()}
-        cancelLabel={m['game.cancel']()}
-        onConfirm={() => {
-          setConfirmRestart(false);
-          dispatch({ type: 'RESET' });
-        }}
-        onCancel={() => setConfirmRestart(false)}
-      />
     </GameShell>
   );
 }

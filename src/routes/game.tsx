@@ -1,42 +1,13 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { buildPageHead } from '@/lib/seo/metadata';
-import { m } from '@/paraglide/messages.js';
-import { getLocale, locales } from '@/paraglide/runtime.js';
-import { GameGuide } from '@/blocks/game-guide';
-import { Header } from '@/blocks/header';
-import { HooperGame } from '@/components/hooper-game/hooper-game';
-
-function GamePage() {
-  return (
-    <div className="bg-background text-foreground flex min-h-screen flex-col">
-      <Header />
-      <main className="flex flex-1 flex-col">
-        <HooperGame />
-        <GameGuide />
-      </main>
-    </div>
-  );
-}
+import { envConfigs } from '@/config';
+import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
 
 export const Route = createFileRoute('/game')({
-  loader: () => {
+  beforeLoad: () => {
     const locale = getLocale();
-    return {
-      locale,
-      title: m['game.meta.title']({}, { locale }),
-      description: m['game.meta.description']({}, { locale }),
-    };
+    const href = localizeUrl(`${envConfigs.app_url}/`, { locale }).href;
+    throw redirect({ href, statusCode: 301 });
   },
-  head: ({ loaderData }) =>
-    loaderData
-      ? buildPageHead({
-          title: loaderData.title,
-          description: loaderData.description,
-          path: '/game',
-          locale: loaderData.locale,
-          alternateLocales: locales,
-        })
-      : {},
-  component: GamePage,
+  component: () => null,
 });
