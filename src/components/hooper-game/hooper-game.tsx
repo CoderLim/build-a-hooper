@@ -64,10 +64,7 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
 
   return (
     <GameShell
-      className={cn(
-        'flex-1',
-        embedded ? 'min-h-[100svh]' : 'min-h-0'
-      )}
+      className={cn('flex-1', embedded ? 'min-h-[100svh]' : 'min-h-0')}
     >
       <div
         className={cn(
@@ -76,16 +73,12 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
         )}
       >
         {state.screen === 'landing' && (
-          <LandingScreen
-            embedded={embedded}
-            onStart={act({ type: 'START' })}
-          />
+          <LandingScreen embedded={embedded} onStart={act({ type: 'START' })} />
         )}
 
         {state.screen === 'mode-select' && (
           <ModeSelectScreen
             mode={state.mode}
-            buildSlots={state.buildSlots}
             progress={progress}
             onSelectMode={(mode) => dispatch({ type: 'SELECT_MODE', mode })}
             onConfirm={act({ type: 'CONFIRM_MODE' })}
