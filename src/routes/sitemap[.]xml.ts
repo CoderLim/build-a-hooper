@@ -17,6 +17,7 @@ const STATIC_PATHS: {
 }[] = [
   { path: '', availableLocales: ALL_UI_LOCALES },
   { path: '/scoring-calculator', availableLocales: ALL_UI_LOCALES },
+  { path: '/leaderboard', availableLocales: ALL_UI_LOCALES },
   { path: '/achievements', availableLocales: ALL_UI_LOCALES },
   { path: '/blog', availableLocales: ALL_UI_LOCALES },
   { path: '/how-to-play', availableLocales: LONG_FORM_LOCALES },
@@ -94,7 +95,9 @@ export const Route = createFileRoute('/sitemap.xml')({
               locale,
               availableLocales,
               changeFrequency:
-                path === '/blog' || path === '/achievements'
+                path === '/blog' ||
+                path === '/leaderboard' ||
+                path === '/achievements'
                   ? 'daily'
                   : 'weekly',
               priority: path === '' ? 1 : 0.8,
