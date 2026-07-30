@@ -1,26 +1,51 @@
-import { GameButton, GameEyebrow, GameTitle } from '../game-ui';
 import { m } from '@/paraglide/messages.js';
 
+import { GameButton, GameEyebrow, GameTitle } from '../game-ui';
+
 interface LandingScreenProps {
+  embedded?: boolean;
   onStart: () => void;
 }
 
 const STEPS = [
-  { num: '1', titleKey: 'game.landing.step1_title' as const, descKey: 'game.landing.step1_desc' as const },
-  { num: '2', titleKey: 'game.landing.step2_title' as const, descKey: 'game.landing.step2_desc' as const },
-  { num: '3', titleKey: 'game.landing.step3_title' as const, descKey: 'game.landing.step3_desc' as const },
+  {
+    num: '1',
+    titleKey: 'game.landing.step1_title' as const,
+    descKey: 'game.landing.step1_desc' as const,
+  },
+  {
+    num: '2',
+    titleKey: 'game.landing.step2_title' as const,
+    descKey: 'game.landing.step2_desc' as const,
+  },
+  {
+    num: '3',
+    titleKey: 'game.landing.step3_title' as const,
+    descKey: 'game.landing.step3_desc' as const,
+  },
 ];
 
-export function LandingScreen({ onStart }: LandingScreenProps) {
+export function LandingScreen({
+  embedded = false,
+  onStart,
+}: LandingScreenProps) {
   return (
     <section className="flex flex-1 flex-col items-center justify-center text-center">
       <GameEyebrow>{m['game.landing.eyebrow']()}</GameEyebrow>
-      <GameTitle className="mt-4 max-w-3xl">{m['game.landing.title']()}</GameTitle>
+      <GameTitle className="mt-4 max-w-4xl">
+        {embedded
+          ? m['landing.hero.headline']()
+          : m['game.landing.title']()}
+      </GameTitle>
       <p className="mt-6 max-w-2xl text-base leading-8 text-white/60 sm:text-lg">
-        {m['game.landing.subtitle']()}
+        {embedded
+          ? m['landing.hero.subheadline']()
+          : m['game.landing.subtitle']()}
       </p>
       <div className="mt-10">
-        <GameButton onClick={onStart}>{m['game.landing.choose_mode']()}</GameButton>
+        <GameButton onClick={onStart}>
+          {m['game.landing.choose_mode']()}
+        </GameButton>
       </div>
       <div className="mt-12 grid w-full max-w-lg grid-cols-3 gap-3">
         {[
