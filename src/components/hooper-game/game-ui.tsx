@@ -62,7 +62,15 @@ interface GameTitleProps {
   className?: string;
 }
 
+const SEO_PAGE_TITLES: Record<string, string> = {
+  Leaderboard: 'Build a Hooper Leaderboard: Rankings and Scoring Guide',
+  Achievements: 'Build a Hooper Achievements: Complete Unlock Guide',
+};
+
 export function GameTitle({ children, className }: GameTitleProps) {
+  const title =
+    typeof children === 'string' ? SEO_PAGE_TITLES[children] ?? children : children;
+
   return (
     <h1
       className={cn(
@@ -70,7 +78,7 @@ export function GameTitle({ children, className }: GameTitleProps) {
         className
       )}
     >
-      {children}
+      {title}
     </h1>
   );
 }
