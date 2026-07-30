@@ -63,8 +63,8 @@ interface GameTitleProps {
 }
 
 const SEO_PAGE_TITLES: Record<string, string> = {
-  Leaderboard: 'Build a Hooper Leaderboard: Rankings and Scoring Guide',
-  Achievements: 'Build a Hooper Achievements: Complete Unlock Guide',
+  Leaderboard: 'Build a Hooper Leaderboard',
+  Achievements: 'Build a Hooper Achievements',
 };
 
 export function GameTitle({ children, className }: GameTitleProps) {
