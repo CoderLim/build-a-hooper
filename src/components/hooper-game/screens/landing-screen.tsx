@@ -51,7 +51,7 @@ export function LandingScreen({
           {m['game.landing.choose_mode']()}
         </GameButton>
       </div>
-      <div className="mt-12 grid w-full max-w-lg grid-cols-3 gap-3">
+      <div className="mt-12 grid w-full max-w-lg grid-cols-1 gap-3 sm:grid-cols-3">
         {[
           ['13', m['game.landing.stat_attributes']()],
           ['3', m['game.landing.stat_modes']()],
@@ -74,7 +74,9 @@ export function LandingScreen({
             key={step.num}
             className="rounded-2xl border border-white/10 bg-white/3 p-4"
           >
-            <span className="text-xs font-bold text-orange-300">{step.num}</span>
+            <span className="text-xs font-bold text-orange-300">
+              {step.num}
+            </span>
             <p className="mt-1 font-bold">{m[step.titleKey]()}</p>
             <p className="mt-1 text-xs leading-5 text-white/50">
               {m[step.descKey]()}

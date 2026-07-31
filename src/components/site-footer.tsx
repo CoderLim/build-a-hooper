@@ -149,7 +149,7 @@ export function SiteFooter({
         {/* Socials + language row */}
         <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           {socials && socials.length > 0 ? (
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-2">
               {socials.map((s) => (
                 <a
                   key={s.label}
@@ -157,7 +157,7 @@ export function SiteFooter({
                   aria-label={s.label}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-neutral-300 transition-colors hover:text-neutral-100"
+                  className="flex size-10 items-center justify-center text-neutral-300 transition-colors hover:text-neutral-100"
                 >
                   <s.icon className="size-[18px]" />
                 </a>
@@ -172,7 +172,7 @@ export function SiteFooter({
                 key={loc}
                 onClick={() => setLocale(loc)}
                 className={cn(
-                  'text-sm transition-colors',
+                  'min-h-9 px-2 text-sm transition-colors',
                   loc === getLocale()
                     ? 'font-semibold text-neutral-100'
                     : 'text-neutral-400 hover:text-neutral-200'

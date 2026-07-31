@@ -27,7 +27,7 @@ export function buildShareUrl(): string {
     envConfigs.app_url ||
     (typeof window !== 'undefined' ? window.location.origin : '')
   ).replace(/\/$/, '');
-  return `${base}${localizeHref('/game')}`;
+  return `${base}${localizeHref('/')}#play`;
 }
 
 function modeLabel(mode: GameMode | null): string {

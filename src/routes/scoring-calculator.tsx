@@ -185,7 +185,7 @@ function ScoringCalculatorPage() {
               <p>{m['scoring.formula_body_3']()}</p>
             </div>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/game" className={buttonVariants()}>
+              <Link href="/#play" className={buttonVariants()}>
                 {m['scoring.play_cta']()}
               </Link>
               <Link

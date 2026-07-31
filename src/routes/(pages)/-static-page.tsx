@@ -64,7 +64,12 @@ type LoaderData = {
 // explicit route file (e.g. privacy-policy.tsx) so static segments
 // always outrank dynamic ones — add a new page by creating the MDX
 // content plus a thin route file using this factory.
-export function staticPageRouteOptions(slug: string) {
+//
+// `slug` is the MDX filename stem (e.g. `best-builds-point-guard`).
+// `path` is the public URL path when it differs from `/${slug}`
+// (e.g. `/best-builds/point-guard`).
+export function staticPageRouteOptions(slug: string, path?: string) {
+  const pagePath = path ?? `/${slug}`;
   return {
     loader: (): LoaderData => {
       const locale = getLocale();
@@ -86,7 +91,7 @@ export function staticPageRouteOptions(slug: string) {
       return buildPageHead({
         title: meta.title,
         description: meta.description,
-        path: `/${slug}`,
+        path: pagePath,
         locale,
         canonicalLocale: resolvedLocale,
         alternateLocales: availableLocales,

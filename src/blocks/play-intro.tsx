@@ -25,7 +25,7 @@ export function PlayIntro() {
         <p className="text-muted-foreground mx-auto mt-6 max-w-3xl text-base leading-8 sm:text-lg">
           {m['landing.hero.subheadline']()}
         </p>
-        <div className="mx-auto mt-10 grid max-w-lg grid-cols-3 gap-3">
+        <div className="mx-auto mt-10 grid max-w-lg grid-cols-1 gap-3 sm:grid-cols-3">
           {STATS.map((key) => (
             <div
               key={key}

@@ -20,6 +20,7 @@ export function GameShell({ children, className }: GameShellProps) {
         alt=""
         width={1920}
         height={1081}
+        fetchPriority="high"
         decoding="async"
         aria-hidden
         className="pointer-events-none absolute inset-0 -z-20 size-full scale-110 object-cover object-center opacity-50 blur-sm"
@@ -69,7 +70,9 @@ const SEO_PAGE_TITLES: Record<string, string> = {
 
 export function GameTitle({ children, className }: GameTitleProps) {
   const title =
-    typeof children === 'string' ? SEO_PAGE_TITLES[children] ?? children : children;
+    typeof children === 'string'
+      ? (SEO_PAGE_TITLES[children] ?? children)
+      : children;
 
   return (
     <h1

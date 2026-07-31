@@ -29,8 +29,11 @@ export function Screenshots() {
                 <img
                   src={src}
                   alt={tDynamic(`landing.screenshots.${key}.alt`)}
-                  className="h-full w-full object-contain"
+                  width={1200}
+                  height={733}
+                  className="h-full w-full max-w-full object-contain"
                   loading="lazy"
+                  decoding="async"
                 />
               </div>
               <figcaption className="space-y-1 p-5">

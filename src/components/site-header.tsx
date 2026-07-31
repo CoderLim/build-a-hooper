@@ -10,7 +10,6 @@ import { m } from '@/paraglide/messages.js';
 import { locales } from '@/paraglide/runtime.js';
 import { LocaleSelector } from '@/components/locale-selector';
 import { SiteUserMenu } from '@/components/site-user-menu';
-import { ThemeToggle } from '@/components/theme-toggle';
 
 export interface NavLink {
   href: string;
@@ -143,7 +142,6 @@ export function SiteHeader({
         {/* Desktop actions */}
         <div className="hidden items-center gap-3 md:flex">
           <LocaleSelector />
-          <ThemeToggle />
           {showAuthLinks && !user ? (
             <>
               <Link
@@ -171,7 +169,7 @@ export function SiteHeader({
 
         {/* Mobile toggle */}
         <button
-          className="p-2 md:hidden"
+          className="flex size-10 items-center justify-center md:hidden"
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           aria-expanded={mobileOpen}
@@ -225,7 +223,6 @@ export function SiteHeader({
           </nav>
           <div className="border-border mt-3 flex items-center gap-2 border-t pt-3">
             <LocaleSelector />
-            <ThemeToggle />
             {showAuthLinks && !user ? (
               <div className="ml-auto flex items-center gap-2">
                 <Link

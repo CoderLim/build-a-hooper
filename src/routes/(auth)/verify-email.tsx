@@ -25,7 +25,14 @@ function safeDecodeCallbackUrl(raw?: string | null) {
   if (!raw) return '/';
   try {
     const decoded = decodeURIComponent(raw);
-    if (decoded.startsWith('/')) return decoded;
+    // Same-site relative paths only — block protocol-relative `//evil.com`.
+    if (
+      decoded.startsWith('/') &&
+      !decoded.startsWith('//') &&
+      !/^\/(sign-in|sign-up|verify-email)(\/|\?|$)/.test(decoded)
+    ) {
+      return decoded;
+    }
     return '/';
   } catch {
     return '/';

@@ -9,24 +9,27 @@ import { md5 } from '@/lib/hash';
 import { enforceMinIntervalRateLimit } from '@/lib/rate-limit';
 import { respData, respErr } from '@/lib/resp';
 
-const extFromMime = (mimeType: string) => {
-  const map: Record<string, string> = {
-    'image/jpeg': 'jpg',
-    'image/jpg': 'jpg',
-    'image/png': 'png',
-    'image/webp': 'webp',
-    'image/gif': 'gif',
-    'image/svg+xml': 'svg',
-    'image/avif': 'avif',
-    'image/heic': 'heic',
-    'image/heif': 'heif',
-  };
-  return map[mimeType] || '';
+const MIME_TO_EXT: Record<string, string> = {
+  'image/jpeg': 'jpg',
+  'image/jpg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+  'image/avif': 'avif',
+  'image/heic': 'heic',
+  'image/heif': 'heif',
 };
+
+const extFromMime = (mimeType: string) => MIME_TO_EXT[mimeType] || '';
+
+const ALLOWED_IMAGE_TYPES = new Set(Object.keys(MIME_TO_EXT));
 
 // Cap for the no-storage local-disk fallback (dev). Configurable via INLINE_IMAGE_MAX_KB.
 const INLINE_MAX_BYTES =
   (Number(envConfigs.inline_image_max_kb) || 10240) * 1024;
+
+// Hard cap even when R2/S3 is configured — avoid unbounded upload DoS.
+const STORAGE_MAX_BYTES = 15 * 1024 * 1024;
 
 async function POST({ request }: { request: Request }) {
   const limited = enforceMinIntervalRateLimit(request, {
@@ -53,12 +56,23 @@ async function POST({ request }: { request: Request }) {
     }> = [];
 
     for (const file of files) {
-      if (!file.type.startsWith('image/')) {
-        return respErr(`File ${file.name} is not an image`);
+      if (
+        !file.type.startsWith('image/') ||
+        !ALLOWED_IMAGE_TYPES.has(file.type)
+      ) {
+        return respErr(
+          `File ${file.name} is not an allowed image type (SVG and non-raster formats are blocked)`
+        );
       }
 
       const arrayBuffer = await file.arrayBuffer();
       const body = new Uint8Array(arrayBuffer);
+
+      if (body.length > STORAGE_MAX_BYTES) {
+        return respErr(
+          `Image too large (${(body.length / 1024 / 1024).toFixed(1)}MB > 15MB)`
+        );
+      }
 
       const digest = md5(body);
       const ext =

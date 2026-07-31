@@ -105,7 +105,11 @@ function BlogPostPage() {
             <img
               src={post.image}
               alt={post.title}
-              className="border-border mb-8 w-full rounded-2xl border object-cover"
+              width={1200}
+              height={630}
+              className="border-border mb-8 h-auto w-full max-w-full rounded-2xl border object-cover"
+              loading="lazy"
+              decoding="async"
             />
           )}
 

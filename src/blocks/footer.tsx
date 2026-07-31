@@ -6,7 +6,7 @@ export function Footer() {
     {
       title: m['landing.footer.explore'](),
       links: [
-        { label: m['landing.nav.play'](), href: '/game' },
+        { label: m['landing.nav.play'](), href: '/#play' },
         { href: '/leaderboard', label: m['landing.nav.leaderboard']() },
         { href: '/achievements', label: m['landing.nav.achievements']() },
         { label: m['landing.footer.blog'](), href: '/blog' },

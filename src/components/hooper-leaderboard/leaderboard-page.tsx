@@ -138,7 +138,7 @@ export function LeaderboardPage({
             ))}
           </div>
           <form
-            className="flex gap-2"
+            className="flex w-full flex-col gap-2 sm:flex-row sm:items-center"
             onSubmit={(event) => {
               event.preventDefault();
               setQuery(search.trim());
@@ -148,11 +148,11 @@ export function LeaderboardPage({
               value={search}
               onChange={(event) => setSearch(event.target.value)}
               placeholder={m['leaderboard.search_placeholder']()}
-              className="w-full min-w-[220px] rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white outline-none placeholder:text-white/30 focus:border-orange-300/50 lg:w-64"
+              className="w-full min-w-0 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-white outline-none placeholder:text-white/30 focus:border-orange-300/50 lg:w-64"
             />
             <button
               type="submit"
-              className="rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-xs font-black tracking-wide text-white uppercase transition hover:border-orange-300/60"
+              className="rounded-full border border-white/10 bg-white/[0.04] px-5 py-2 text-xs font-black tracking-wide text-white uppercase transition hover:border-orange-300/60 sm:shrink-0"
             >
               Go
             </button>
@@ -213,7 +213,9 @@ export function LeaderboardPage({
                         #{player.rank}
                       </td>
                       <td className="px-3 py-3">
-                        <span className="font-semibold">{player.displayName}</span>
+                        <span className="font-semibold">
+                          {player.displayName}
+                        </span>
                         <p className="text-xs text-white/40">
                           {player.preferredPosition ?? '—'}
                         </p>

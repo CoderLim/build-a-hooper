@@ -169,7 +169,7 @@ export function MyCardScreen({
               {m['game.card.login_to_save']()}
             </p>
             <Link
-              href="/sign-in?callbackUrl=/game"
+              href="/sign-in?callbackUrl=/"
               className="mt-3 inline-flex rounded-full bg-orange-300 px-5 py-2 text-xs font-black tracking-wide text-neutral-950 uppercase"
             >
               {m['game.card.login']()}
