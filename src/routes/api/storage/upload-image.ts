@@ -24,12 +24,12 @@ const extFromMime = (mimeType: string) => MIME_TO_EXT[mimeType] || '';
 
 const ALLOWED_IMAGE_TYPES = new Set(Object.keys(MIME_TO_EXT));
 
+/** Soft cap even with remote storage configured — avoid unbounded upload DoS. */
+const STORAGE_MAX_BYTES = 15 * 1024 * 1024;
+
 // Cap for the no-storage local-disk fallback (dev). Configurable via INLINE_IMAGE_MAX_KB.
 const INLINE_MAX_BYTES =
   (Number(envConfigs.inline_image_max_kb) || 10240) * 1024;
-
-// Hard cap even when R2/S3 is configured — avoid unbounded upload DoS.
-const STORAGE_MAX_BYTES = 15 * 1024 * 1024;
 
 async function POST({ request }: { request: Request }) {
   const limited = enforceMinIntervalRateLimit(request, {

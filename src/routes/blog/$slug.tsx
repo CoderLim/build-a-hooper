@@ -4,7 +4,12 @@ import { ArrowLeft, Calendar } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
-import { buildPageHead } from '@/lib/seo/metadata';
+import {
+  blogPostingJsonLd,
+  breadcrumbListJsonLd,
+  jsonLdScript,
+} from '@/lib/seo/json-ld';
+import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { baseLocale, getLocale } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
@@ -34,10 +39,11 @@ export const Route = createFileRoute('/blog/$slug')({
       post.source === 'local'
         ? getAvailablePostLocales(post.slug)
         : [baseLocale];
-    return buildPageHead({
+    const path = `/blog/${post.slug}`;
+    const head = buildPageHead({
       title: `${post.title} | ${envConfigs.app_name}`,
       description: post.description,
-      path: `/blog/${post.slug}`,
+      path,
       locale,
       canonicalLocale: post.resolvedLocale,
       alternateLocales: availableLocales,
@@ -45,6 +51,37 @@ export const Route = createFileRoute('/blog/$slug')({
       image: post.image,
       type: 'article',
     });
+    const url = localizedPageUrl(path, post.resolvedLocale);
+    return {
+      ...head,
+      scripts: [
+        jsonLdScript([
+          blogPostingJsonLd({
+            headline: post.title,
+            description: post.description,
+            url,
+            image: post.image,
+            datePublished: post.createdAt,
+            authorName: post.authorName,
+            locale: post.resolvedLocale,
+          }),
+          breadcrumbListJsonLd([
+            {
+              name: envConfigs.app_name || 'Build a Hooper',
+              url: localizedPageUrl('/', post.resolvedLocale),
+            },
+            {
+              name: m['blog.title']({}, { locale: post.resolvedLocale as any }),
+              url: localizedPageUrl('/blog', post.resolvedLocale),
+            },
+            {
+              name: post.title,
+              url,
+            },
+          ]),
+        ]),
+      ],
+    };
   },
   component: BlogPostPage,
 });

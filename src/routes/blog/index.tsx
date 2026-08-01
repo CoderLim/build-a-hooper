@@ -1,7 +1,12 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
-import { buildPageHead } from '@/lib/seo/metadata';
+import {
+  breadcrumbListJsonLd,
+  jsonLdScript,
+  organizationJsonLd,
+} from '@/lib/seo/json-ld';
+import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { baseLocale, getLocale, locales } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
@@ -18,15 +23,35 @@ export const Route = createFileRoute('/blog/')({
   },
   head: ({ loaderData }) => {
     const locale = loaderData?.locale ?? baseLocale;
-    return buildPageHead({
-      title: `${m['blog.title']({}, { locale: locale as any })} | ${envConfigs.app_name}`,
-      description: m['blog.description']({}, { locale: locale as any }),
+    const title = `${m['blog.title']({}, { locale: locale as any })} | ${envConfigs.app_name}`;
+    const description = m['blog.description']({}, { locale: locale as any });
+    const head = buildPageHead({
+      title,
+      description,
       path: '/blog',
       locale,
       canonicalLocale: locale,
       alternateLocales: [...locales],
       indexable: true,
     });
+    return {
+      ...head,
+      scripts: [
+        jsonLdScript([
+          organizationJsonLd(locale),
+          breadcrumbListJsonLd([
+            {
+              name: envConfigs.app_name || 'Build a Hooper',
+              url: localizedPageUrl('/', locale),
+            },
+            {
+              name: m['blog.title']({}, { locale: locale as any }),
+              url: localizedPageUrl('/blog', locale),
+            },
+          ]),
+        ]),
+      ],
+    };
   },
   component: BlogPage,
 });
