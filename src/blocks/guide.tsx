@@ -1,3 +1,4 @@
+import { Link } from '@/core/i18n/navigation';
 import { m } from '@/paraglide/messages.js';
 
 const SECTIONS = [
@@ -7,6 +8,27 @@ const SECTIONS = [
   ['landing.guide.beginner_title', 'landing.guide.beginner_body'],
   ['landing.guide.search_title', 'landing.guide.search_body'],
 ] as const;
+
+const CREATE_A_HOOPER_PHRASE = 'Create a Hooper';
+const CREATE_A_HOOPER_HREF = '/create-a-hooper';
+
+const linkClass =
+  'text-primary font-semibold underline decoration-primary/30 underline-offset-4 transition hover:decoration-primary';
+
+function TextWithCreateAHooperLink({ text }: { text: string }) {
+  const idx = text.indexOf(CREATE_A_HOOPER_PHRASE);
+  if (idx === -1) return <>{text}</>;
+
+  return (
+    <>
+      {text.slice(0, idx)}
+      <Link href={CREATE_A_HOOPER_HREF} className={linkClass}>
+        {CREATE_A_HOOPER_PHRASE}
+      </Link>
+      {text.slice(idx + CREATE_A_HOOPER_PHRASE.length)}
+    </>
+  );
+}
 
 export function Guide() {
   return (
@@ -28,7 +50,11 @@ export function Guide() {
                 {m[titleKey]()}
               </h3>
               <p className="text-muted-foreground text-base leading-8">
-                {m[bodyKey]()}
+                {bodyKey === 'landing.guide.search_body' ? (
+                  <TextWithCreateAHooperLink text={m[bodyKey]()} />
+                ) : (
+                  m[bodyKey]()
+                )}
               </p>
             </article>
           ))}

@@ -28,6 +28,10 @@ export function Footer() {
         { label: m['landing.nav.best_builds'](), href: '/best-builds' },
         { label: m['landing.nav.attributes'](), href: '/attributes' },
         {
+          label: m['create_a_hooper.nav_label'](),
+          href: '/create-a-hooper',
+        },
+        {
           label: m['scoring.nav_label'](),
           href: '/scoring-calculator',
         },
