@@ -1,22 +1,22 @@
+import { cn } from '@/lib/utils';
+import {
+  estimatedWinChance,
+  getLastFiveGames,
+  getNextGame,
+} from '@/lib/hooper-game/season-engine';
+import type { SeasonState, TeamSeason } from '@/lib/hooper-game/types';
+import { m } from '@/paraglide/messages.js';
+
 import {
   GameButton,
   GameEyebrow,
   GamePanel,
   GameTitle,
 } from '../game-ui';
-import {
-  estimatedWinChance,
-  getLastFiveGames,
-  getNextGame,
-} from '@/lib/hooper-game/season-engine';
-import type { BuildSlot, SeasonState, TeamSeason } from '@/lib/hooper-game/types';
-import { m } from '@/paraglide/messages.js';
-import { cn } from '@/lib/utils';
 
 interface SeasonHubScreenProps {
   seasonState: SeasonState;
   careerTeam: TeamSeason | null;
-  buildSlots: BuildSlot[];
   overall: number;
   onSimulateNext: () => void;
   onSimulateToEnd: () => void;
@@ -27,7 +27,6 @@ interface SeasonHubScreenProps {
 export function SeasonHubScreen({
   seasonState,
   careerTeam,
-  buildSlots,
   overall,
   onSimulateNext,
   onSimulateToEnd,
@@ -36,7 +35,7 @@ export function SeasonHubScreen({
 }: SeasonHubScreenProps) {
   const nextGame = getNextGame(seasonState);
   const lastFive = getLastFiveGames(seasonState);
-  const winChance = estimatedWinChance(buildSlots);
+  const winChance = estimatedWinChance(seasonState);
   const { wins, losses, rank } = seasonState.standings;
   const gamesLeft = 82 - seasonState.currentGameIndex;
   const seasonDone = seasonState.seasonComplete;
@@ -46,7 +45,9 @@ export function SeasonHubScreen({
       <div>
         <GameEyebrow>{m['game.season.eyebrow']()}</GameEyebrow>
         <GameTitle className="mt-2">{m['game.season.title']()}</GameTitle>
-        <p className="mt-2 text-sm text-white/55">{m['game.season.subtitle']()}</p>
+        <p className="mt-2 text-sm text-white/55">
+          {m['game.season.subtitle']()}
+        </p>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-4">
@@ -75,15 +76,21 @@ export function SeasonHubScreen({
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-xs text-white/40">
-                    {m['game.season.game_n']({ n: String(nextGame.gameNumber) })}
+                    {m['game.season.game_n']({
+                      n: String(nextGame.gameNumber),
+                    })}
                   </p>
                   <p className="text-lg font-bold">
                     vs {nextGame.opponentAbbr}
                   </p>
-                  <p className="text-sm text-white/50">{nextGame.opponent}</p>
+                  <p className="text-sm text-white/50">
+                    {nextGame.opponent}
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-black text-emerald-400">{winChance}%</p>
+                  <p className="text-2xl font-black text-emerald-400">
+                    {winChance}%
+                  </p>
                   <p className="text-[10px] text-white/40 uppercase">
                     {m['game.season.win_chance']()}
                   </p>
@@ -93,14 +100,20 @@ export function SeasonHubScreen({
                 <GameButton onClick={onWatchGameCast} className="text-xs">
                   {m['game.season.watch_gamecast']()}
                 </GameButton>
-                <GameButton variant="secondary" onClick={onSimulateNext} className="text-xs">
+                <GameButton
+                  variant="secondary"
+                  onClick={onSimulateNext}
+                  className="text-xs"
+                >
                   {m['game.season.simulate_next']()}
                 </GameButton>
               </div>
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-sm text-white/50">{m['game.season.regular_complete']()}</p>
+              <p className="text-sm text-white/50">
+                {m['game.season.regular_complete']()}
+              </p>
               <GameButton onClick={onStartPlayoffs}>
                 {m['game.season.enter_playoffs']()}
               </GameButton>
@@ -110,7 +123,9 @@ export function SeasonHubScreen({
 
         <GamePanel title={m['game.season.last_five']()}>
           {lastFive.length === 0 ? (
-            <p className="text-sm text-white/40">{m['game.season.no_games']()}</p>
+            <p className="text-sm text-white/40">
+              {m['game.season.no_games']()}
+            </p>
           ) : (
             <ul className="space-y-2">
               {lastFive.map((g) => (
@@ -123,14 +138,17 @@ export function SeasonHubScreen({
                   <span
                     className={cn(
                       'font-bold',
-                      g.result === 'W' ? 'text-emerald-400' : 'text-red-400'
+                      g.result === 'W'
+                        ? 'text-emerald-400'
+                        : 'text-red-400'
                     )}
                   >
                     {g.result}
                   </span>
                   {g.playerStats && (
                     <span className="text-xs text-white/40">
-                      {g.playerStats.pts}/{g.playerStats.ast}/{g.playerStats.reb}
+                      {g.playerStats.pts}/{g.playerStats.ast}/
+                      {g.playerStats.reb}
                     </span>
                   )}
                 </li>
