@@ -189,7 +189,9 @@ export function isPlayerNameUsed(
 
 export function selectPlayer(state: GameState, playerId: string): GameState {
   if (state.buildPhase !== 'roster' || !state.currentTeam) return state;
-  const player = state.currentTeam.roster.find((candidate) => candidate.id === playerId);
+  const player = state.currentTeam.roster.find(
+    (candidate) => candidate.id === playerId
+  );
   if (!player || state.usedPlayerNames.has(player.name)) return state;
   return {
     ...state,
@@ -207,7 +209,9 @@ export function selectAttribute(
     (candidate) => candidate.id === state.selectedPlayerId
   );
   if (!player || !player.attributes[attribute]) return state;
-  const slot = state.buildSlots.find((candidate) => candidate.attribute === attribute);
+  const slot = state.buildSlots.find(
+    (candidate) => candidate.attribute === attribute
+  );
   if (slot?.locked) return state;
   return { ...state, selectedAttribute: attribute };
 }
@@ -329,17 +333,16 @@ export function completeCareerSpin(state: GameState): GameState {
 
 export function confirmCareerTeam(state: GameState): GameState {
   if (!state.careerTeam) return state;
+  const seasonState = createSeasonState(
+    state.careerTeam,
+    state.buildSlots,
+    state.position ?? 'SF',
+    state.mode ?? 'classic'
+  );
   return {
     ...state,
     screen: 'season',
-    seasonState: createSeasonState(
-      state.careerTeam,
-      state.buildSlots,
-      state.position ?? 'SF',
-      state.mode ?? 'classic',
-      undefined,
-      state.runSeed
-    ),
+    seasonState: { ...seasonState, runSeed: state.runSeed },
   };
 }
 
