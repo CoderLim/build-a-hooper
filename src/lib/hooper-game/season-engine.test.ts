@@ -14,7 +14,6 @@ import type {
   BuildProfile,
   BuildSlot,
   PlayoffSeries,
-  Position,
   SeasonGame,
   SeasonState,
   TeamSeason,
@@ -140,6 +139,9 @@ function makeSeason(
           (game.playerStats?.reb ?? 0) >= 10
       ).length,
     },
+    mode: 'classic',
+    runSeed: 123,
+    engineVersion: '2',
   };
 }
 
@@ -216,6 +218,7 @@ test('season schedule never includes the career team as its own opponent', () =>
     makeTeam('BOS'),
     makeSlots({}, 84),
     'SF',
+    'classic',
     () => 0
   );
 
@@ -239,8 +242,12 @@ test('DPOY requires elite defense rather than high overall alone', () => {
   };
   const games = makeGames(82, { pts: 24, ast: 7, reb: 7 }, 54);
 
-  assert.ok(!buildSeasonStats(makeSeason(offenseOnly, games)).awards.includes('DPOY'));
-  assert.ok(buildSeasonStats(makeSeason(eliteDefender, games)).awards.includes('DPOY'));
+  assert.ok(
+    !buildSeasonStats(makeSeason(offenseOnly, games)).awards.includes('DPOY')
+  );
+  assert.ok(
+    buildSeasonStats(makeSeason(eliteDefender, games)).awards.includes('DPOY')
+  );
 });
 
 test('Scoring Title requires elite scoring in addition to points per game', () => {
