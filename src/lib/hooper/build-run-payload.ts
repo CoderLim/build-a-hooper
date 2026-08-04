@@ -2,6 +2,7 @@ import type { BuildSummaryItem, SubmitRunInput } from '@/modules/hooper/types';
 import {
   createRunFingerprint,
   HOOPER_ENGINE_VERSION,
+  stableHashHex,
 } from '@/lib/hooper-game/run-random';
 import type {
   BuildSlot,
@@ -23,6 +24,7 @@ export function buildSummaryFromSlots(slots: BuildSlot[]): BuildSummaryItem[] {
 }
 
 export function buildSubmitRunInput(input: {
+  runToken: string;
   mode: GameMode;
   position: Position;
   careerTeam: TeamSeason;
@@ -30,6 +32,7 @@ export function buildSubmitRunInput(input: {
 }): SubmitRunInput {
   return {
     engineVersion: HOOPER_ENGINE_VERSION,
+    runToken: input.runToken,
     mode: input.mode,
     position: input.position,
     careerTeam: { abbr: input.careerTeam.abbr },
@@ -38,10 +41,11 @@ export function buildSubmitRunInput(input: {
 }
 
 export function buildRunFingerprint(input: SubmitRunInput): string {
-  return createRunFingerprint({
+  const buildFingerprint = createRunFingerprint({
     mode: input.mode,
     position: input.position,
     careerTeamAbbr: input.careerTeam.abbr,
     buildSlots: input.buildSlots,
   });
+  return stableHashHex(`${input.runToken}:${buildFingerprint}`);
 }
