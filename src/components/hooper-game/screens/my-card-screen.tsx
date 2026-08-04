@@ -50,14 +50,21 @@ export function MyCardScreen({
   const overall = getOverallRating(buildSlots);
 
   useEffect(() => {
-    if (!session?.user || !mode || submittedRef.current) return;
+    if (
+      !session?.user ||
+      !mode ||
+      !position ||
+      !careerTeam ||
+      submittedRef.current
+    ) {
+      return;
+    }
 
     const payload = buildSubmitRunInput({
       mode,
       position,
       careerTeam,
       buildSlots,
-      seasonStats,
     });
     const fingerprint = buildRunFingerprint(payload);
     const storageKey = `hooper-run-submitted:${session.user.id}:${fingerprint}`;
@@ -79,7 +86,7 @@ export function MyCardScreen({
         submittedRef.current = false;
         setSaveState('error');
       });
-  }, [session?.user, mode, position, careerTeam, buildSlots, seasonStats]);
+  }, [session?.user, mode, position, careerTeam, buildSlots]);
 
   return (
     <section className="flex flex-1 flex-col gap-8 py-4">
@@ -134,8 +141,8 @@ export function MyCardScreen({
             <div>
               <p className="text-white/40">{m['game.card.playoff_path']()}:</p>
               <ul className="mt-1 space-y-1">
-                {seasonStats.playoffPath.map((step, i) => (
-                  <li key={i} className="text-xs text-white/60">
+                {seasonStats.playoffPath.map((step, index) => (
+                  <li key={index} className="text-xs text-white/60">
                     {step}
                   </li>
                 ))}
