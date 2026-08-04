@@ -4,8 +4,6 @@ import type {
   GameMode,
   Grade,
   Position,
-  SeasonStats,
-  TeamSeason,
 } from '@/lib/hooper-game/types';
 
 export type LeaderboardSortBy =
@@ -25,13 +23,11 @@ export interface BuildSummaryItem {
 }
 
 export interface SubmitRunInput {
+  engineVersion: string;
   mode: GameMode;
-  position: Position | null;
-  careerTeam: Pick<TeamSeason, 'abbr' | 'name'> | null;
-  overall: number;
+  position: Position;
+  careerTeam: { abbr: string };
   buildSlots: BuildSlot[];
-  seasonStats: SeasonStats;
-  rookieCount: number;
 }
 
 export interface HooperRunView {
