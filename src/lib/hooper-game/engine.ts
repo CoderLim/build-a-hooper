@@ -216,6 +216,8 @@ export function lockPick(state: GameState): GameState {
           grade,
           overall,
           playerName: player.name,
+          playerId: player.id,
+          teamId: state.currentTeam!.id,
           round,
           isRookie: player.rookie ?? false,
         }
@@ -291,7 +293,8 @@ export function confirmCareerTeam(state: GameState): GameState {
     seasonState: createSeasonState(
       state.careerTeam,
       state.buildSlots,
-      state.position ?? 'SF'
+      state.position ?? 'SF',
+      state.mode ?? 'classic'
     ),
   };
 }
