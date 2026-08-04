@@ -1,5 +1,18 @@
-import { ATTRIBUTE_KEYS, GRADE_VALUES } from './constants';
+import type { SubmitRunInput } from '@/modules/hooper/types';
+
+import {
+  ATTRIBUTE_KEYS,
+  GRADE_VALUES,
+  POSITIONS,
+  REROLLS_BY_MODE,
+} from './constants';
 import { CAREER_TEAMS, TEAM_SEASONS } from './data';
+import type { VerifiedRunChallenge } from './run-challenge';
+import {
+  createRunFingerprint,
+  deterministicIndex,
+  HOOPER_ENGINE_VERSION,
+} from './run-random';
 import {
   buildSeasonStats,
   createSeasonState,
@@ -7,13 +20,7 @@ import {
   simulateToEnd,
   startPlayoffs,
 } from './season-engine';
-import {
-  createRunFingerprint,
-  createVerifiedRunId,
-  HOOPER_ENGINE_VERSION,
-} from './run-random';
 import type { BuildSlot, Grade, TeamSeason } from './types';
-import type { SubmitRunInput } from '@/modules/hooper/types';
 
 export class RunVerificationError extends Error {
   constructor(message: string) {
@@ -31,18 +38,47 @@ function getCareerTeam(abbr: string): TeamSeason {
   return team ?? fail('Unknown career team');
 }
 
-export function validateRunInput(input: SubmitRunInput): {
+export function validateRunInput(
+  input: SubmitRunInput,
+  challenge: VerifiedRunChallenge
+): {
   input: SubmitRunInput;
   careerTeam: TeamSeason;
   buildSlots: BuildSlot[];
 } {
-  if (input.engineVersion !== HOOPER_ENGINE_VERSION) {
+  if (
+    input.engineVersion !== HOOPER_ENGINE_VERSION ||
+    challenge.engineVersion !== HOOPER_ENGINE_VERSION
+  ) {
     fail('Unsupported game engine version');
   }
+  if (!input.runToken) fail('Run challenge is required');
   if (!input.position) fail('Position is required');
   if (!input.careerTeam?.abbr) fail('Career team is required');
   if (input.buildSlots.length !== ATTRIBUTE_KEYS.length) {
     fail('A completed run must contain exactly 13 attributes');
+  }
+
+  if (input.mode !== 'classic') {
+    const expectedPosition =
+      POSITIONS[
+        deterministicIndex(challenge.seed, 'position', POSITIONS.length)
+      ];
+    if (input.position !== expectedPosition) {
+      fail('Position does not match the run challenge');
+    }
+  }
+
+  const expectedCareerTeam =
+    CAREER_TEAMS[
+      deterministicIndex(
+        challenge.seed,
+        'career-team',
+        CAREER_TEAMS.length
+      )
+    ];
+  if (input.careerTeam.abbr !== expectedCareerTeam?.abbr) {
+    fail('Career team does not match the run challenge');
   }
 
   const careerTeam = getCareerTeam(input.careerTeam.abbr);
@@ -51,6 +87,7 @@ export function validateRunInput(input: SubmitRunInput): {
   const playerIds = new Set<string>();
   const playerNames = new Set<string>();
   const normalized: BuildSlot[] = [];
+  let rerollsUsed = 0;
 
   for (const slot of input.buildSlots) {
     if (!ATTRIBUTE_KEYS.includes(slot.attribute)) fail('Unknown attribute');
@@ -70,15 +107,34 @@ export function validateRunInput(input: SubmitRunInput): {
     if (rounds.has(slot.round)) fail('Duplicate draft round');
     rounds.add(slot.round);
 
+    if (
+      !Number.isInteger(slot.rollAttempt) ||
+      slot.rollAttempt == null ||
+      slot.rollAttempt < 0
+    ) {
+      fail('Invalid reroll provenance');
+    }
+    rerollsUsed += slot.rollAttempt;
+
+    const expectedTeam =
+      TEAM_SEASONS[
+        deterministicIndex(
+          challenge.seed,
+          `build:${slot.round}:${slot.rollAttempt}`,
+          TEAM_SEASONS.length
+        )
+      ];
+    if (!expectedTeam || slot.teamId !== expectedTeam.id) {
+      fail('Source team does not match the run challenge');
+    }
+
     if (playerIds.has(slot.playerId) || playerNames.has(slot.playerName)) {
       fail('Duplicate player');
     }
     playerIds.add(slot.playerId);
     playerNames.add(slot.playerName);
 
-    const sourceTeam = TEAM_SEASONS.find((team) => team.id === slot.teamId);
-    if (!sourceTeam) fail('Unknown source team');
-    const player = sourceTeam.roster.find(
+    const player = expectedTeam.roster.find(
       (candidate) => candidate.id === slot.playerId
     );
     if (!player || player.name !== slot.playerName) fail('Unknown source player');
@@ -105,12 +161,16 @@ export function validateRunInput(input: SubmitRunInput): {
       overall: canonicalOverall,
       playerName: player.name,
       playerId: player.id,
-      teamId: sourceTeam.id,
+      teamId: expectedTeam.id,
       round: slot.round,
+      rollAttempt: slot.rollAttempt,
       isRookie: canonicalRookie,
     });
   }
 
+  if (rerollsUsed > REROLLS_BY_MODE[input.mode]) {
+    fail('Run used too many rerolls');
+  }
   if (
     ATTRIBUTE_KEYS.some((attribute) => !attributes.has(attribute)) ||
     rounds.size !== ATTRIBUTE_KEYS.length
@@ -127,6 +187,7 @@ export function validateRunInput(input: SubmitRunInput): {
   return {
     input: {
       engineVersion: HOOPER_ENGINE_VERSION,
+      runToken: input.runToken,
       mode: input.mode,
       position: input.position,
       careerTeam: { abbr: careerTeam.abbr },
@@ -137,8 +198,11 @@ export function validateRunInput(input: SubmitRunInput): {
   };
 }
 
-export function replayVerifiedRun(input: SubmitRunInput) {
-  const verified = validateRunInput(input);
+export function replayVerifiedRun(
+  input: SubmitRunInput,
+  challenge: VerifiedRunChallenge
+) {
+  const verified = validateRunInput(input, challenge);
   const { mode, position } = verified.input;
   let season = createSeasonState(
     verified.careerTeam,
@@ -172,7 +236,8 @@ export function replayVerifiedRun(input: SubmitRunInput) {
     overall: season.buildProfile.overall,
     rookieCount: verified.buildSlots.filter((slot) => slot.isRookie).length,
     fingerprint,
+    runId: challenge.runId,
   };
 }
 
-export { createVerifiedRunId, HOOPER_ENGINE_VERSION };
+export { HOOPER_ENGINE_VERSION };
