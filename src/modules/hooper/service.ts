@@ -1,5 +1,6 @@
 import { and, asc, count, desc, eq, like, sum, type SQL } from 'drizzle-orm';
 
+import { envConfigs } from '@/config';
 import {
   hooperLegacy,
   hooperRun,
@@ -14,10 +15,8 @@ import {
   type AchievementsResult,
 } from '@/lib/hooper/achievements';
 import { buildSummaryFromSlots } from '@/lib/hooper/build-run-payload';
-import {
-  createVerifiedRunId,
-  replayVerifiedRun,
-} from '@/lib/hooper-game/run-integrity';
+import { verifyRunChallenge } from '@/lib/hooper-game/run-challenge';
+import { replayVerifiedRun } from '@/lib/hooper-game/run-integrity';
 import { computeLegacyPoints } from '@/modules/hooper/legacy-points';
 import type {
   HooperLegacyView,
@@ -119,8 +118,13 @@ export async function submitRun(
   displayName: string,
   input: SubmitRunInput
 ): Promise<HooperRunView> {
-  const verified = replayVerifiedRun(input);
-  const { seasonStats, overall, rookieCount } = verified;
+  const challenge = await verifyRunChallenge(
+    input.runToken,
+    userId,
+    envConfigs.auth_secret
+  );
+  const verified = replayVerifiedRun(input, challenge);
+  const { seasonStats, overall, rookieCount, runId } = verified;
   const buildSummary = buildSummaryFromSlots(verified.buildSlots);
   const legacyPoints = computeLegacyPoints(
     seasonStats,
@@ -128,7 +132,6 @@ export async function submitRun(
     seasonStats.wins
   );
   const awardsCount = seasonStats.awards.length;
-  const runId = createVerifiedRunId(userId, verified.fingerprint);
   const existingRun = await findRunById(runId);
   if (existingRun) return toRunView(existingRun);
 
