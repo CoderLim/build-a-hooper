@@ -29,6 +29,7 @@ interface MyCardScreenProps {
   showPosition: boolean;
   careerTeam: TeamSeason | null;
   seasonStats: SeasonStats;
+  runToken: string | null;
   onPlayAgain: () => void;
 }
 
@@ -41,6 +42,7 @@ export function MyCardScreen({
   showPosition,
   careerTeam,
   seasonStats,
+  runToken,
   onPlayAgain,
 }: MyCardScreenProps) {
   const [saveState, setSaveState] = useState<SaveState>('idle');
@@ -50,14 +52,23 @@ export function MyCardScreen({
   const overall = getOverallRating(buildSlots);
 
   useEffect(() => {
-    if (!session?.user || !mode || submittedRef.current) return;
+    if (
+      !session?.user ||
+      !runToken ||
+      !mode ||
+      !position ||
+      !careerTeam ||
+      submittedRef.current
+    ) {
+      return;
+    }
 
     const payload = buildSubmitRunInput({
+      runToken,
       mode,
       position,
       careerTeam,
       buildSlots,
-      seasonStats,
     });
     const fingerprint = buildRunFingerprint(payload);
     const storageKey = `hooper-run-submitted:${session.user.id}:${fingerprint}`;
@@ -79,7 +90,14 @@ export function MyCardScreen({
         submittedRef.current = false;
         setSaveState('error');
       });
-  }, [session?.user, mode, position, careerTeam, buildSlots, seasonStats]);
+  }, [
+    session?.user,
+    runToken,
+    mode,
+    position,
+    careerTeam,
+    buildSlots,
+  ]);
 
   return (
     <section className="flex flex-1 flex-col gap-8 py-4">
@@ -114,12 +132,12 @@ export function MyCardScreen({
             [seasonStats.ppg, 'PPG'],
             [seasonStats.apg, 'APG'],
             [seasonStats.rpg, 'RPG'],
-          ].map(([val, label]) => (
+          ].map(([value, label]) => (
             <div
               key={String(label)}
               className="rounded-xl border border-white/10 bg-black/20 py-3"
             >
-              <p className="text-xl font-black">{val}</p>
+              <p className="text-xl font-black">{value}</p>
               <p className="text-[10px] text-white/40">{label}</p>
             </div>
           ))}
@@ -134,8 +152,8 @@ export function MyCardScreen({
             <div>
               <p className="text-white/40">{m['game.card.playoff_path']()}:</p>
               <ul className="mt-1 space-y-1">
-                {seasonStats.playoffPath.map((step, i) => (
-                  <li key={i} className="text-xs text-white/60">
+                {seasonStats.playoffPath.map((step, index) => (
+                  <li key={index} className="text-xs text-white/60">
                     {step}
                   </li>
                 ))}

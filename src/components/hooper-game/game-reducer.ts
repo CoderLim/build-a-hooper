@@ -15,6 +15,7 @@ import {
   selectMode,
   selectPlayer,
   selectPosition,
+  setRunChallenge,
   startCareerSpin,
   startGame,
   startSpin,
@@ -37,6 +38,7 @@ import type {
 } from '@/lib/hooper-game/types';
 
 export type GameAction =
+  | { type: 'SET_RUN_CHALLENGE'; runToken: string; seed: number }
   | { type: 'START' }
   | { type: 'SELECT_MODE'; mode: GameMode }
   | { type: 'CONFIRM_MODE' }
@@ -66,6 +68,8 @@ export type GameAction =
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
+    case 'SET_RUN_CHALLENGE':
+      return setRunChallenge(state, action.runToken, action.seed);
     case 'START':
       return startGame(state);
     case 'SELECT_MODE':
@@ -165,9 +169,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'START_GAMECAST': {
       if (!state.seasonState) return state;
-      const idx = state.seasonState.currentGameIndex;
-      if (idx >= 82) return state;
-      const gameCast = startGameCast(state.seasonState, idx);
+      const index = state.seasonState.currentGameIndex;
+      if (index >= 82) return state;
+      const gameCast = startGameCast(state.seasonState, index);
       return { ...state, gameCast, screen: 'gamecast' };
     }
     case 'ADVANCE_GAMECAST': {

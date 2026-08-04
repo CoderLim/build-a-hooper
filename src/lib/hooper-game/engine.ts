@@ -7,6 +7,7 @@ import {
   REROLLS_BY_MODE,
 } from './constants';
 import { CAREER_TEAMS, TEAM_SEASONS } from './data';
+import { deterministicIndex } from './run-random';
 import { createSeasonState } from './season-engine';
 import type {
   AttributeKey,
@@ -18,6 +19,20 @@ import type {
   Position,
   TeamSeason,
 } from './types';
+
+function createLocalRunSeed(): number {
+  return Math.floor(Math.random() * 0x100000000) >>> 0;
+}
+
+function deterministicTeam(
+  seed: number,
+  round: number,
+  attempt: number
+): TeamSeason {
+  return TEAM_SEASONS[
+    deterministicIndex(seed, `build:${round}:${attempt}`, TEAM_SEASONS.length)
+  ]!;
+}
 
 export function createInitialState(): GameState {
   return {
@@ -43,6 +58,23 @@ export function createInitialState(): GameState {
     seasonState: null,
     gameCast: null,
     seasonStats: null,
+    runToken: null,
+    runSeed: createLocalRunSeed(),
+    currentRollAttempt: 0,
+  };
+}
+
+export function setRunChallenge(
+  state: GameState,
+  runToken: string,
+  runSeed: number
+): GameState {
+  if (state.screen !== 'landing') return state;
+  return {
+    ...state,
+    runToken,
+    runSeed: runSeed >>> 0,
+    currentRollAttempt: 0,
   };
 }
 
@@ -65,7 +97,10 @@ export function confirmMode(state: GameState): GameState {
     return { ...state, screen: 'position-select' };
   }
 
-  const position = POSITIONS[Math.floor(Math.random() * POSITIONS.length)]!;
+  const position =
+    POSITIONS[
+      deterministicIndex(state.runSeed, 'position', POSITIONS.length)
+    ]!;
 
   if (state.mode === 'blind') {
     return {
@@ -101,25 +136,23 @@ export function confirmPositionRoll(state: GameState): GameState {
   return { ...state, screen: 'build', buildPhase: 'idle' };
 }
 
-function pickRandomTeam(pool: TeamSeason[]): TeamSeason {
-  return pool[Math.floor(Math.random() * pool.length)]!;
-}
-
 export function startSpin(state: GameState): GameState {
   if (state.buildPhase !== 'idle') return state;
-  const abbrs = TEAM_SEASONS.map((t) => t.abbr);
+  const abbrs = TEAM_SEASONS.map((team) => team.abbr);
   return {
     ...state,
     buildPhase: 'spinning',
     spinDisplayAbbr: abbrs[Math.floor(Math.random() * abbrs.length)] ?? null,
     selectedPlayerId: null,
     selectedAttribute: null,
+    currentRollAttempt: 0,
   };
 }
 
 export function completeSpin(state: GameState): GameState {
   if (state.buildPhase !== 'spinning') return state;
-  const team = pickRandomTeam(state.spinPool);
+  const round = state.lockedPicks.length + 1;
+  const team = deterministicTeam(state.runSeed, round, 0);
   return {
     ...state,
     buildPhase: 'roster',
@@ -127,12 +160,15 @@ export function completeSpin(state: GameState): GameState {
     spinDisplayAbbr: team.abbr,
     selectedPlayerId: null,
     selectedAttribute: null,
+    currentRollAttempt: 0,
   };
 }
 
 export function rerollTeam(state: GameState): GameState {
   if (state.rerollsLeft <= 0 || state.buildPhase !== 'roster') return state;
-  const team = pickRandomTeam(state.spinPool);
+  const round = state.lockedPicks.length + 1;
+  const nextAttempt = state.currentRollAttempt + 1;
+  const team = deterministicTeam(state.runSeed, round, nextAttempt);
   return {
     ...state,
     rerollsLeft: state.rerollsLeft - 1,
@@ -140,6 +176,7 @@ export function rerollTeam(state: GameState): GameState {
     spinDisplayAbbr: team.abbr,
     selectedPlayerId: null,
     selectedAttribute: null,
+    currentRollAttempt: nextAttempt,
   };
 }
 
@@ -152,7 +189,9 @@ export function isPlayerNameUsed(
 
 export function selectPlayer(state: GameState, playerId: string): GameState {
   if (state.buildPhase !== 'roster' || !state.currentTeam) return state;
-  const player = state.currentTeam.roster.find((p) => p.id === playerId);
+  const player = state.currentTeam.roster.find(
+    (candidate) => candidate.id === playerId
+  );
   if (!player || state.usedPlayerNames.has(player.name)) return state;
   return {
     ...state,
@@ -167,10 +206,12 @@ export function selectAttribute(
 ): GameState {
   if (!state.selectedPlayerId || !state.currentTeam) return state;
   const player = state.currentTeam.roster.find(
-    (p) => p.id === state.selectedPlayerId
+    (candidate) => candidate.id === state.selectedPlayerId
   );
   if (!player || !player.attributes[attribute]) return state;
-  const slot = state.buildSlots.find((s) => s.attribute === attribute);
+  const slot = state.buildSlots.find(
+    (candidate) => candidate.attribute === attribute
+  );
   if (slot?.locked) return state;
   return { ...state, selectedAttribute: attribute };
 }
@@ -186,7 +227,7 @@ export function lockPick(state: GameState): GameState {
   }
 
   const player = state.currentTeam.roster.find(
-    (p) => p.id === state.selectedPlayerId
+    (candidate) => candidate.id === state.selectedPlayerId
   );
   if (!player) return state;
 
@@ -216,7 +257,10 @@ export function lockPick(state: GameState): GameState {
           grade,
           overall,
           playerName: player.name,
+          playerId: player.id,
+          teamId: state.currentTeam!.id,
           round,
+          rollAttempt: state.currentRollAttempt,
           isRookie: player.rookie ?? false,
         }
       : slot
@@ -236,6 +280,7 @@ export function lockPick(state: GameState): GameState {
       spinDisplayAbbr: null,
       selectedPlayerId: null,
       selectedAttribute: null,
+      currentRollAttempt: 0,
       screen: 'reveal',
       positionRevealed: true,
     };
@@ -251,6 +296,7 @@ export function lockPick(state: GameState): GameState {
     spinDisplayAbbr: null,
     selectedPlayerId: null,
     selectedAttribute: null,
+    currentRollAttempt: 0,
   };
 }
 
@@ -264,7 +310,7 @@ export function proceedToCareerTeam(state: GameState): GameState {
 }
 
 export function startCareerSpin(state: GameState): GameState {
-  const abbrs = CAREER_TEAMS.map((t) => t.abbr);
+  const abbrs = CAREER_TEAMS.map((team) => team.abbr);
   return {
     ...state,
     careerTeamPhase: 'spinning',
@@ -274,7 +320,9 @@ export function startCareerSpin(state: GameState): GameState {
 
 export function completeCareerSpin(state: GameState): GameState {
   const team =
-    CAREER_TEAMS[Math.floor(Math.random() * CAREER_TEAMS.length)] ?? null;
+    CAREER_TEAMS[
+      deterministicIndex(state.runSeed, 'career-team', CAREER_TEAMS.length)
+    ] ?? null;
   return {
     ...state,
     careerTeam: team,
@@ -285,14 +333,16 @@ export function completeCareerSpin(state: GameState): GameState {
 
 export function confirmCareerTeam(state: GameState): GameState {
   if (!state.careerTeam) return state;
+  const seasonState = createSeasonState(
+    state.careerTeam,
+    state.buildSlots,
+    state.position ?? 'SF',
+    state.mode ?? 'classic'
+  );
   return {
     ...state,
     screen: 'season',
-    seasonState: createSeasonState(
-      state.careerTeam,
-      state.buildSlots,
-      state.position ?? 'SF'
-    ),
+    seasonState: { ...seasonState, runSeed: state.runSeed },
   };
 }
 
@@ -302,10 +352,10 @@ export function resetGame(): GameState {
 }
 
 export function getOverallRating(slots: BuildSlot[]): number {
-  const locked = slots.filter((s) => s.locked && s.overall);
+  const locked = slots.filter((slot) => slot.locked && slot.overall);
   if (locked.length === 0) return 0;
   return Math.round(
-    locked.reduce((sum, s) => sum + (s.overall ?? 0), 0) / locked.length
+    locked.reduce((sum, slot) => sum + (slot.overall ?? 0), 0) / locked.length
   );
 }
 

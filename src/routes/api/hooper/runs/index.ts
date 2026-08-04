@@ -2,51 +2,73 @@ import { createFileRoute } from '@tanstack/react-router';
 import { z } from 'zod';
 
 import { getAuth } from '@/core/auth';
-import { getUserRuns, submitRun } from '@/modules/hooper/service';
-import type { SubmitRunInput } from '@/modules/hooper/types';
+import { HOOPER_ENGINE_VERSION } from '@/lib/hooper-game/run-random';
 import { enforceMinIntervalRateLimit } from '@/lib/rate-limit';
 import { respData, respErr } from '@/lib/resp';
+import { getUserRuns, submitRun } from '@/modules/hooper/service';
+import type { SubmitRunInput } from '@/modules/hooper/types';
 
-const seasonStatsSchema = z.object({
-  wins: z.number().int().min(0).max(82),
-  losses: z.number().int().min(0).max(82),
-  ppg: z.number().int().min(0).max(100),
-  apg: z.number().int().min(0).max(50),
-  rpg: z.number().int().min(0).max(50),
-  awards: z.array(z.string().max(64)).max(20),
-  playoffResult: z.string().max(64),
-  champion: z.boolean(),
-  fmvp: z.boolean(),
-  playoffPath: z.array(z.string().max(64)).max(16).optional(),
-  tripleDoubles: z.number().int().min(0).max(82).default(0),
-  madeThroughPlayIn: z.boolean().default(false),
-  finalsComeback: z.boolean().default(false),
-});
+const attributeSchema = z.enum([
+  '3PT',
+  'MID',
+  'FIN',
+  'DNK',
+  'HAN',
+  'PAS',
+  'PDEF',
+  'IDEF',
+  'BLK',
+  'REB',
+  'ATH',
+  'STR',
+  'CLU',
+]);
 
-const buildSlotSchema = z.object({
-  attribute: z.string().max(64),
-  locked: z.boolean(),
-  grade: z.string().max(8).optional(),
-  overall: z.number().min(0).max(99).optional(),
-  playerName: z.string().max(128).optional(),
-  round: z.number().int().min(0).max(20).optional(),
-  isRookie: z.boolean().optional(),
-});
+const gradeSchema = z.enum([
+  'A+',
+  'A',
+  'A-',
+  'B+',
+  'B',
+  'B-',
+  'C+',
+  'C',
+  'C-',
+  'D+',
+  'D',
+  'D-',
+  'F',
+]);
 
-const submitRunSchema = z.object({
-  mode: z.enum(['classic', 'blind', 'chaos']),
-  position: z.enum(['PG', 'SG', 'SF', 'PF', 'C']).nullable(),
-  careerTeam: z
-    .object({
-      abbr: z.string().max(8),
-      name: z.string().max(64),
-    })
-    .nullable(),
-  overall: z.number().int().min(0).max(99),
-  buildSlots: z.array(buildSlotSchema).max(20),
-  seasonStats: seasonStatsSchema,
-  rookieCount: z.number().int().min(0).max(13).default(0),
-});
+const buildSlotSchema = z
+  .object({
+    attribute: attributeSchema,
+    locked: z.literal(true),
+    grade: gradeSchema,
+    overall: z.number().int().min(0).max(99),
+    playerName: z.string().min(1).max(128),
+    playerId: z.string().min(1).max(256),
+    teamId: z.string().min(1).max(256),
+    round: z.number().int().min(1).max(13),
+    rollAttempt: z.number().int().min(0).max(3),
+    isRookie: z.boolean(),
+  })
+  .strict();
+
+const submitRunSchema = z
+  .object({
+    engineVersion: z.literal(HOOPER_ENGINE_VERSION),
+    runToken: z.string().min(32).max(4096),
+    mode: z.enum(['classic', 'blind', 'chaos']),
+    position: z.enum(['PG', 'SG', 'SF', 'PF', 'C']),
+    careerTeam: z
+      .object({
+        abbr: z.string().min(2).max(8),
+      })
+      .strict(),
+    buildSlots: z.array(buildSlotSchema).length(13),
+  })
+  .strict();
 
 async function GET({ request }: { request: Request }) {
   try {
@@ -87,17 +109,10 @@ async function POST({ request }: { request: Request }) {
       return respErr(parsed.error.issues[0]?.message ?? 'Invalid payload');
     }
 
-    const input = parsed.data as SubmitRunInput;
-    // Soft integrity: regular-season games must not exceed 82.
-    const { wins, losses } = input.seasonStats;
-    if (wins + losses > 82) {
-      return respErr('Invalid season record');
-    }
-
     const run = await submitRun(
       session.user.id,
       session.user.name || 'Hooper',
-      input
+      parsed.data as SubmitRunInput
     );
     return respData(run);
   } catch (error: unknown) {

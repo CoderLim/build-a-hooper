@@ -93,7 +93,10 @@ export interface BuildSlot {
   grade?: Grade;
   overall?: number;
   playerName?: string;
+  playerId?: string;
+  teamId?: string;
   round?: number;
+  rollAttempt?: number;
   isRookie?: boolean;
 }
 
@@ -154,6 +157,9 @@ export interface SeasonState {
   teamStrength: number;
   buildProfile: BuildProfile;
   totals: SeasonTotals;
+  mode: GameMode;
+  runSeed: number;
+  engineVersion: string;
 }
 
 export interface GameCastState {
@@ -205,4 +211,7 @@ export interface GameState {
   seasonState: SeasonState | null;
   gameCast: GameCastState | null;
   seasonStats: SeasonStats | null;
+  runToken: string | null;
+  runSeed: number;
+  currentRollAttempt: number;
 }

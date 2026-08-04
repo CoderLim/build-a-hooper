@@ -63,6 +63,9 @@ function makeSeason(stats: { pts: number; ast: number; reb: number }): SeasonSta
       rebounds: stats.reb * 82,
       tripleDoubles: 0,
     },
+    mode: 'classic',
+    runSeed: 123,
+    engineVersion: '2',
   };
 }
 
