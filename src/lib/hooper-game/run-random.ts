@@ -31,6 +31,15 @@ export function createSeededRandom(seed: string | number): () => number {
   };
 }
 
+export function deterministicIndex(
+  seed: number,
+  scope: string,
+  length: number
+): number {
+  if (length <= 0) throw new Error('Cannot choose from an empty collection');
+  return Math.floor(createSeededRandom(`${seed}:${scope}`)() * length);
+}
+
 export function canonicalRunKey(input: {
   mode: GameMode;
   position: Position;
@@ -49,6 +58,7 @@ export function canonicalRunKey(input: {
       slot?.grade ?? '',
       slot?.overall ?? '',
       slot?.round ?? '',
+      slot?.rollAttempt ?? '',
       slot?.isRookie ? '1' : '0',
     ].join(':');
   }).join('|');
