@@ -24,6 +24,7 @@ export interface BuildSummaryItem {
 
 export interface SubmitRunInput {
   engineVersion: string;
+  runToken: string;
   mode: GameMode;
   position: Position;
   careerTeam: { abbr: string };
