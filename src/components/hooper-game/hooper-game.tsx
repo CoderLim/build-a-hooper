@@ -1,5 +1,8 @@
-import { useReducer } from 'react';
+import { useReducer, useState } from 'react';
 
+import { useSession } from '@/core/auth/client';
+import { apiPost } from '@/lib/api-client';
+import type { RunChallengeResponse } from '@/lib/hooper-game/run-challenge';
 import {
   createDevCardPreviewState,
   isDevCardPreviewActive,
@@ -46,6 +49,8 @@ interface HooperGameProps {
 
 export function HooperGame({ embedded = false }: HooperGameProps = {}) {
   const [state, dispatch] = useReducer(gameReducer, undefined, initState);
+  const [starting, setStarting] = useState(false);
+  const { data: session, isPending: sessionPending } = useSession();
 
   const showRatings = ratingsVisible(state.mode);
   const showPosition = positionVisible(state.mode, state.positionRevealed);
@@ -53,14 +58,39 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
   const overall = getOverallRating(state.buildSlots);
 
   const lockedAttributes = state.buildSlots
-    .filter((s) => s.locked)
-    .map((s) => s.attribute);
+    .filter((slot) => slot.locked)
+    .map((slot) => slot.attribute);
 
   const selectedPlayer = state.currentTeam?.roster.find(
-    (p) => p.id === state.selectedPlayerId
+    (player) => player.id === state.selectedPlayerId
   );
 
   const act = (action: GameAction) => () => dispatch(action);
+
+  const handleStart = async () => {
+    if (starting || sessionPending) return;
+    if (!session?.user) {
+      dispatch({ type: 'START' });
+      return;
+    }
+
+    setStarting(true);
+    try {
+      const challenge = await apiPost<RunChallengeResponse>(
+        '/api/hooper/runs/challenge'
+      );
+      dispatch({
+        type: 'SET_RUN_CHALLENGE',
+        runToken: challenge.runToken,
+        seed: challenge.seed,
+      });
+      dispatch({ type: 'START' });
+    } catch (error) {
+      console.error('[hooper] Failed to issue run challenge', error);
+    } finally {
+      setStarting(false);
+    }
+  };
 
   return (
     <GameShell
@@ -73,7 +103,11 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
         )}
       >
         {state.screen === 'landing' && (
-          <LandingScreen embedded={embedded} onStart={act({ type: 'START' })} />
+          <LandingScreen
+            embedded={embedded}
+            onStart={handleStart}
+            startDisabled={starting || sessionPending}
+          />
         )}
 
         {state.screen === 'mode-select' && (
@@ -181,6 +215,7 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
             showPosition={showPosition}
             careerTeam={state.careerTeam}
             seasonStats={state.seasonStats}
+            runToken={state.runToken}
             onPlayAgain={act({ type: 'RESET' })}
           />
         )}
