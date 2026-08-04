@@ -1,6 +1,5 @@
 import { and, asc, count, desc, eq, like, sum, type SQL } from 'drizzle-orm';
 
-import { db } from '@/core/db';
 import {
   hooperLegacy,
   hooperRun,
@@ -8,6 +7,17 @@ import {
   type HooperLegacy,
   type HooperRun,
 } from '@/config/db/schema';
+import { db } from '@/core/db';
+import {
+  evaluateAchievements,
+  lockedAchievementCatalog,
+  type AchievementsResult,
+} from '@/lib/hooper/achievements';
+import { buildSummaryFromSlots } from '@/lib/hooper/build-run-payload';
+import {
+  createVerifiedRunId,
+  replayVerifiedRun,
+} from '@/lib/hooper-game/run-integrity';
 import { computeLegacyPoints } from '@/modules/hooper/legacy-points';
 import type {
   HooperLegacyView,
@@ -18,13 +28,6 @@ import type {
   LeaderboardStats,
   SubmitRunInput,
 } from '@/modules/hooper/types';
-import { getUuid } from '@/lib/hash';
-import {
-  evaluateAchievements,
-  lockedAchievementCatalog,
-  type AchievementsResult,
-} from '@/lib/hooper/achievements';
-import { buildSummaryFromSlots } from '@/lib/hooper/build-run-payload';
 
 function parseJsonArray<T>(raw: string): T[] {
   try {
@@ -102,83 +105,111 @@ function sortColumn(sortBy: LeaderboardSortBy) {
   }
 }
 
+async function findRunById(runId: string): Promise<HooperRun | undefined> {
+  const [row] = await db()
+    .select()
+    .from(hooperRun)
+    .where(eq(hooperRun.id, runId))
+    .limit(1);
+  return row;
+}
+
 export async function submitRun(
   userId: string,
   displayName: string,
   input: SubmitRunInput
 ): Promise<HooperRunView> {
-  const { seasonStats } = input;
-  const buildSummary = buildSummaryFromSlots(input.buildSlots);
+  const verified = replayVerifiedRun(input);
+  const { seasonStats, overall, rookieCount } = verified;
+  const buildSummary = buildSummaryFromSlots(verified.buildSlots);
   const legacyPoints = computeLegacyPoints(
     seasonStats,
-    input.overall,
+    overall,
     seasonStats.wins
   );
   const awardsCount = seasonStats.awards.length;
-  const runId = getUuid();
+  const runId = createVerifiedRunId(userId, verified.fingerprint);
+  const existingRun = await findRunById(runId);
+  if (existingRun) return toRunView(existingRun);
+
   const now = new Date();
 
-  await db().transaction(async (tx) => {
-    await tx.insert(hooperRun).values({
-      id: runId,
-      userId,
-      completedAt: now,
-      mode: input.mode,
-      position: input.position,
-      careerTeamAbbr: input.careerTeam?.abbr ?? null,
-      careerTeamName: input.careerTeam?.name ?? null,
-      overall: input.overall,
-      wins: seasonStats.wins,
-      losses: seasonStats.losses,
-      ppg: seasonStats.ppg,
-      apg: seasonStats.apg,
-      rpg: seasonStats.rpg,
-      champion: seasonStats.champion,
-      fmvp: seasonStats.fmvp,
-      playoffResult: seasonStats.playoffResult,
-      awards: JSON.stringify(seasonStats.awards),
-      legacyPoints,
-      buildSummary: JSON.stringify(buildSummary),
-      rookieCount: input.rookieCount,
-      tripleDoubles: seasonStats.tripleDoubles,
-      madeThroughPlayIn: seasonStats.madeThroughPlayIn,
-      finalsComeback: seasonStats.finalsComeback,
-      playoffPath: JSON.stringify(seasonStats.playoffPath),
-    });
+  try {
+    await db().transaction(async (tx) => {
+      await tx.insert(hooperRun).values({
+        id: runId,
+        userId,
+        completedAt: now,
+        mode: verified.input.mode,
+        position: verified.input.position,
+        careerTeamAbbr: verified.careerTeam.abbr,
+        careerTeamName: verified.careerTeam.name,
+        overall,
+        wins: seasonStats.wins,
+        losses: seasonStats.losses,
+        ppg: seasonStats.ppg,
+        apg: seasonStats.apg,
+        rpg: seasonStats.rpg,
+        champion: seasonStats.champion,
+        fmvp: seasonStats.fmvp,
+        playoffResult: seasonStats.playoffResult,
+        awards: JSON.stringify(seasonStats.awards),
+        legacyPoints,
+        buildSummary: JSON.stringify(buildSummary),
+        rookieCount,
+        tripleDoubles: seasonStats.tripleDoubles,
+        madeThroughPlayIn: seasonStats.madeThroughPlayIn,
+        finalsComeback: seasonStats.finalsComeback,
+        playoffPath: JSON.stringify(seasonStats.playoffPath),
+      });
 
-    const existing = await tx
-      .select()
-      .from(hooperLegacy)
-      .where(eq(hooperLegacy.userId, userId))
-      .limit(1);
+      const existing = await tx
+        .select()
+        .from(hooperLegacy)
+        .where(eq(hooperLegacy.userId, userId))
+        .limit(1);
 
-    const current = existing[0];
-    const totalRuns = (current?.totalRuns ?? 0) + 1;
-    const totalChampionships =
-      (current?.totalChampionships ?? 0) + (seasonStats.champion ? 1 : 0);
-    const totalLegacyPoints = (current?.totalLegacyPoints ?? 0) + legacyPoints;
-    const bestOverall = Math.max(current?.bestOverall ?? 0, input.overall);
-    const totalAwards = (current?.totalAwards ?? 0) + awardsCount;
+      const current = existing[0];
+      const totalRuns = (current?.totalRuns ?? 0) + 1;
+      const totalChampionships =
+        (current?.totalChampionships ?? 0) + (seasonStats.champion ? 1 : 0);
+      const totalLegacyPoints = (current?.totalLegacyPoints ?? 0) + legacyPoints;
+      const bestOverall = Math.max(current?.bestOverall ?? 0, overall);
+      const totalAwards = (current?.totalAwards ?? 0) + awardsCount;
 
-    const [totals] = await tx
-      .select({
-        totalWins: sum(hooperRun.wins),
-        totalLosses: sum(hooperRun.losses),
-      })
-      .from(hooperRun)
-      .where(eq(hooperRun.userId, userId));
+      const [totals] = await tx
+        .select({
+          totalWins: sum(hooperRun.wins),
+          totalLosses: sum(hooperRun.losses),
+        })
+        .from(hooperRun)
+        .where(eq(hooperRun.userId, userId));
 
-    const winRate = computeWinRate(
-      Number(totals?.totalWins ?? 0),
-      Number(totals?.totalLosses ?? 0)
-    );
+      const winRate = computeWinRate(
+        Number(totals?.totalWins ?? 0),
+        Number(totals?.totalLosses ?? 0)
+      );
 
-    if (current) {
-      await tx
-        .update(hooperLegacy)
-        .set({
+      if (current) {
+        await tx
+          .update(hooperLegacy)
+          .set({
+            displayName,
+            preferredPosition: verified.input.position,
+            totalRuns,
+            totalChampionships,
+            totalLegacyPoints,
+            bestOverall,
+            totalAwards,
+            winRate,
+            lastRunAt: now,
+          })
+          .where(eq(hooperLegacy.userId, userId));
+      } else {
+        await tx.insert(hooperLegacy).values({
+          userId,
           displayName,
-          preferredPosition: input.position,
+          preferredPosition: verified.input.position,
           totalRuns,
           totalChampionships,
           totalLegacyPoints,
@@ -186,30 +217,16 @@ export async function submitRun(
           totalAwards,
           winRate,
           lastRunAt: now,
-        })
-        .where(eq(hooperLegacy.userId, userId));
-    } else {
-      await tx.insert(hooperLegacy).values({
-        userId,
-        displayName,
-        preferredPosition: input.position,
-        totalRuns,
-        totalChampionships,
-        totalLegacyPoints,
-        bestOverall,
-        totalAwards,
-        winRate,
-        lastRunAt: now,
-      });
-    }
-  });
+        });
+      }
+    });
+  } catch (error) {
+    const duplicate = await findRunById(runId);
+    if (duplicate) return toRunView(duplicate);
+    throw error;
+  }
 
-  const [row] = await db()
-    .select()
-    .from(hooperRun)
-    .where(eq(hooperRun.id, runId))
-    .limit(1);
-
+  const row = await findRunById(runId);
   if (!row) throw new Error('Failed to save run');
   return toRunView(row);
 }
@@ -354,11 +371,8 @@ export async function getPublicProfile(
       asc(hooperLegacy.displayName)
     );
 
-  const rank =
-    rankRows.findIndex((row) => row.userId === userId) >= 0
-      ? rankRows.findIndex((row) => row.userId === userId) + 1
-      : undefined;
-
+  const rankIndex = rankRows.findIndex((row) => row.userId === userId);
+  const rank = rankIndex >= 0 ? rankIndex + 1 : undefined;
   const { items: recentRuns } = await getUserRuns(userId, 1, 5);
 
   return {
