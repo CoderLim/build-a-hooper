@@ -5,6 +5,7 @@ import { GameButton, GameEyebrow, GameTitle } from '../game-ui';
 interface LandingScreenProps {
   embedded?: boolean;
   onStart: () => void;
+  startDisabled?: boolean;
 }
 
 const STEPS = [
@@ -28,6 +29,7 @@ const STEPS = [
 export function LandingScreen({
   embedded = false,
   onStart,
+  startDisabled = false,
 }: LandingScreenProps) {
   return (
     <section className="flex flex-1 flex-col items-center justify-center text-center">
@@ -47,7 +49,7 @@ export function LandingScreen({
         </>
       )}
       <div className="mt-10">
-        <GameButton onClick={onStart}>
+        <GameButton onClick={onStart} disabled={startDisabled}>
           {m['game.landing.choose_mode']()}
         </GameButton>
       </div>
