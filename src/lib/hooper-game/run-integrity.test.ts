@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
+import type { SubmitRunInput } from '@/modules/hooper/types';
+
 import { ATTRIBUTE_KEYS, GRADE_VALUES } from './constants';
 import { TEAM_SEASONS } from './data';
 import {
@@ -9,19 +11,25 @@ import {
   validateRunInput,
 } from './run-integrity';
 import type { BuildSlot } from './types';
-import type { SubmitRunInput } from '@/modules/hooper/types';
 
 function createValidBuildSlots(): BuildSlot[] {
-  const usedPlayers = new Set<string>();
+  const usedPlayerIds = new Set<string>();
+  const usedPlayerNames = new Set<string>();
 
   return ATTRIBUTE_KEYS.map((attribute, index) => {
     for (const team of TEAM_SEASONS) {
       for (const player of team.roster) {
-        if (usedPlayers.has(player.id)) continue;
+        if (
+          usedPlayerIds.has(player.id) ||
+          usedPlayerNames.has(player.name)
+        ) {
+          continue;
+        }
         const grade = player.attributes[attribute];
         if (!grade) continue;
 
-        usedPlayers.add(player.id);
+        usedPlayerIds.add(player.id);
+        usedPlayerNames.add(player.name);
         return {
           attribute,
           locked: true,
@@ -105,7 +113,10 @@ test('client-claimed stats and awards are ignored by authoritative replay', () =
   const verified = replayVerifiedRun(input);
 
   assert.notEqual(verified.overall, 99);
-  assert.ok(verified.seasonStats.wins + verified.seasonStats.losses === 82);
+  assert.equal(
+    verified.seasonStats.wins + verified.seasonStats.losses,
+    82
+  );
   assert.notDeepEqual(verified.seasonStats, input.seasonStats);
 });
 
