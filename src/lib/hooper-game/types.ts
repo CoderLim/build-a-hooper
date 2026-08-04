@@ -96,6 +96,7 @@ export interface BuildSlot {
   playerId?: string;
   teamId?: string;
   round?: number;
+  rollAttempt?: number;
   isRookie?: boolean;
 }
 
@@ -210,4 +211,7 @@ export interface GameState {
   seasonState: SeasonState | null;
   gameCast: GameCastState | null;
   seasonStats: SeasonStats | null;
+  runToken: string | null;
+  runSeed: number;
+  currentRollAttempt: number;
 }
