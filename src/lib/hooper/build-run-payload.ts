@@ -1,10 +1,12 @@
 import type { BuildSummaryItem, SubmitRunInput } from '@/modules/hooper/types';
-import { getOverallRating } from '@/lib/hooper-game/engine';
+import {
+  createRunFingerprint,
+  HOOPER_ENGINE_VERSION,
+} from '@/lib/hooper-game/run-random';
 import type {
   BuildSlot,
   GameMode,
   Position,
-  SeasonStats,
   TeamSeason,
 } from '@/lib/hooper-game/types';
 
@@ -22,37 +24,24 @@ export function buildSummaryFromSlots(slots: BuildSlot[]): BuildSummaryItem[] {
 
 export function buildSubmitRunInput(input: {
   mode: GameMode;
-  position: Position | null;
-  careerTeam: TeamSeason | null;
+  position: Position;
+  careerTeam: TeamSeason;
   buildSlots: BuildSlot[];
-  seasonStats: SeasonStats;
 }): SubmitRunInput {
-  const rookieCount = input.buildSlots.filter(
-    (slot) => slot.locked && slot.isRookie
-  ).length;
-
   return {
+    engineVersion: HOOPER_ENGINE_VERSION,
     mode: input.mode,
     position: input.position,
-    careerTeam: input.careerTeam
-      ? { abbr: input.careerTeam.abbr, name: input.careerTeam.name }
-      : null,
-    overall: getOverallRating(input.buildSlots),
+    careerTeam: { abbr: input.careerTeam.abbr },
     buildSlots: input.buildSlots,
-    seasonStats: input.seasonStats,
-    rookieCount,
   };
 }
 
 export function buildRunFingerprint(input: SubmitRunInput): string {
-  const { seasonStats } = input;
-  return [
-    input.mode,
-    input.position ?? 'none',
-    input.overall,
-    seasonStats.wins,
-    seasonStats.losses,
-    seasonStats.playoffResult,
-    seasonStats.champion ? '1' : '0',
-  ].join(':');
+  return createRunFingerprint({
+    mode: input.mode,
+    position: input.position,
+    careerTeamAbbr: input.careerTeam.abbr,
+    buildSlots: input.buildSlots,
+  });
 }
