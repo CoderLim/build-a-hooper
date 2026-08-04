@@ -50,6 +50,7 @@ const buildSlotSchema = z
     playerId: z.string().min(1).max(256),
     teamId: z.string().min(1).max(256),
     round: z.number().int().min(1).max(13),
+    rollAttempt: z.number().int().min(0).max(3),
     isRookie: z.boolean(),
   })
   .strict();
@@ -57,6 +58,7 @@ const buildSlotSchema = z
 const submitRunSchema = z
   .object({
     engineVersion: z.literal(HOOPER_ENGINE_VERSION),
+    runToken: z.string().min(32).max(4096),
     mode: z.enum(['classic', 'blind', 'chaos']),
     position: z.enum(['PG', 'SG', 'SF', 'PF', 'C']),
     careerTeam: z
