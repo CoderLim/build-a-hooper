@@ -1,9 +1,15 @@
 import { CAREER_TEAMS } from './data';
+import {
+  createSeededRandom,
+  deriveRunSeed,
+  HOOPER_ENGINE_VERSION,
+} from './run-random';
 import type {
   AttributeKey,
   BuildProfile,
   BuildSlot,
   GameCastState,
+  GameMode,
   PlayoffRound,
   PlayoffSeries,
   Position,
@@ -244,7 +250,7 @@ export function createBuildProfile(
 
 function calculateTeamStrength(team: TeamSeason) {
   const topRotation = [...team.roster]
-    .sort((a, b) => b.overall - a.overall)
+    .sort((left, right) => right.overall - left.overall)
     .slice(0, 8);
   if (topRotation.length === 0) return 84;
   const average =
@@ -305,10 +311,7 @@ function winsToCapture(round: PlayoffRound) {
   return round === 'playin' ? 1 : 4;
 }
 
-function randomOpponent(
-  excludeAbbr: string,
-  random: RandomSource
-): Opponent {
+function randomOpponent(excludeAbbr: string, random: RandomSource): Opponent {
   const pool = OPPONENTS.filter(
     (opponent) => opponent.abbr !== excludeAbbr
   );
@@ -363,10 +366,19 @@ export function createSeasonState(
   careerTeam: TeamSeason,
   buildSlots: BuildSlot[],
   position: Position,
-  random: RandomSource = Math.random
+  mode: GameMode = 'classic',
+  random?: RandomSource
 ): SeasonState {
+  const runSeed = deriveRunSeed({
+    mode,
+    position,
+    careerTeamAbbr: careerTeam.abbr,
+    buildSlots,
+  });
   const games: SeasonGame[] = Array.from({ length: 82 }, (_, index) => {
-    const opponent = randomOpponent(careerTeam.abbr, random);
+    const opponentRandom =
+      random ?? createSeededRandom(`${runSeed}:schedule:${index}`);
+    const opponent = randomOpponent(careerTeam.abbr, opponentRandom);
     return {
       gameNumber: index + 1,
       opponent: opponent.name,
@@ -393,7 +405,34 @@ export function createSeasonState(
       rebounds: 0,
       tripleDoubles: 0,
     },
+    mode,
+    runSeed,
+    engineVersion: HOOPER_ENGINE_VERSION,
   };
+}
+
+function regularGameOutcome(
+  season: SeasonState,
+  gameIndex: number,
+  random?: RandomSource
+) {
+  const game = season.games[gameIndex];
+  if (!game) return null;
+  const source =
+    random ?? createSeededRandom(`${season.runSeed}:regular:${gameIndex}`);
+  const chance = calculateWinProbability(
+    season.buildProfile,
+    season.teamStrength,
+    game.opponentStrength
+  );
+  const won = source() < chance;
+  const playerStats = generatePlayerStats(
+    season.buildProfile,
+    season.buildProfile.position,
+    won,
+    source
+  );
+  return { won, playerStats };
 }
 
 function applyRegularSeasonResult(
@@ -402,14 +441,16 @@ function applyRegularSeasonResult(
   won: boolean,
   playerStats: { pts: number; ast: number; reb: number }
 ): SeasonState {
-  const games = season.games.map((game, index) =>
+  const game = season.games[gameIndex];
+  if (!game || game.result) return season;
+  const games = season.games.map((candidate, index) =>
     index === gameIndex
       ? {
-          ...game,
+          ...candidate,
           result: won ? ('W' as const) : ('L' as const),
           playerStats,
         }
-      : game
+      : candidate
   );
   const standings = {
     wins: season.standings.wins + (won ? 1 : 0),
@@ -437,27 +478,16 @@ function applyRegularSeasonResult(
 
 export function simulateNextGame(
   season: SeasonState,
-  random: RandomSource = Math.random
+  random?: RandomSource
 ): SeasonState {
   if (season.seasonComplete || season.currentGameIndex >= 82) return season;
-  const game = season.games[season.currentGameIndex]!;
-  const chance = calculateWinProbability(
-    season.buildProfile,
-    season.teamStrength,
-    game.opponentStrength
-  );
-  const won = random() < chance;
-  const playerStats = generatePlayerStats(
-    season.buildProfile,
-    season.buildProfile.position,
-    won,
-    random
-  );
+  const outcome = regularGameOutcome(season, season.currentGameIndex, random);
+  if (!outcome) return season;
   const updated = applyRegularSeasonResult(
     season,
     season.currentGameIndex,
-    won,
-    playerStats
+    outcome.won,
+    outcome.playerStats
   );
   return updated.currentGameIndex >= 82
     ? { ...updated, seasonComplete: true }
@@ -466,7 +496,7 @@ export function simulateNextGame(
 
 export function simulateToEnd(
   season: SeasonState,
-  random: RandomSource = Math.random
+  random?: RandomSource
 ): SeasonState {
   let current = season;
   while (!current.seasonComplete && current.currentGameIndex < 82) {
@@ -498,14 +528,17 @@ export function estimatedWinChance(season: SeasonState): number {
 
 export function startPlayoffs(
   season: SeasonState,
-  random: RandomSource = Math.random
+  random?: RandomSource
 ): SeasonState {
+  if (season.playoffSeries.length > 0) return season;
   const { wins } = season.standings;
   if (wins < 38) {
     return { ...season, seasonComplete: true, inPlayoffs: false };
   }
   const round: PlayoffRound = wins < 42 ? 'playin' : 'r1';
-  const opponent = randomOpponent(season.careerTeamAbbr, random);
+  const source =
+    random ?? createSeededRandom(`${season.runSeed}:playoffs:${round}:opponent`);
+  const opponent = randomOpponent(season.careerTeamAbbr, source);
   const series: PlayoffSeries = {
     round,
     opponent: opponent.name,
@@ -535,10 +568,15 @@ function nextRound(round: PlayoffRound): PlayoffRound | null {
 
 export function simulatePlayoffGame(
   season: SeasonState,
-  random: RandomSource = Math.random
+  random?: RandomSource
 ): SeasonState {
   const current = season.playoffSeries[season.playoffSeries.length - 1];
   if (!current || current.completed) return season;
+  const source =
+    random ??
+    createSeededRandom(
+      `${season.runSeed}:playoffs:${current.round}:${current.results.length}`
+    );
   const probability = clamp(
     calculateWinProbability(
       season.buildProfile,
@@ -548,7 +586,7 @@ export function simulatePlayoffGame(
     0.15,
     0.9
   );
-  const won = random() < probability;
+  const won = source() < probability;
   const updated: PlayoffSeries = {
     ...current,
     wins: current.wins + (won ? 1 : 0),
@@ -584,7 +622,9 @@ export function simulatePlayoffGame(
       seasonComplete: true,
     };
   }
-  const opponent = randomOpponent(season.careerTeamAbbr, random);
+  const opponentSource =
+    random ?? createSeededRandom(`${season.runSeed}:playoffs:${next}:opponent`);
+  const opponent = randomOpponent(season.careerTeamAbbr, opponentSource);
   const nextSeries: PlayoffSeries = {
     round: next,
     opponent: opponent.name,
@@ -619,10 +659,7 @@ export function isFinalsComeback(results: Array<'W' | 'L'>) {
   }
   if (trailedOneThreeAt < 0) return false;
   const remaining = results.slice(trailedOneThreeAt + 1);
-  return (
-    remaining.length >= 3 &&
-    remaining.every((result) => result === 'W')
-  );
+  return remaining.length >= 3 && remaining.every((result) => result === 'W');
 }
 
 export function buildSeasonStats(season: SeasonState): SeasonStats {
@@ -701,26 +738,21 @@ function createFinalScore(won: boolean, random: RandomSource) {
 export function startGameCast(
   season: SeasonState,
   gameIndex: number,
-  random: RandomSource = Math.random
+  random?: RandomSource
 ): GameCastState {
   const game = season.games[gameIndex];
-  const chance = game
-    ? calculateWinProbability(
-        season.buildProfile,
-        season.teamStrength,
-        game.opponentStrength
-      )
-    : 0.5;
-  const won = game?.result ? game.result === 'W' : random() < chance;
-  const playerStats =
-    game?.playerStats ??
-    generatePlayerStats(
-      season.buildProfile,
-      season.buildProfile.position,
-      won,
-      random
-    );
-  const target = createFinalScore(won, random);
+  const outcome = game?.result
+    ? {
+        won: game.result === 'W',
+        playerStats: game.playerStats ?? { pts: 0, ast: 0, reb: 0 },
+      }
+    : regularGameOutcome(season, gameIndex, random) ?? {
+        won: false,
+        playerStats: { pts: 0, ast: 0, reb: 0 },
+      };
+  const scoreSource =
+    random ?? createSeededRandom(`${season.runSeed}:gamecast:${gameIndex}`);
+  const target = createFinalScore(outcome.won, scoreSource);
   return {
     gameIndex,
     quarter: 1,
@@ -729,11 +761,11 @@ export function startGameCast(
     targetHomeScore: target.homeScore,
     targetAwayScore: target.awayScore,
     plays: [
-      `Q1 · ${PLAY_BY_PLAY[Math.floor(random() * PLAY_BY_PLAY.length)]}`,
+      `Q1 · ${PLAY_BY_PLAY[Math.floor(scoreSource() * PLAY_BY_PLAY.length)]}`,
     ],
     complete: false,
-    won,
-    playerStats,
+    won: outcome.won,
+    playerStats: outcome.playerStats,
   };
 }
 
@@ -771,8 +803,6 @@ export function applyGameCastResult(
   season: SeasonState,
   cast: GameCastState
 ): SeasonState {
-  const game = season.games[cast.gameIndex];
-  if (!game || game.result) return season;
   const updated = applyRegularSeasonResult(
     season,
     cast.gameIndex,
