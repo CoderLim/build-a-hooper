@@ -97,10 +97,34 @@ export interface BuildSlot {
   isRookie?: boolean;
 }
 
+export interface BuildProfile {
+  position: Position;
+  overall: number;
+  scoring: number;
+  playmaking: number;
+  perimeterDefense: number;
+  interiorDefense: number;
+  defense: number;
+  rebounding: number;
+  physical: number;
+  clutch: number;
+  positionFit: number;
+  impact: number;
+}
+
+export interface SeasonTotals {
+  gamesPlayed: number;
+  points: number;
+  assists: number;
+  rebounds: number;
+  tripleDoubles: number;
+}
+
 export interface SeasonGame {
   gameNumber: number;
   opponent: string;
   opponentAbbr: string;
+  opponentStrength: number;
   result?: 'W' | 'L';
   playerStats?: { pts: number; ast: number; reb: number };
   isPlayoff?: boolean;
@@ -110,8 +134,10 @@ export interface PlayoffSeries {
   round: PlayoffRound;
   opponent: string;
   opponentAbbr: string;
+  opponentStrength: number;
   wins: number;
   losses: number;
+  results: Array<'W' | 'L'>;
   completed: boolean;
   won?: boolean;
 }
@@ -124,6 +150,10 @@ export interface SeasonState {
   playoffSeries: PlayoffSeries[];
   seasonComplete: boolean;
   inPlayoffs: boolean;
+  careerTeamAbbr: string;
+  teamStrength: number;
+  buildProfile: BuildProfile;
+  totals: SeasonTotals;
 }
 
 export interface GameCastState {
@@ -131,6 +161,8 @@ export interface GameCastState {
   quarter: number;
   homeScore: number;
   awayScore: number;
+  targetHomeScore: number;
+  targetAwayScore: number;
   plays: string[];
   complete: boolean;
   won: boolean;
