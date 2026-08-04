@@ -1,7 +1,7 @@
 import { m } from '@/paraglide/messages.js';
 
 /**
- * SSR-visible gameplay guide for /game.
+ * SSR-visible gameplay guide for the homepage play section.
  * Keeps AdSense content pages above thin-content thresholds.
  */
 export function GameGuide() {

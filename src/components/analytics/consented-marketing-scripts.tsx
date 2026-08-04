@@ -9,13 +9,12 @@ function normalizePathname(pathname: string): string {
   return match ? match[2] || '/' : pathname || '/';
 }
 
+/** Content pages with substantial publisher content. Legal, auth, tools, and thin list pages are excluded. */
 function canShowAdsense(pathname: string): boolean {
   if (/^\/(ja|ko)(\/|$)/.test(pathname)) return false;
   const path = normalizePathname(pathname);
   return (
     path === '/' ||
-    path === '/game' ||
-    path === '/scoring-calculator' ||
     path === '/create-a-hooper' ||
     path === '/achievements' ||
     path === '/how-to-play' ||
@@ -23,7 +22,6 @@ function canShowAdsense(pathname: string): boolean {
     path === '/attributes' ||
     path === '/best-builds' ||
     path.startsWith('/best-builds/') ||
-    path === '/blog' ||
     path.startsWith('/blog/')
   );
 }

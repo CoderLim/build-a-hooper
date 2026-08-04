@@ -215,7 +215,8 @@ export function getSettings(): Setting[] {
       name: 'app_description',
       title: 'App Description',
       type: 'textarea',
-      placeholder: 'Ship your SaaS faster',
+      placeholder:
+        'Unofficial browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
       group: 'appinfo',
       tab: 'general',
     },
