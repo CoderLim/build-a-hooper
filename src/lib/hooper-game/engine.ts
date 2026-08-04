@@ -288,7 +288,11 @@ export function confirmCareerTeam(state: GameState): GameState {
   return {
     ...state,
     screen: 'season',
-    seasonState: createSeasonState(state.careerTeam, state.buildSlots),
+    seasonState: createSeasonState(
+      state.careerTeam,
+      state.buildSlots,
+      state.position ?? 'SF'
+    ),
   };
 }
 
