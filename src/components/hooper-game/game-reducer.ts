@@ -29,7 +29,12 @@ import {
   startGameCast,
   startPlayoffs,
 } from '@/lib/hooper-game/season-engine';
-import type { AttributeKey, GameMode, GameState, Position } from '@/lib/hooper-game/types';
+import type {
+  AttributeKey,
+  GameMode,
+  GameState,
+  Position,
+} from '@/lib/hooper-game/types';
 
 export type GameAction =
   | { type: 'START' }
@@ -95,7 +100,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return confirmCareerTeam(state);
     case 'SIMULATE_NEXT': {
       if (!state.seasonState) return state;
-      const seasonState = simulateNextGame(state.seasonState, state.buildSlots);
+      const seasonState = simulateNextGame(state.seasonState);
       if (seasonState.seasonComplete && !seasonState.inPlayoffs) {
         const withPlayoffs = startPlayoffs(seasonState);
         if (withPlayoffs.inPlayoffs) {
@@ -104,7 +109,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           seasonState: withPlayoffs,
-          seasonStats: buildSeasonStats(withPlayoffs, state.buildSlots),
+          seasonStats: buildSeasonStats(withPlayoffs),
           screen: 'my-card',
         };
       }
@@ -112,7 +117,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'SIMULATE_TO_END': {
       if (!state.seasonState) return state;
-      let seasonState = simulateToEnd(state.seasonState, state.buildSlots);
+      let seasonState = simulateToEnd(state.seasonState);
       seasonState = startPlayoffs(seasonState);
       if (seasonState.inPlayoffs) {
         return { ...state, seasonState, screen: 'playoffs' };
@@ -120,7 +125,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return {
         ...state,
         seasonState,
-        seasonStats: buildSeasonStats(seasonState, state.buildSlots),
+        seasonStats: buildSeasonStats(seasonState),
         screen: 'my-card',
       };
     }
@@ -131,7 +136,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return {
           ...state,
           seasonState,
-          seasonStats: buildSeasonStats(seasonState, state.buildSlots),
+          seasonStats: buildSeasonStats(seasonState),
           screen: 'my-card',
         };
       }
@@ -139,12 +144,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     }
     case 'SIMULATE_PLAYOFF_GAME': {
       if (!state.seasonState) return state;
-      let seasonState = simulatePlayoffGame(state.seasonState, state.buildSlots);
+      const seasonState = simulatePlayoffGame(state.seasonState);
       if (seasonState.seasonComplete) {
         return {
           ...state,
           seasonState,
-          seasonStats: buildSeasonStats(seasonState, state.buildSlots),
+          seasonStats: buildSeasonStats(seasonState),
           screen: 'my-card',
         };
       }
@@ -154,7 +159,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (!state.seasonState) return state;
       return {
         ...state,
-        seasonStats: buildSeasonStats(state.seasonState, state.buildSlots),
+        seasonStats: buildSeasonStats(state.seasonState),
         screen: 'my-card',
       };
     }
@@ -162,7 +167,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       if (!state.seasonState) return state;
       const idx = state.seasonState.currentGameIndex;
       if (idx >= 82) return state;
-      const gameCast = startGameCast(state.seasonState, idx, state.buildSlots);
+      const gameCast = startGameCast(state.seasonState, idx);
       return { ...state, gameCast, screen: 'gamecast' };
     }
     case 'ADVANCE_GAMECAST': {
@@ -191,7 +196,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           ...state,
           seasonState: withPlayoffs,
           gameCast: null,
-          seasonStats: buildSeasonStats(withPlayoffs, state.buildSlots),
+          seasonStats: buildSeasonStats(withPlayoffs),
           screen: 'my-card',
         };
       }

@@ -148,7 +148,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
           <SeasonHubScreen
             seasonState={state.seasonState}
             careerTeam={state.careerTeam}
-            buildSlots={state.buildSlots}
             overall={overall}
             onSimulateNext={act({ type: 'SIMULATE_NEXT' })}
             onSimulateToEnd={act({ type: 'SIMULATE_TO_END' })}
