@@ -1,0 +1,210 @@
+export const meta = {
+  title: 'Build a Hooper Calculation: How the Simulation Works',
+  description:
+    'Build a Hooper calculation explained: see how attributes, position fit, team strength, player stats, awards, and playoffs shape each simulated season.',
+  heading: 'Build a Hooper Calculation: How the Simulation Works',
+  updated_at: '2026-08-04',
+};
+
+Understanding the **Build a Hooper calculation** helps you read a result without reducing the game to one overall number. Build a Hooper first turns thirteen drafted attributes into a role-based player profile. It then combines that profile with position responsibilities, career-team quality, opponent strength, and controlled game-to-game variation. The result is an 82-game season that rewards coherent builds more consistently than random collections of high grades.
+
+This page explains the Build a Hooper calculation at a useful level. It covers what the simulation considers, why position fit matters, how box-score production is shaped, and why awards or playoff success require more than a high overall. It intentionally does not publish every coefficient, threshold, random seed, or integrity check. The goal is to help players make better basketball decisions, not to turn Build a Hooper into a spreadsheet exploit.
+
+For the controls and draft sequence, start with the [complete Play Guide](/how-to-play). For the meaning of each rating, open the [Attribute Guide](/attributes).
+
+## Build a Hooper calculation at a glance
+
+The Build a Hooper calculation follows a layered process:
+
+1. Validate the thirteen completed attribute slots.
+2. Convert the attributes into basketball skill groups.
+3. Evaluate those groups for the selected position.
+4. Combine player impact with career-team and opponent strength.
+5. Simulate each regular-season game.
+6. Generate points, assists, and rebounds from role-relevant skills.
+7. Calculate standings, award races, playoff qualification, and series outcomes.
+8. Produce the final card, achievements, and leaderboard result.
+
+The important idea is that Build a Hooper does not ask only, “How high are the grades?” It also asks, “Do these grades create a player who can perform the job of this position?”
+
+## From thirteen attributes to one player profile
+
+Every Build a Hooper run fills the same thirteen ratings:
+
+**3PT · MID · FIN · DNK · HAN · PAS · PDEF · IDEF · BLK · REB · ATH · STR · CLU**
+
+The Build a Hooper calculation does not treat these as thirteen isolated switches. Related attributes are blended into broader basketball capabilities.
+
+| Player capability | Main inputs | What it represents |
+| --- | --- | --- |
+| Scoring | 3PT, MID, FIN, DNK, HAN, ATH, CLU | Shot creation, finishing routes, and reliable point production |
+| Playmaking | PAS, HAN, CLU, ATH | Ball control, passing value, and creation for teammates |
+| Perimeter defense | PDEF, ATH, STR, CLU | Staying in front, contesting outside, and handling pressure |
+| Interior defense | IDEF, BLK, STR, REB | Paint protection, physical resistance, and possession control |
+| Rebounding | REB, STR, ATH, IDEF | Securing missed shots and ending defensive possessions |
+| Physical profile | ATH, STR | Movement, explosion, contact, and durability of the role |
+| Clutch value | CLU | Late-game execution and composure |
+
+This grouping is why one excellent attribute cannot carry every part of a Build a Hooper season. An A+ three-point rating helps scoring, but it does not automatically create passing, interior defense, or rebounding. An A+ block rating helps paint defense, but without rebounding the defense may not finish the possession.
+
+The terminology follows familiar basketball ideas. The official [NBA Stats glossary](https://www.nba.com/stats/help/glossary) separates production such as assists and rebounds into distinct measurements, while the [Jr. NBA position guide](https://jr.nba.com/basketball-positions/) describes different responsibilities for guards, forwards, and centers. Build a Hooper adapts those broad ideas into a lightweight fictional simulation rather than copying an official league model.
+
+## Why position fit changes the value of a build
+
+Position is one of the most important parts of the Build a Hooper calculation. A point guard, shooting guard, small forward, power forward, and center do not receive identical value from the same skill mix.
+
+A point guard receives more benefit from playmaking, handle, perimeter defense, and enough scoring to pressure the defense. A center receives more benefit from interior defense, rebounding, strength, and finishing. A small forward is evaluated as a more flexible wing, while power forwards lean toward interior work and shooting guards lean toward scoring.
+
+That does not mean Build a Hooper forces one correct template. A passing center, defensive point guard, or stretch power forward can succeed. The build still needs to cover the position’s basic responsibilities before the specialty becomes valuable.
+
+This explains a common result: two players can have nearly identical overall ratings but produce different seasons. The better-fitting Build a Hooper profile converts more of its grades into useful on-court impact. The less coherent profile may contain strong ratings that do not support one another or do not match the selected position.
+
+## Overall rating versus impact
+
+The displayed overall is a simple summary of the completed rating sheet. It is useful, but it is not the entire Build a Hooper calculation.
+
+The simulation also creates a position-fit score from scoring, creation, defense, rebounding, physical tools, and clutch value. Overall and position fit are then combined into a broader impact estimate. This prevents the season from being decided only by the arithmetic average of thirteen grades.
+
+A high overall remains an advantage because it usually means the player has fewer weak areas. However, Build a Hooper can reward a slightly lower overall when the player has a clear role, strong position fit, and complementary skills. It can also expose an inflated overall built from unrelated strengths.
+
+When reviewing a final card, read the overall beside the role:
+
+- Can the player create a dependable shot?
+- Can the player support teammates or protect the ball?
+- Can the player defend the areas expected for the position?
+- Can the player rebound enough for the role?
+- Do athleticism, strength, and clutch value support the main identity?
+
+Those questions describe the Build a Hooper calculation more accurately than “higher is always better.”
+
+## Career-team strength and opponent strength
+
+A Build a Hooper player does not simulate the season alone. The selected career team also contributes to the result.
+
+Career-team strength is estimated from the quality of the team’s main rotation rather than one star name. Stronger rotations provide a better baseline. The Build a Hooper calculation then compares that team context with the strength of the next opponent.
+
+A great player on a weaker team can still win many games, but the path is harder. A balanced player on an elite team may produce a steadier record. This creates a reason to care about both the custom hooper and the environment around the hooper.
+
+Opponent quality also changes across the schedule. The season therefore contains easier and harder stretches instead of applying one identical win chance eighty-two times.
+
+## How a regular-season game is decided
+
+For each game, the Build a Hooper calculation begins with a neutral competitive baseline. It then adjusts the chance of winning through several broad factors:
+
+- the custom player’s overall impact;
+- the career team’s strength relative to the opponent;
+- the build’s defensive value;
+- the build’s clutch value;
+- controlled variation that keeps results from becoming perfectly predictable.
+
+The probability is bounded so even an elite Build a Hooper is not guaranteed to win every night, and a weak build is not mathematically locked out of every upset. This is important for a season simulator: ratings should strongly influence outcomes without making the schedule meaningless.
+
+The same completed run is reproducible. Simulating one game at a time, using the full-season button, or watching GameCast is designed to preserve the authoritative result rather than rerolling the season until a preferred outcome appears.
+
+## How points, assists, and rebounds are generated
+
+Box-score production comes from role-relevant parts of the Build a Hooper profile.
+
+**Points** are driven primarily by the scoring group, with help from overall impact, position usage, and whether the team won. A shooting guard normally receives more scoring usage than a center with the same generic profile, while a strong scoring center can still outperform an average guard.
+
+**Assists** are driven primarily by playmaking and position. Point guards start from a higher creation expectation, but a high-passing forward or center can still produce strong assist numbers.
+
+**Rebounds** are driven primarily by rebounding skill, physical tools, and position. Centers and power forwards begin with larger rebounding responsibilities, while guards need exceptional rebounding attributes to reach similar totals.
+
+Game-to-game variation moves each line around its expected level. Build a Hooper therefore produces hot games, quiet games, and different season averages without disconnecting the numbers from the attributes.
+
+## Why an 82-game season matters
+
+A single simulated game can contain noise. An 82-game Build a Hooper season gives the player profile enough opportunities to reveal its normal level.
+
+As the schedule progresses, the simulation updates:
+
+- wins and losses;
+- estimated standings rank;
+- points, assists, and rebounds totals;
+- triple-doubles;
+- award-race progress;
+- playoff qualification.
+
+This long sample rewards repeatable strengths. A coherent two-way Build a Hooper tends to remain useful against more opponent types. A one-dimensional build may dominate favorable matchups but lose ground when the schedule attacks its missing skill.
+
+The season length also makes comparison more meaningful. Two builds should be judged by the full record, production, awards, and playoff path rather than one exciting GameCast score.
+
+## How awards are evaluated
+
+Awards are not granted by overall rating alone.
+
+The Build a Hooper calculation considers a combination of individual production, specialized skill quality, player impact, and team success.
+
+- A scoring title requires elite scoring ability and elite points production.
+- MVP consideration requires high impact, strong all-around production, and a winning season.
+- Defensive Player of the Year requires elite defensive value and enough team success.
+- Finals MVP requires a championship run and a player profile strong enough to drive that run.
+
+This approach prevents a high-overall offensive player from automatically receiving DPOY and prevents an empty-stat season from automatically receiving MVP. Build a Hooper awards are meant to summarize what the player actually accomplished within the simulated season.
+
+## Playoff qualification and series logic
+
+Regular-season wins determine whether the Build a Hooper career reaches the postseason and whether it begins in the play-in or the first round.
+
+The playoffs use the same core player, team, opponent, defense, and clutch logic, but each result now changes a series instead of one line in an 82-game table. A play-in round requires one decisive win. Standard playoff rounds require a best-of-seven series victory.
+
+The Build a Hooper calculation records the order of wins and losses, which allows the final card to distinguish a genuine comeback from a generic seven-game series. Winning the championship requires surviving every round, not merely reaching a high regular-season seed.
+
+## What the calculation intentionally does not claim
+
+Build a Hooper is a fan-made strategy game, not a prediction engine for real NBA games or real player careers.
+
+The Build a Hooper calculation does not model every possession, coaching adjustment, injury, substitution, lineup combination, contract, fatigue pattern, referee decision, or tactical scheme. It compresses basketball ideas into a transparent game loop that can react to thirteen attributes and five positions.
+
+The ratings are illustrative game values. They should be used to compare choices inside Build a Hooper, not as official scouting grades. The simulation aims for understandable cause and effect, replayability, and varied outcomes rather than perfect real-world forecasting.
+
+## How to use this information during a draft
+
+You do not need to calculate formulas while playing Build a Hooper. Use the high-level logic as a draft checklist.
+
+1. Choose a position and identify its essential job.
+2. Complete one primary skill group before collecting luxury ratings.
+3. Add a second way to contribute.
+4. Protect the build from one catastrophic weakness.
+5. Use rerolls when the available team cannot support an essential open slot.
+6. Judge the reveal by role and position fit before judging overall.
+7. Compare the final season with the original plan.
+
+For example, a Build a Hooper point guard should normally establish handle and passing, then add scoring and perimeter defense. A center should normally establish rebounding and interior defense, then add finishing, strength, athleticism, passing, or shooting according to the intended archetype.
+
+The detailed [Position Builds hub](/best-builds) provides role-specific plans, while the [Game Modes guide](/modes) explains how visible information and rerolls change the decision process.
+
+## Build a Hooper calculation FAQ
+
+### Does the highest overall always win?
+
+No. Overall helps, but position fit, team strength, opponent strength, defense, clutch value, and normal variation also affect a Build a Hooper season.
+
+### Can one elite attribute carry the whole simulation?
+
+One elite attribute can define a specialty, but it cannot replace every related skill group. Build a Hooper rewards combinations such as handle plus passing, interior defense plus rebounding, or shooting plus creation.
+
+### Why do two similar builds get different records?
+
+Small attribute differences can change position fit and impact. Career-team context and the opponent schedule also matter. Controlled variation then creates different game results around those expectations.
+
+### Does GameCast change the result?
+
+GameCast presents the game quarter by quarter. It is designed to show the same underlying Build a Hooper outcome rather than create a separate opportunity to reroll the game.
+
+### Are awards based only on stats?
+
+No. Build a Hooper awards combine production with relevant skill quality, player impact, and team success.
+
+### Is the exact formula public?
+
+This guide explains the meaningful inputs and the direction of the Build a Hooper calculation. Exact coefficients, thresholds, randomization details, and integrity controls are intentionally not published.
+
+### Where should I go next?
+
+Read the [Play Guide](/how-to-play) for the full game loop, study the [Attribute Guide](/attributes), choose a [position build](/best-builds), or [start a new Build a Hooper run](/#play).
+
+## Unofficial note
+
+Build a Hooper on buildahooper.org is an unofficial fan project. It is not affiliated with, endorsed by, or connected to the NBA, NBA 2K, Take-Two, or any league, team, or brand rights holder. The Build a Hooper calculation uses illustrative fan-simulation values and should not be interpreted as an official basketball rating system.

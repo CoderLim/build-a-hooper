@@ -1,6 +1,8 @@
 import { m } from '@/paraglide/messages.js';
 import { SiteFooter, type FooterColumn } from '@/components/site-footer';
 
+import { getHowItWorksLabel } from './site-nav';
+
 export function Footer() {
   const columns: FooterColumn[] = [
     {
@@ -24,9 +26,10 @@ export function Footer() {
       title: m['landing.footer.guides'](),
       links: [
         { label: m['landing.nav.how_to_play'](), href: '/how-to-play' },
+        { label: m['landing.nav.attributes'](), href: '/attributes' },
+        { label: getHowItWorksLabel(), href: '/how-it-works' },
         { label: m['landing.nav.modes'](), href: '/modes' },
         { label: m['landing.nav.best_builds'](), href: '/best-builds' },
-        { label: m['landing.nav.attributes'](), href: '/attributes' },
         {
           label: m['create_a_hooper.nav_label'](),
           href: '/create-a-hooper',
