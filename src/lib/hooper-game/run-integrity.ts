@@ -204,12 +204,13 @@ export function replayVerifiedRun(
 ) {
   const verified = validateRunInput(input, challenge);
   const { mode, position } = verified.input;
-  let season = createSeasonState(
+  const initialSeason = createSeasonState(
     verified.careerTeam,
     verified.buildSlots,
     position,
     mode
   );
+  let season = { ...initialSeason, runSeed: challenge.seed };
   season = simulateToEnd(season);
   season = startPlayoffs(season);
 
