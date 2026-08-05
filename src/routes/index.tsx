@@ -22,6 +22,7 @@ import { Hero } from '@/blocks/hero';
 import { HowItWorks } from '@/blocks/how-it-works';
 import { PlayIntro } from '@/blocks/play-intro';
 import { Screenshots } from '@/blocks/screenshots';
+import { VideoGuide } from '@/blocks/video-guide';
 import { getBlogPostsFn } from '@/content/posts/server';
 
 const FAQ_KEYS = [
@@ -48,6 +49,7 @@ function HomePage() {
         <FAQ />
         <Blog posts={posts} />
         <Disclaimer />
+        <VideoGuide />
       </main>
       <Footer />
     </div>
