@@ -7,7 +7,6 @@ import {
   GameCard,
   GameEyebrow,
   GamePanel,
-  GameTitle,
   ProgressPill,
 } from '../game-ui';
 
@@ -60,7 +59,9 @@ export function ModeSelectScreen({
     <section className="flex flex-1 flex-col gap-8">
       <div>
         <GameEyebrow>{m['game.mode.eyebrow']()}</GameEyebrow>
-        <GameTitle className="mt-3">{m['game.mode.title']()}</GameTitle>
+        <div className="mt-3 text-3xl font-black tracking-tight uppercase sm:text-4xl lg:text-5xl">
+          {m['game.mode.title']()}
+        </div>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-white/55">
           {m['game.mode.subtitle']()}
         </p>
@@ -75,9 +76,9 @@ export function ModeSelectScreen({
             <p className="text-[10px] font-bold tracking-[0.2em] text-orange-300/80 uppercase">
               {m[item.tagKey]()}
             </p>
-            <h3 className="mt-2 text-lg font-black uppercase">
+            <div className="mt-2 text-lg font-black uppercase">
               {m[item.titleKey]()}
-            </h3>
+            </div>
             <p className="mt-2 text-sm leading-6 text-white/55">
               {m[item.descKey]()}
             </p>
@@ -86,9 +87,9 @@ export function ModeSelectScreen({
       </div>
       <div className="grid gap-6 lg:grid-cols-[1fr_280px]">
         <GamePanel>
-          <h2 className="text-xl font-black tracking-tight text-white sm:text-2xl">
+          <div className="text-xl font-black tracking-tight text-white sm:text-2xl">
             {m['game.mode.attributes_title']()}
-          </h2>
+          </div>
           <p className="mt-1.5 text-sm text-white/50">
             {m['game.mode.attributes_subtitle']()}
           </p>
