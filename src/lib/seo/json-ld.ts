@@ -90,6 +90,41 @@ export function softwareApplicationJsonLd(input: {
   };
 }
 
+export function articleJsonLd(input: {
+  headline: string;
+  description: string;
+  url: string;
+  dateModified: string;
+  locale?: string;
+}): JsonLdObject {
+  const siteUrl =
+    (envConfigs.app_url || '').replace(/\/$/, '') || 'https://buildahooper.org';
+  const organizationId = `${siteUrl}/#organization`;
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: input.headline,
+    description: input.description,
+    url: input.url,
+    image: [defaultOgImageUrl()],
+    dateModified: input.dateModified,
+    author: {
+      '@type': 'Organization',
+      '@id': organizationId,
+      name: envConfigs.app_name || 'Build a Hooper',
+      url: siteUrl,
+    },
+    publisher: { '@id': organizationId },
+    isPartOf: { '@id': `${siteUrl}/#website` },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': input.url,
+    },
+    ...(input.locale ? { inLanguage: input.locale } : {}),
+  };
+}
+
 export type FaqItem = {
   question: string;
   answer: string;
