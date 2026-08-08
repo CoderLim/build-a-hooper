@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 
 import { useSession } from '@/core/auth/client';
 import { apiPost } from '@/lib/api-client';
@@ -25,7 +25,6 @@ import { GameShell } from './game-ui';
 import { BuildRoomScreen } from './screens/build-room-screen';
 import { CareerTeamScreen } from './screens/career-team-screen';
 import { GameCastScreen } from './screens/gamecast-screen';
-import { LandingScreen } from './screens/landing-screen';
 import { ModeSelectScreen } from './screens/mode-select-screen';
 import { MyCardScreen } from './screens/my-card-screen';
 import { PlayoffsScreen } from './screens/playoffs-screen';
@@ -49,8 +48,8 @@ interface HooperGameProps {
 
 export function HooperGame({ embedded = false }: HooperGameProps = {}) {
   const [state, dispatch] = useReducer(gameReducer, undefined, initState);
-  const [starting, setStarting] = useState(false);
   const { data: session, isPending: sessionPending } = useSession();
+  const issuingChallenge = useRef(false);
 
   const showRatings = ratingsVisible(state.mode);
   const showPosition = positionVisible(state.mode, state.positionRevealed);
@@ -67,30 +66,42 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
 
   const act = (action: GameAction) => () => dispatch(action);
 
-  const handleStart = async () => {
-    if (starting || sessionPending) return;
-    if (!session?.user) {
-      dispatch({ type: 'START' });
-      return;
-    }
+  useEffect(() => {
+    if (state.screen !== 'mode-select') return;
+    if (state.runToken) return;
+    if (sessionPending || !session?.user) return;
+    if (issuingChallenge.current) return;
 
-    setStarting(true);
-    try {
-      const challenge = await apiPost<RunChallengeResponse>(
-        '/api/hooper/runs/challenge'
-      );
-      dispatch({
-        type: 'SET_RUN_CHALLENGE',
-        runToken: challenge.runToken,
-        seed: challenge.seed,
-      });
-      dispatch({ type: 'START' });
-    } catch (error) {
-      console.error('[hooper] Failed to issue run challenge', error);
-    } finally {
-      setStarting(false);
-    }
-  };
+    issuingChallenge.current = true;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const challenge = await apiPost<RunChallengeResponse>(
+          '/api/hooper/runs/challenge'
+        );
+        if (cancelled) return;
+        dispatch({
+          type: 'SET_RUN_CHALLENGE',
+          runToken: challenge.runToken,
+          seed: challenge.seed,
+        });
+      } catch (error) {
+        console.error('[hooper] Failed to issue run challenge', error);
+      } finally {
+        issuingChallenge.current = false;
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    state.screen,
+    state.runToken,
+    session?.user,
+    sessionPending,
+  ]);
 
   return (
     <GameShell
@@ -102,14 +113,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
           embedded ? 'pt-24 pb-10 sm:pt-28 sm:pb-14' : 'py-8'
         )}
       >
-        {state.screen === 'landing' && (
-          <LandingScreen
-            embedded={embedded}
-            onStart={handleStart}
-            startDisabled={starting || sessionPending}
-          />
-        )}
-
         {state.screen === 'mode-select' && (
           <ModeSelectScreen
             mode={state.mode}

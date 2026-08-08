@@ -33,7 +33,6 @@ export type Position = 'PG' | 'SG' | 'SF' | 'PF' | 'C';
 export type GameMode = 'classic' | 'blind' | 'chaos';
 
 export type GameScreen =
-  | 'landing'
   | 'mode-select'
   | 'position-select'
   | 'position-roll'

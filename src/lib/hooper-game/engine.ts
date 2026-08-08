@@ -36,7 +36,7 @@ function deterministicTeam(
 
 export function createInitialState(): GameState {
   return {
-    screen: 'landing',
+    screen: 'mode-select',
     mode: null,
     position: null,
     positionRevealed: false,
@@ -69,17 +69,13 @@ export function setRunChallenge(
   runToken: string,
   runSeed: number
 ): GameState {
-  if (state.screen !== 'landing') return state;
+  if (state.screen !== 'mode-select') return state;
   return {
     ...state,
     runToken,
     runSeed: runSeed >>> 0,
     currentRollAttempt: 0,
   };
-}
-
-export function startGame(state: GameState): GameState {
-  return { ...state, screen: 'mode-select' };
 }
 
 export function selectMode(state: GameState, mode: GameMode): GameState {
@@ -376,7 +372,6 @@ export function getGameStep(
   screen: GameState['screen']
 ): import('./types').GameStep {
   switch (screen) {
-    case 'landing':
     case 'mode-select':
     case 'position-select':
     case 'position-roll':

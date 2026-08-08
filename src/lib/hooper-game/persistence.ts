@@ -49,9 +49,12 @@ export function serializeGameState(state: GameState): PersistedGameState {
 
 export function deserializeGameState(data: PersistedGameState): GameState {
   const initial = createInitialState();
+  const screen =
+    (data.screen as string) === 'landing' ? 'mode-select' : data.screen;
   return {
     ...initial,
     ...data,
+    screen,
     usedPlayerNames: new Set(data.usedPlayerNames),
     spinPool: initial.spinPool,
   };
@@ -59,11 +62,14 @@ export function deserializeGameState(data: PersistedGameState): GameState {
 
 export function saveGameState(state: GameState): void {
   if (typeof window === 'undefined') return;
-  if (state.screen === 'landing') {
+  if (state.screen === 'mode-select') {
     window.localStorage.removeItem(STORAGE_KEY);
     return;
   }
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(serializeGameState(state)));
+  window.localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(serializeGameState(state))
+  );
 }
 
 export function loadGameState(): GameState | null {

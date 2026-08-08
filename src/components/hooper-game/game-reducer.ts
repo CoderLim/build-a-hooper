@@ -9,15 +9,14 @@ import {
   createInitialState,
   lockPick,
   proceedToCareerTeam,
-  resetGame,
   rerollTeam,
+  resetGame,
   selectAttribute,
   selectMode,
   selectPlayer,
   selectPosition,
   setRunChallenge,
   startCareerSpin,
-  startGame,
   startSpin,
 } from '@/lib/hooper-game/engine';
 import {
@@ -39,7 +38,6 @@ import type {
 
 export type GameAction =
   | { type: 'SET_RUN_CHALLENGE'; runToken: string; seed: number }
-  | { type: 'START' }
   | { type: 'SELECT_MODE'; mode: GameMode }
   | { type: 'CONFIRM_MODE' }
   | { type: 'SELECT_POSITION'; position: Position }
@@ -70,8 +68,6 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case 'SET_RUN_CHALLENGE':
       return setRunChallenge(state, action.runToken, action.seed);
-    case 'START':
-      return startGame(state);
     case 'SELECT_MODE':
       return selectMode(state, action.mode);
     case 'CONFIRM_MODE':
