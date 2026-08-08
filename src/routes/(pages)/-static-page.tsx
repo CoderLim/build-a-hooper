@@ -2,7 +2,8 @@ import type { ComponentType } from 'react';
 import { notFound, useLoaderData } from '@tanstack/react-router';
 
 import { Link } from '@/core/i18n/navigation';
-import { buildPageHead } from '@/lib/seo/metadata';
+import { articleJsonLd, jsonLdScript } from '@/lib/seo/json-ld';
+import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { baseLocale, getLocale, locales } from '@/paraglide/runtime.js';
 
@@ -23,6 +24,26 @@ type PageModule = {
 const pages = import.meta.glob<PageModule>('/src/content/pages/*.mdx', {
   eager: true,
 });
+
+const EDITORIAL_SLUGS = new Set([
+  'how-to-play',
+  'how-it-works',
+  'modes',
+  'attributes',
+  'best-builds',
+  'best-builds-point-guard',
+  'best-builds-shooting-guard',
+  'best-builds-small-forward',
+  'best-builds-power-forward',
+  'best-builds-center',
+]);
+
+const BY_LABELS: Record<string, string> = {
+  en: 'By',
+  zh: '作者',
+  ja: '執筆',
+  ko: '작성',
+};
 
 type ResolvedPage = {
   page: PageModule;
@@ -117,9 +138,14 @@ export function staticPageRouteOptions(slug: string, path?: string) {
     },
     head: ({ loaderData }: { loaderData?: LoaderData }) => {
       if (!loaderData) return {};
-      const { meta, locale, resolvedLocale, isFallback, availableLocales } =
-        loaderData;
-      return buildPageHead({
+      const {
+        meta,
+        locale,
+        resolvedLocale,
+        isFallback,
+        availableLocales,
+      } = loaderData;
+      const head = buildPageHead({
         title: meta.title,
         description: meta.description,
         path: pagePath,
@@ -128,6 +154,23 @@ export function staticPageRouteOptions(slug: string, path?: string) {
         alternateLocales: availableLocales,
         indexable: !isFallback,
       });
+
+      if (!EDITORIAL_SLUGS.has(slug) || isFallback) return head;
+
+      return {
+        ...head,
+        scripts: [
+          jsonLdScript(
+            articleJsonLd({
+              headline: meta.heading ?? meta.title,
+              description: meta.description,
+              url: localizedPageUrl(pagePath, resolvedLocale),
+              dateModified: meta.updated_at,
+              locale: resolvedLocale,
+            })
+          ),
+        ],
+      };
     },
     component: StaticPage,
   };
@@ -142,6 +185,8 @@ function StaticPage() {
   const Content = page.page.default;
   const calculationLink =
     playGuideCalculationLinks[resolvedLocale] ?? playGuideCalculationLinks.en!;
+  const isEditorial = EDITORIAL_SLUGS.has(slug);
+  const byLabel = BY_LABELS[resolvedLocale] ?? BY_LABELS.en!;
 
   return (
     <article>
@@ -151,7 +196,17 @@ function StaticPage() {
         </h1>
         <p className="text-muted-foreground mt-2 text-sm">{meta.description}</p>
         <p className="text-muted-foreground mt-2 text-xs">
-          {m['common.pages.last_updated']()}: {meta.updated_at}
+          {isEditorial && (
+            <>
+              {byLabel}{' '}
+              <Link href="/about" className="underline underline-offset-2">
+                Build a Hooper
+              </Link>
+              <span aria-hidden="true"> · </span>
+            </>
+          )}
+          {m['common.pages.last_updated']()}:{' '}
+          <time dateTime={meta.updated_at}>{meta.updated_at}</time>
         </p>
       </header>
       <div className="text-foreground/90 text-[15px] leading-7">
