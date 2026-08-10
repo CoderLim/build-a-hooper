@@ -1,0 +1,189 @@
+export const meta = {
+  title: 'Build a Hooper 99 Overall: Is 99 OVR Possible?',
+  description:
+    'Can you get 99 OVR in Build a Hooper? No—the verified max is 97. See why 99-rated attributes cause confusion and how to chase a 95–97 build.',
+  created_at: '2026-08-10',
+  author_name: 'Build a Hooper',
+  author_image: '/logo.png',
+  image: '/imgs/screenshots/draft-spin.png',
+};
+
+## Can you get 99 Overall in Build a Hooper?
+
+**No. In the current Build a Hooper rating system, the highest verified final OVR is 97.** That is the answer players searching for **Build a Hooper 99 Overall** usually want first.
+
+The confusion is understandable. Individual player attributes can show ratings such as 98 or 99 in gameplay, so it is natural to assume a finished player card can also reach 99 OVR. But the final Overall is calculated separately from those individual numbers. In the current build on buildahooper.org, every locked attribute contributes through its letter grade, and the highest grade, A+, contributes 97 to the final OVR calculation.
+
+That means a 99-rated three-pointer, handle, rebound, or other individual skill does **not** make the whole player a 99 Overall.
+
+If you only need the short answer, remember this:
+
+> **99 can appear on an individual attribute. 97 is the maximum verified final OVR.**
+
+For the broader scoring system, see the [Build a Hooper high-score guide](/blog/build-a-hooper-high-score-guide). If you want to understand every slot before chasing a near-perfect card, start with the [13 attribute guide](/attributes).
+
+## Why players think a Build a Hooper 99 OVR is possible
+
+The strongest reason is visual: the game can show individual ratings in the high 90s, including 99. When a player sees a 99 rating attached to one skill, “Can I make a 99 Overall player?” is the obvious next question.
+
+A long gameplay run titled **“I Play Build a Hooper Until I Create the Perfect Player”** shows that exact thought process. Early in the run, the creator wonders whether 95 or 96 is really the ceiling or whether better players could eventually produce a 99-level build. Around the 3-minute mark, he explicitly makes 99 Overall the goal.
+
+Later, the video confirms that some individual attributes can indeed hit 99. That makes the 99 OVR theory look even more believable. But the end of the run supplies the important evidence: after finally assembling an all-A+ sheet, the finished player is revealed as **97 Overall**. The creator then concludes that 97 must be the maximum.
+
+That is why “Build a Hooper 99 Overall” is best understood as a **maximum-rating question**, not as proof that a 99 OVR card exists.
+
+## 99 attributes vs. 97 Overall
+
+The easiest way to understand the difference is to separate **raw skill ratings** from **final OVR**.
+
+A raw attribute rating describes one skill. A player might have an elite three-point rating, finishing rating, handle, perimeter defense, rebounding, or another category. Those individual numbers can reach the upper 90s.
+
+The final card, however, combines all 13 Build a Hooper attributes:
+
+**3PT · MID · FIN · DNK · HAN · PAS · PDEF · IDEF · BLK · REB · ATH · STR · CLU**
+
+On the current buildahooper.org implementation, those attributes contribute to OVR through this grade scale:
+
+| Grade | OVR value |
+| ----- | --------: |
+| A+    |        97 |
+| A     |        93 |
+| A-    |        90 |
+| B+    |        87 |
+| B     |        83 |
+| B-    |        80 |
+| C+    |        77 |
+| C     |        73 |
+| C-    |        70 |
+| D+    |        67 |
+| D     |        63 |
+| D-    |        60 |
+| F     |        50 |
+
+The final OVR is the rounded average of the 13 locked attribute values. Since the highest contribution available from any slot is 97, the average can never exceed 97.
+
+That is the mathematical reason 99 Overall is impossible in the current system.
+
+## What does a perfect 97 OVR build require?
+
+An **all-A+ build** is the cleanest definition of a perfect attribute sheet. Every one of the 13 slots is filled with the highest grade available, so the average is exactly 97.
+
+```text
+(97 + 97 + ... + 97) / 13 = 97
+```
+
+The gameplay run we reviewed eventually reaches that all-A+ state and the reveal still shows 97 Overall. This is useful because it confirms the same ceiling from two directions: the rating logic says 97 is the maximum, and an actual perfect-grade run displays 97.
+
+There is one subtle point, though: **you do not necessarily need 13 A+ grades just to make the screen display 97 OVR.** Because the final average is rounded, a near-perfect sheet can also round up to 97.
+
+For example, twelve A+ grades and one A grade produce:
+
+```text
+(12 × 97 + 93) / 13 = 96.69 → 97 OVR after rounding
+```
+
+Two A grades instead of one drop the average to about 96.38, which rounds to 96. So an all-A+ sheet is the true perfect build, while a displayed 97 OVR can be slightly less than perfect underneath.
+
+That distinction matters if your goal is the number on the card rather than a literally perfect 13-slot draft.
+
+## How hard is 97 OVR?
+
+Very hard. Build a Hooper forces you to fill 13 different attributes, and each round gives you a different team-season roster. You also cannot simply reuse the same player for multiple slots. Even when a roster contains a superstar, that player may not solve the attribute you still need.
+
+The challenge becomes more severe late in the draft. Offensive slots such as 3PT, FIN, HAN, and ATH often feel easier because many star guards and wings offer strong values there. The awkward final slots are usually the ones that punish poor planning: IDEF, BLK, REB, STR, or whichever category you ignored while chasing highlight skills.
+
+That is why a 97 attempt is less about finding one magical player and more about **protecting the average across all 13 decisions**.
+
+If you are still learning the board, do not make 97 your first benchmark. A 90+ build is already strong. A 95+ build is an excellent high-end target and also reaches the top OVR bonus tier in the current Legacy scoring system. See the [scoring calculator](/scoring-calculator) for how OVR combines with wins and playoff results.
+
+## Best strategy for chasing 95–97 OVR
+
+The most reliable route is **Classic mode**. Classic exposes ratings and gives you three rerolls, which gives you far more control than Blind or Chaos. If your specific goal is “highest possible Overall,” information is more valuable than difficulty.
+
+Use these rules during the draft:
+
+1. **Take A+ whenever it solves a real open slot.** A+ gives you the maximum 97 contribution and creates room for one weaker pick later.
+2. **Treat A as strong but not free.** One A can still fit inside a displayed 97 build if nearly everything else is A+. Multiple A grades pull the average down quickly.
+3. **Use A- as a floor for 90–95 attempts.** An A- is not bad, but it makes a 97 chase much harder.
+4. **Save at least one reroll for the last few slots.** Early rosters feel important, but late dead ends are more dangerous because you have fewer open attributes to choose from.
+5. **Draft scarce attributes before they become emergencies.** If a good REB, BLK, IDEF, or STR option appears early, consider locking it instead of taking another glamorous scoring stat.
+6. **Watch the average, not just the best number.** One 99-rated individual skill cannot compensate for several mediocre grades elsewhere.
+
+For position-specific ideas, use the [Best Builds hub](/best-builds). For the differences between Classic, Blind, and Chaos, see the full [Build a Hooper modes guide](/modes).
+
+## Why Classic is better for a max-OVR attempt
+
+Classic gives you the two things a 97 chase needs most: visible grades and three rerolls.
+
+Blind hides the ratings and gives you only one reroll. You can still make smart basketball guesses—guards for handling and passing, bigs for rebounding and interior defense—but you cannot know whether a good real-world fit is actually an A+ in the game until the final reveal.
+
+Chaos is harder still because both ratings and position information are hidden during the build. It is excellent for challenge runs, but it is a poor environment for deliberately optimizing a mathematical average.
+
+The YouTube run illustrates this well. The creator spends much of the video trying harder modes, repeatedly producing strong 90–96 OVR players but falling short of the perfect sheet. Once the goal becomes purely “get the best possible card,” returning to the more controllable setup makes the chase much more realistic.
+
+So if your search is specifically **Build a Hooper 99 OVR**, Classic is the mode that best answers the underlying goal: get as close to the rating ceiling as possible.
+
+## Is 95 OVR good enough?
+
+Yes. For most runs, **95 OVR is already elite**.
+
+The current Legacy scoring system awards its top OVR bonus at 95+, so moving from 95 to 97 does not add more Legacy points by itself. A championship, playoff result, and regular-season performance matter more to your total score than squeezing the last two OVR points out of an already elite card.
+
+That creates two different goals:
+
+- **High-score goal:** get to 95+, then prioritize winning the season and championship.
+- **Perfect-build goal:** keep rerunning until you reach 97 OVR or an all-A+ sheet.
+
+Do not confuse them. A 97 build is satisfying because it proves you hit the ceiling, but a 95 OVR champion can be the more valuable run on the leaderboard.
+
+If Legacy points are your priority, follow the [high-score checklist](/blog/build-a-hooper-high-score-guide) instead of sacrificing a strong season just to chase one more OVR point.
+
+## Frequently asked questions
+
+### Is 99 OVR possible in Build a Hooper?
+
+Not in the current rating system we verified. The highest final Overall is 97.
+
+### Can an individual attribute be 99?
+
+Yes. Gameplay footage shows individual skill ratings reaching 99. That is different from the final player OVR.
+
+### What is the maximum Build a Hooper Overall?
+
+The highest verified final rating is **97 OVR**.
+
+### Do you need all A+ grades to display 97 OVR?
+
+No. An all-A+ sheet is the perfect build, but because the final average is rounded, twelve A+ grades plus one A also display as 97 OVR in the current implementation.
+
+### What is the easiest mode for getting 97 OVR?
+
+Classic. Ratings are visible and you have three rerolls, so you can deliberately protect the average instead of drafting blind.
+
+### Should I chase 97 or stop at 95?
+
+If you want a perfect card, chase 97. If you want Legacy points, 95+ already earns the maximum OVR bonus, so winning the season matters more.
+
+## Bottom line
+
+If you searched **Build a Hooper 99 Overall**, the important correction is simple: **99 OVR is not the verified ceiling. 97 is.**
+
+Individual skills can show 99, which is why the confusion exists. But the current final-OVR system tops out at 97, and a real all-A+ gameplay run also finishes at 97 Overall.
+
+For most players, the smartest progression is:
+
+1. Learn to build consistent 90+ cards.
+2. Push toward 95+ while protecting difficult attributes.
+3. Use Classic and save rerolls if you want a 97 attempt.
+4. Treat an all-A+ sheet as the true perfect-build challenge.
+5. Once you reach 95+, remember that championships matter more than the last two OVR points for Legacy scoring.
+
+[Play Build a Hooper](/#play) · [Compare the 13 attributes](/attributes) · [Use the scoring calculator](/scoring-calculator)
+
+## Sources and verification
+
+- **Build a Hooper public game:** [build-a-hooper.pages.dev](https://build-a-hooper.pages.dev/) — confirms the 13-attribute, three-mode, 82-game structure.
+- **Current buildahooper.org game logic:** the highest grade contribution is A+ = 97, and final OVR is the rounded average of locked attributes.
+- **Gameplay reference:** *I Play Build a Hooper Until I Create the Perfect Player* — the reviewed run shows individual 99-rated attributes, then completes an all-A+ build that reveals as 97 Overall.
+
+Build a Hooper and buildahooper.org are unofficial basketball simulator experiences and are not affiliated with the NBA, NBA 2K, Take-Two, any league, team, player, or rights holder.

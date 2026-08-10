@@ -1,5 +1,6 @@
 import { Link } from '@/core/i18n/navigation';
 import { m } from '@/paraglide/messages.js';
+import { getLocale } from '@/paraglide/runtime.js';
 
 const SECTIONS = [
   ['landing.guide.attributes_title', 'landing.guide.attributes_body'],
@@ -11,6 +12,7 @@ const SECTIONS = [
 
 const CREATE_A_HOOPER_PHRASE = 'Create a Hooper';
 const CREATE_A_HOOPER_HREF = '/create-a-hooper';
+const MAX_OVR_HREF = '/blog/build-a-hooper-99-overall';
 
 const linkClass =
   'text-primary font-semibold underline decoration-primary/30 underline-offset-4 transition hover:decoration-primary';
@@ -31,6 +33,8 @@ function TextWithCreateAHooperLink({ text }: { text: string }) {
 }
 
 export function Guide() {
+  const locale = getLocale();
+
   return (
     <section id="guide" className="px-4 py-20 sm:py-24">
       <div className="mx-auto max-w-4xl">
@@ -51,7 +55,19 @@ export function Guide() {
               </h3>
               <p className="text-muted-foreground text-base leading-8">
                 {bodyKey === 'landing.guide.search_body' ? (
-                  <TextWithCreateAHooperLink text={m[bodyKey]()} />
+                  <>
+                    <TextWithCreateAHooperLink text={m[bodyKey]()} />
+                    {locale === 'en' && (
+                      <>
+                        {' '}If your goal is the rating ceiling, read our{' '}
+                        <Link href={MAX_OVR_HREF} className={linkClass}>
+                          Build a Hooper 99 Overall guide
+                        </Link>{' '}
+                        to see why individual 99 ratings still lead to a verified
+                        97 OVR maximum.
+                      </>
+                    )}
+                  </>
                 ) : (
                   m[bodyKey]()
                 )}
