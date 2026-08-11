@@ -23,6 +23,9 @@
     "rbac:init": "tsx scripts/with-env.ts tsx scripts/init-rbac.ts",
     "rbac:assign": "tsx scripts/with-env.ts tsx scripts/assign-role.ts",
     "hooper:backfill-win-rate": "tsx scripts/with-env.ts tsx scripts/backfill-win-rate.ts",
+    "indexnow:keyfile": "shipany-indexnow keyfile",
+    "indexnow:verify": "shipany-indexnow verify --wait",
+    "indexnow:submit": "shipany-indexnow submit --wait",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "prepare": "husky"
@@ -101,6 +104,7 @@
     "nitro": "3.0.260603-beta",
     "prettier": "^3.8.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "shipany-indexnow": "0.1.0",
     "tailwindcss": "^4.1.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.0",

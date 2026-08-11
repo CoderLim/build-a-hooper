@@ -36,7 +36,15 @@ jobs:
 
       - name: Build & Deploy Worker
         uses: cloudflare/wrangler-action@v3
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pnpm run cf:ci:build && pnpm exec wrangler deploy
+          command: pnpm indexnow:keyfile && pnpm run cf:ci:build && pnpm exec wrangler deploy
+
+      - name: Notify IndexNow
+        continue-on-error: true
+        env:
+          INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: pnpm indexnow:submit
