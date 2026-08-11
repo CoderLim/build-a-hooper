@@ -32,14 +32,20 @@ jobs:
         if: env.ENV_PRODUCTION != ''
         run: echo "$ENV_PRODUCTION" > .env.production
 
-      - name: Build & Deploy Worker
-        uses: cloudflare/wrangler-action@v3
+      - name: Generate IndexNow key file
         env:
           INDEXNOW_KEY: ${{ secrets.INDEXNOW_KEY }}
+        run: pnpm indexnow:keyfile
+
+      - name: Build Worker
+        run: pnpm run cf:ci:build
+
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pnpm indexnow:keyfile && pnpm run cf:ci:build && pnpm exec wrangler deploy
+          command: deploy
 
       - name: Notify IndexNow
         continue-on-error: true
