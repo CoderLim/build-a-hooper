@@ -1,18 +1,34 @@
 import { useMemo, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 
+import { envConfigs } from '@/config';
 import { tDynamic } from '@/core/i18n/dynamic';
 import { Link } from '@/core/i18n/navigation';
 import {
   computeLegacyPointsBreakdown,
   type PlayoffResult,
 } from '@/lib/hooper/legacy-points';
-import { buildPageHead } from '@/lib/seo/metadata';
+import {
+  breadcrumbListJsonLd,
+  faqPageJsonLd,
+  jsonLdScript,
+  softwareApplicationJsonLd,
+} from '@/lib/seo/json-ld';
+import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, locales } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
+import {
+  getScoringFaqItems,
+  ScoringCalculatorGuide,
+} from '@/blocks/scoring-calculator-guide';
 import { buttonVariants } from '@/components/ui/button';
+
+const PATH = '/scoring-calculator';
+const EN_TITLE = 'Build a Hooper Legacy Points Calculator';
+const EN_DESCRIPTION =
+  'Build a Hooper Legacy Points Calculator estimates Legacy points from OVR, 82-game wins and playoff result, with the current scoring rules explained.';
 
 const PLAYOFF_OPTIONS: { value: PlayoffResult; labelKey: string }[] = [
   { value: 'Missed Playoffs', labelKey: 'scoring.result.missed' },
@@ -35,24 +51,61 @@ export const Route = createFileRoute('/scoring-calculator')({
     const locale = getLocale();
     return {
       locale,
-      title: m['scoring.meta.title']({}, { locale }),
-      description: m['scoring.meta.description']({}, { locale }),
+      title:
+        locale === 'en'
+          ? EN_TITLE
+          : m['scoring.meta.title']({}, { locale }),
+      description:
+        locale === 'en'
+          ? EN_DESCRIPTION
+          : m['scoring.meta.description']({}, { locale }),
     };
   },
-  head: ({ loaderData }) =>
-    loaderData
-      ? buildPageHead({
-          title: loaderData.title,
-          description: loaderData.description,
-          path: '/scoring-calculator',
-          locale: loaderData.locale,
-          alternateLocales: locales,
-        })
-      : {},
+  head: ({ loaderData }) => {
+    if (!loaderData) return {};
+
+    const { locale, title, description } = loaderData;
+    const canonical = localizedPageUrl(PATH, locale);
+    const siteUrl =
+      (envConfigs.app_url || '').replace(/\/$/, '') ||
+      'https://buildahooper.org';
+    const head = buildPageHead({
+      title,
+      description,
+      path: PATH,
+      locale,
+      alternateLocales: locales,
+    });
+
+    return {
+      ...head,
+      scripts: [
+        ...(head.scripts ?? []),
+        jsonLdScript([
+          breadcrumbListJsonLd([
+            { name: 'Home', url: `${siteUrl}/` },
+            { name: title, url: canonical },
+          ]),
+          softwareApplicationJsonLd({
+            name: title,
+            description,
+            url: canonical,
+            locale,
+          }),
+          faqPageJsonLd({
+            items: getScoringFaqItems(locale),
+            url: `${canonical}#faq`,
+            locale,
+          }),
+        ]),
+      ],
+    };
+  },
   component: ScoringCalculatorPage,
 });
 
 function ScoringCalculatorPage() {
+  const locale = getLocale();
   const [overall, setOverall] = useState(90);
   const [wins, setWins] = useState(50);
   const [playoffResult, setPlayoffResult] =
@@ -80,10 +133,12 @@ function ScoringCalculatorPage() {
               {m['scoring.eyebrow']()}
             </p>
             <h1 className="mt-4 font-serif text-4xl tracking-tight sm:text-5xl">
-              {m['scoring.title']()}
+              {locale === 'en' ? EN_TITLE : m['scoring.title']()}
             </h1>
             <p className="text-muted-foreground mt-5 text-base leading-8">
-              {m['scoring.intro']()}
+              {locale === 'en'
+                ? 'Build a Hooper Legacy Points Calculator turns a completed season into an instant four-part Legacy score. Enter OVR, regular-season wins, and your deepest playoff result to see the same current scoring thresholds used by the game.'
+                : m['scoring.intro']()}
             </p>
           </header>
 
@@ -196,6 +251,8 @@ function ScoringCalculatorPage() {
               </Link>
             </div>
           </section>
+
+          <ScoringCalculatorGuide />
         </div>
       </main>
       <Footer />
