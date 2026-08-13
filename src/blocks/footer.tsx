@@ -35,6 +35,10 @@ export function Footer() {
           href: '/create-a-hooper',
         },
         {
+          label: 'Build a Bucket NBA Game',
+          href: '/build-a-bucket-nba-game',
+        },
+        {
           label: m['scoring.nav_label'](),
           href: '/scoring-calculator',
         },

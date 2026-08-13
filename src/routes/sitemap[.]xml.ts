@@ -10,6 +10,7 @@ import {
 
 const ALL_UI_LOCALES = ['en', 'zh', 'ja', 'ko'] as const;
 const LONG_FORM_LOCALES = ['en', 'zh'] as const;
+const ENGLISH_ONLY = ['en'] as const;
 
 const STATIC_PATHS: {
   path: string;
@@ -18,6 +19,7 @@ const STATIC_PATHS: {
   { path: '', availableLocales: ALL_UI_LOCALES },
   { path: '/scoring-calculator', availableLocales: ALL_UI_LOCALES },
   { path: '/create-a-hooper', availableLocales: ALL_UI_LOCALES },
+  { path: '/build-a-bucket-nba-game', availableLocales: ENGLISH_ONLY },
   { path: '/leaderboard', availableLocales: ALL_UI_LOCALES },
   { path: '/achievements', availableLocales: ALL_UI_LOCALES },
   { path: '/blog', availableLocales: ALL_UI_LOCALES },
