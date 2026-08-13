@@ -12,6 +12,7 @@ const SECTIONS = [
 
 const CREATE_A_HOOPER_PHRASE = 'Create a Hooper';
 const CREATE_A_HOOPER_HREF = '/create-a-hooper';
+const BUILD_A_BUCKET_HREF = '/build-a-bucket-nba-game';
 const MAX_OVR_HREF = '/blog/build-a-hooper-99-overall';
 
 const linkClass =
@@ -59,7 +60,14 @@ export function Guide() {
                     <TextWithCreateAHooperLink text={m[bodyKey]()} />
                     {locale === 'en' && (
                       <>
-                        {' '}If your goal is the rating ceiling, read our{' '}
+                        {' '}Players comparing related NBA player-builder formats
+                        can also read our{' '}
+                        <Link href={BUILD_A_BUCKET_HREF} className={linkClass}>
+                          Build a Bucket NBA Game guide
+                        </Link>{' '}
+                        for a verified overview of Build-A-Bucket&apos;s Guard/Big
+                        paths, NBA player spins, and season simulation. If your
+                        goal is the rating ceiling, read our{' '}
                         <Link href={MAX_OVR_HREF} className={linkClass}>
                           Build a Hooper 99 Overall guide
                         </Link>{' '}
