@@ -13,9 +13,9 @@ import {
   BUILD_A_BUCKET_FAQ,
   BuildABucketNbaGameGuide,
 } from '@/blocks/build-a-bucket-nba-game-guide';
+import { BuildABucketEmbed } from '@/blocks/build-a-bucket-embed';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
-import { Hero } from '@/blocks/hero';
 
 const PATH = '/build-a-bucket-nba-game';
 const TITLE = 'Build a Bucket NBA Game: Guide, Modes & How It Works';
@@ -76,7 +76,7 @@ function BuildABucketNbaGamePage() {
     <div className="bg-background text-foreground flex min-h-screen flex-col">
       <Header overlay />
       <main>
-        <Hero />
+        <BuildABucketEmbed />
         <BuildABucketNbaGameGuide />
       </main>
       <Footer />
