@@ -63,7 +63,7 @@ export function Guide() {
                         {' '}Players comparing related NBA player-builder formats
                         can also read our{' '}
                         <Link href={BUILD_A_BUCKET_HREF} className={linkClass}>
-                          Build a Bucket NBA Game guide
+                          Build a Bucket NBA Game
                         </Link>{' '}
                         for a verified overview of Build-A-Bucket&apos;s Guard/Big
                         paths, NBA player spins, and season simulation. If your
