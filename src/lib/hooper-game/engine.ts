@@ -34,6 +34,16 @@ function deterministicTeam(
   ]!;
 }
 
+function firstAvailablePlayerId(
+  state: GameState,
+  team: TeamSeason
+): string | null {
+  return (
+    team.roster.find((candidate) => !state.usedPlayerNames.has(candidate.name))
+      ?.id ?? null
+  );
+}
+
 export function createInitialState(): GameState {
   return {
     screen: 'mode-select',
@@ -152,7 +162,7 @@ export function completeSpin(state: GameState): GameState {
     buildPhase: 'roster',
     currentTeam: team,
     spinDisplayAbbr: team.abbr,
-    selectedPlayerId: null,
+    selectedPlayerId: firstAvailablePlayerId(state, team),
     selectedAttribute: null,
     currentRollAttempt: 0,
   };
@@ -168,7 +178,7 @@ export function rerollTeam(state: GameState): GameState {
     rerollsLeft: state.rerollsLeft - 1,
     currentTeam: team,
     spinDisplayAbbr: team.abbr,
-    selectedPlayerId: null,
+    selectedPlayerId: firstAvailablePlayerId(state, team),
     selectedAttribute: null,
     currentRollAttempt: nextAttempt,
   };
