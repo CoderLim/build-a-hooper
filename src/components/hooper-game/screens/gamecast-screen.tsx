@@ -1,6 +1,12 @@
-import { GameButton, GameEyebrow, GamePanel, GameTitle } from '../game-ui';
+import { useEffect, useRef } from 'react';
+
 import type { GameCastState, SeasonState } from '@/lib/hooper-game/types';
 import { m } from '@/paraglide/messages.js';
+
+import { GameButton, GameEyebrow, GamePanel, GameTitle } from '../game-ui';
+
+const QUARTER_MS = 1600;
+const FINAL_HOLD_MS = 1400;
 
 interface GameCastScreenProps {
   gameCast: GameCastState;
@@ -16,6 +22,19 @@ export function GameCastScreen({
   onSkip,
 }: GameCastScreenProps) {
   const game = seasonState.games[gameCast.gameIndex];
+  const onAdvanceRef = useRef(onAdvance);
+  const onSkipRef = useRef(onSkip);
+  onAdvanceRef.current = onAdvance;
+  onSkipRef.current = onSkip;
+
+  useEffect(() => {
+    if (gameCast.complete) {
+      const id = window.setTimeout(() => onSkipRef.current(), FINAL_HOLD_MS);
+      return () => window.clearTimeout(id);
+    }
+    const id = window.setTimeout(() => onAdvanceRef.current(), QUARTER_MS);
+    return () => window.clearTimeout(id);
+  }, [gameCast.complete, gameCast.quarter]);
 
   return (
     <section className="flex flex-1 flex-col gap-6">
@@ -38,7 +57,9 @@ export function GameCastScreen({
             <span className="text-white">{gameCast.awayScore}</span>
           </p>
           <p className="text-xs text-white/40 uppercase">
-            {gameCast.complete ? m['game.gamecast.final']() : `Q${gameCast.quarter}`}
+            {gameCast.complete
+              ? m['game.gamecast.final']()
+              : `Q${gameCast.quarter}`}
           </p>
         </div>
       </div>
@@ -72,18 +93,13 @@ export function GameCastScreen({
         ))}
       </div>
 
-      <div className="flex justify-center gap-3">
-        {!gameCast.complete && (
-          <GameButton variant="secondary" onClick={onAdvance}>
-            {m['game.gamecast.next_quarter']()}
+      {!gameCast.complete && (
+        <div className="flex justify-center">
+          <GameButton variant="secondary" onClick={onSkip}>
+            {m['game.gamecast.skip']()}
           </GameButton>
-        )}
-        <GameButton onClick={onSkip}>
-          {gameCast.complete
-            ? m['game.gamecast.continue']()
-            : m['game.gamecast.skip']()}
-        </GameButton>
-      </div>
+        </div>
+      )}
     </section>
   );
 }
