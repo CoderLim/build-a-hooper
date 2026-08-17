@@ -994,6 +994,8 @@
   "game.build.slot_open": "未定",
   "game.build.slot_locked": "確定",
   "game.build.draft_simulate": "13個すべて選んでシミュレーション（{current}/13）",
+  "game.build.draft_complete": "ドラフト完了",
+  "game.build.draft_complete_body": "13の能力値がすべて確定しました。シミュレーションで選手を公開し、シーズンを開始しましょう。",
   "game.reveal.eyebrow": "ビルド公開",
   "game.reveal.title": "あなたのHooper",
   "game.reveal.position": "ポジション：{position}",

@@ -141,6 +141,7 @@ export function confirmPositionRoll(state: GameState): GameState {
 }
 
 export function startSpin(state: GameState): GameState {
+  if (state.lockedPicks.length >= ATTRIBUTE_KEYS.length) return state;
   if (state.buildPhase !== 'idle') return state;
   const abbrs = TEAM_SEASONS.map((team) => team.abbr);
   return {

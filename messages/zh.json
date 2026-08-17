@@ -994,6 +994,8 @@
   "game.build.slot_open": "待选",
   "game.build.slot_locked": "已锁定",
   "game.build.draft_simulate": "选满 13 项后开始模拟（{current}/13）",
+  "game.build.draft_complete": "选秀完成",
+  "game.build.draft_complete_body": "13 项能力已全部锁定。点击模拟以揭晓球员并开始赛季。",
   "game.reveal.eyebrow": "构筑揭晓",
   "game.reveal.title": "你的球员",
   "game.reveal.position": "位置：{position}",

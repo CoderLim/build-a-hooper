@@ -994,6 +994,8 @@
   "game.build.slot_open": "미정",
   "game.build.slot_locked": "확정",
   "game.build.draft_simulate": "13개를 모두 선택해야 시뮬레이션 ({current}/13)",
+  "game.build.draft_complete": "드래프트 완료",
+  "game.build.draft_complete_body": "13개 능력치가 모두 확정되었습니다. 시뮬레이션으로 선수를 공개하고 시즌을 시작하세요.",
   "game.reveal.eyebrow": "빌드 공개",
   "game.reveal.title": "내 Hooper",
   "game.reveal.position": "포지션: {position}",

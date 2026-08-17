@@ -3,6 +3,7 @@ import { isPlayerNameUsed } from '@/lib/hooper-game/engine';
 import type {
   AttributeKey,
   GameState,
+  LockedPick,
   RosterPlayer,
   TeamSeason,
 } from '@/lib/hooper-game/types';
@@ -77,9 +78,15 @@ export function BuildRoomScreen({
                 {m['game.build.team_spin']()}
               </p>
               <h3 className="mt-1 text-lg font-black uppercase">
-                {state.buildPhase === 'idle' && m['game.build.ready']()}
-                {state.buildPhase === 'spinning' && m['game.build.spinning']()}
-                {state.buildPhase === 'roster' &&
+                {isDraftComplete && m['game.build.draft_complete']()}
+                {!isDraftComplete &&
+                  state.buildPhase === 'idle' &&
+                  m['game.build.ready']()}
+                {!isDraftComplete &&
+                  state.buildPhase === 'spinning' &&
+                  m['game.build.spinning']()}
+                {!isDraftComplete &&
+                  state.buildPhase === 'roster' &&
                   m['game.build.choose_player']()}
               </h3>
             </div>
@@ -95,7 +102,14 @@ export function BuildRoomScreen({
             )}
           </div>
 
-          {state.buildPhase === 'idle' && (
+          {isDraftComplete && (
+            <DraftRecapPanel
+              picks={state.lockedPicks}
+              showRatings={showRatings}
+            />
+          )}
+
+          {!isDraftComplete && state.buildPhase === 'idle' && (
             <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-white/15 px-4 py-10 text-center">
               <p className="text-sm text-white/50">
                 {m['game.build.no_team']()}
@@ -109,7 +123,7 @@ export function BuildRoomScreen({
             </div>
           )}
 
-          {state.buildPhase === 'spinning' && (
+          {!isDraftComplete && state.buildPhase === 'spinning' && (
             <SpinAnimation
               abbrs={abbrs}
               finalAbbr={state.spinDisplayAbbr}
@@ -118,17 +132,19 @@ export function BuildRoomScreen({
             />
           )}
 
-          {state.buildPhase === 'roster' && state.currentTeam && (
-            <RosterPanel
-              team={state.currentTeam}
-              state={state}
-              showRatings={showRatings}
-              lockedAttributes={lockedAttributes}
-              selectedPlayer={selectedPlayer}
-              onSelectPlayer={onSelectPlayer}
-              onSelectAttribute={onSelectAttribute}
-            />
-          )}
+          {!isDraftComplete &&
+            state.buildPhase === 'roster' &&
+            state.currentTeam && (
+              <RosterPanel
+                team={state.currentTeam}
+                state={state}
+                showRatings={showRatings}
+                lockedAttributes={lockedAttributes}
+                selectedPlayer={selectedPlayer}
+                onSelectPlayer={onSelectPlayer}
+                onSelectAttribute={onSelectAttribute}
+              />
+            )}
         </GamePanel>
 
         <GamePanel>
@@ -186,6 +202,41 @@ function overallClass(overall: number, selected: boolean) {
   if (overall >= 80) return 'text-orange-300';
   if (overall >= 70) return 'text-yellow-400';
   return 'text-red-400';
+}
+
+function DraftRecapPanel({
+  picks,
+  showRatings,
+}: {
+  picks: LockedPick[];
+  showRatings: boolean;
+}) {
+  return (
+    <div className="mt-6 max-h-[min(52vh,28rem)] space-y-2 overflow-y-auto pr-1">
+      {picks.map((pick) => (
+        <div
+          key={pick.round}
+          className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/4 px-3 py-2.5"
+        >
+          <span className="w-6 shrink-0 text-[11px] font-black text-white/35 tabular-nums">
+            {pick.round}
+          </span>
+          <span className="w-9 shrink-0 text-[11px] font-black tracking-wide text-orange-300">
+            {pick.attribute}
+          </span>
+          <span className="min-w-0 flex-1 truncate text-sm font-semibold">
+            {pick.playerName}
+          </span>
+          <span className="hidden max-w-28 truncate text-xs text-white/40 sm:block">
+            {pick.teamName}
+          </span>
+          <span className="w-8 shrink-0 text-right text-xs font-black text-orange-300 tabular-nums">
+            {showRatings ? pick.overall : '??'}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function RosterPanel({

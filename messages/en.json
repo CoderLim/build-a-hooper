@@ -994,6 +994,8 @@
   "game.build.slot_open": "open",
   "game.build.slot_locked": "locked",
   "game.build.draft_simulate": "Draft all 13 to simulate ({current}/13)",
+  "game.build.draft_complete": "Draft complete",
+  "game.build.draft_complete_body": "All 13 attributes are locked. Simulate to reveal your hooper and start the season.",
   "game.reveal.eyebrow": "Build Reveal",
   "game.reveal.title": "Your Hooper",
   "game.reveal.position": "Position: {position}",
