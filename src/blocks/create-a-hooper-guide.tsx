@@ -313,8 +313,8 @@ function EnglishCreateAHooperGuide() {
           </h3>
           <p className="text-muted-foreground mt-2 leading-8">
             Yes — Create a Hooper play on this page is free in the browser. It
-            is an unofficial fan simulator experience and is not affiliated with
-            the NBA or official team branding.
+            is a basketball simulator and is not affiliated with the NBA or
+            official team branding.
           </p>
         </div>
       </section>

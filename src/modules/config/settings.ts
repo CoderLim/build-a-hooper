@@ -216,7 +216,7 @@ export function getSettings(): Setting[] {
       title: 'App Description',
       type: 'textarea',
       placeholder:
-        'Unofficial browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
+        'Browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
       group: 'appinfo',
       tab: 'general',
     },

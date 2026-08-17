@@ -127,12 +127,12 @@ function EnglishAchievementsGuide() {
         </h2>
         <p className="text-sm leading-7 sm:text-base">
           <strong className="text-white/85">Build a Hooper Achievements</strong>{' '}
-          is the complete milestone system for saved careers on buildahooper.org.
-          The page tracks mode challenges, competitive titles, position wins,
-          rookie experiments, underdog runs, build quality, awards, and long-term
-          legacy goals. Build a Hooper Achievements turns repeat play into a
-          structured progression path, so every run can teach a new strategy
-          instead of becoming another isolated season.
+          is the complete milestone system for saved careers on
+          buildahooper.org. The page tracks mode challenges, competitive titles,
+          position wins, rookie experiments, underdog runs, build quality,
+          awards, and long-term legacy goals. Build a Hooper Achievements turns
+          repeat play into a structured progression path, so every run can teach
+          a new strategy instead of becoming another isolated season.
         </p>
       </header>
 
@@ -142,17 +142,21 @@ function EnglishAchievementsGuide() {
         </h2>
         <p className="text-sm leading-7 sm:text-base">
           To unlock Build a Hooper Achievements, sign in before completing the
-          relevant run. Guest players can browse the catalog and plan objectives,
-          but account progress appears only for signed-in careers. After a saved
-          season satisfies an objective, the matching Build a Hooper Achievements
-          card becomes unlocked and its points are added to the achievement total.
-          Use the refresh button when a recently completed run has not appeared
-          yet.
+          relevant run. Guest players can browse the catalog and plan
+          objectives, but account progress appears only for signed-in careers.
+          After a saved season satisfies an objective, the matching Build a
+          Hooper Achievements card becomes unlocked and its points are added to
+          the achievement total. Use the refresh button when a recently
+          completed run has not appeared yet.
         </p>
         <ol className="list-decimal space-y-2 pl-5 text-sm leading-7 sm:text-base">
           <li>Choose one primary objective before starting the draft.</li>
-          <li>Sign in, complete the full run, and reach the final season card.</li>
-          <li>Return to Build a Hooper Achievements and refresh your progress.</li>
+          <li>
+            Sign in, complete the full run, and reach the final season card.
+          </li>
+          <li>
+            Return to Build a Hooper Achievements and refresh your progress.
+          </li>
         </ol>
         <p className="text-sm leading-7 sm:text-base">
           The Build a Hooper Achievements page includes filters for status,
@@ -184,10 +188,10 @@ function EnglishAchievementsGuide() {
           Competitive-title objectives such as Ring Collector, Eleven Rings,
           Dynasty Builder, and Immortal Legacy require increasing numbers of
           titles in Blind or Chaos. These Build a Hooper Achievements cannot be
-          rushed with one perfect build. They reward a repeatable process: choose
-          portable attributes, avoid position-breaking holes, save the reroll for
-          a truly dead board, and finish every season that still has a credible
-          playoff path.
+          rushed with one perfect build. They reward a repeatable process:
+          choose portable attributes, avoid position-breaking holes, save the
+          reroll for a truly dead board, and finish every season that still has
+          a credible playoff path.
         </p>
       </section>
 
@@ -197,9 +201,9 @@ function EnglishAchievementsGuide() {
         </h2>
         <p className="text-sm leading-7 sm:text-base">
           Position achievements ask you to win with PG, SG, SF, PF, and C. The
-          Build a Hooper Achievements catalog includes individual position titles
-          and Complete Hooper, which requires a championship with every position
-          in Blind or Chaos. This category is where the{' '}
+          Build a Hooper Achievements catalog includes individual position
+          titles and Complete Hooper, which requires a championship with every
+          position in Blind or Chaos. This category is where the{' '}
           <Link href="/attributes" className={linkClass}>
             attributes guide
           </Link>{' '}
@@ -207,8 +211,8 @@ function EnglishAchievementsGuide() {
           <Link href="/best-builds" className={linkClass}>
             best-builds hub
           </Link>{' '}
-          become essential. Handles and passing anchor point guards; shooting and
-          perimeter defense support wings; rebounding and interior defense
+          become essential. Handles and passing anchor point guards; shooting
+          and perimeter defense support wings; rebounding and interior defense
           stabilize bigs.
         </p>
         <div className="overflow-x-auto rounded-xl border border-white/10">
@@ -237,9 +241,13 @@ function EnglishAchievementsGuide() {
                 <td className="px-4 py-3">Balanced Monster, two-way awards</td>
               </tr>
               <tr>
-                <td className="px-4 py-3 font-semibold text-white/80">PF / C</td>
+                <td className="px-4 py-3 font-semibold text-white/80">
+                  PF / C
+                </td>
                 <td className="px-4 py-3">REB, IDEF, FIN, BLK or STR</td>
-                <td className="px-4 py-3">Defensive Wall, DPOY, underdog title</td>
+                <td className="px-4 py-3">
+                  Defensive Wall, DPOY, underdog title
+                </td>
               </tr>
             </tbody>
           </table>
@@ -262,10 +270,10 @@ function EnglishAchievementsGuide() {
         </p>
         <p className="text-sm leading-7 sm:text-base">
           Underdog Run and Underdog Miracle focus on A- or lower builds in Blind
-          or Chaos. These Build a Hooper Achievements teach one of the most useful
-          lessons in the game: overall rating is not the whole card. A coherent
-          lower-rated player can outperform a shiny build with empty creation,
-          weak finishing, or no defensive foundation.
+          or Chaos. These Build a Hooper Achievements teach one of the most
+          useful lessons in the game: overall rating is not the whole card. A
+          coherent lower-rated player can outperform a shiny build with empty
+          creation, weak finishing, or no defensive foundation.
         </p>
       </section>
 
@@ -278,19 +286,19 @@ function EnglishAchievementsGuide() {
           asks for strong passing and handles. Sniper Build requires high
           three-point and mid-range grades. Athletic Freak combines athleticism,
           dunking, and strength. Defensive Wall checks perimeter defense,
-          interior defense, blocks, and rebounding. Balanced Monster, Specialist,
-          Superstar Build, GOAT Blueprint, and Perfect Balance raise the standard
-          further. The Build a Hooper Achievements filters make it easy to isolate
-          these construction targets before you start a new run.
+          interior defense, blocks, and rebounding. Balanced Monster,
+          Specialist, Superstar Build, GOAT Blueprint, and Perfect Balance raise
+          the standard further. The Build a Hooper Achievements filters make it
+          easy to isolate these construction targets before you start a new run.
         </p>
         <p className="text-sm leading-7 sm:text-base">
           Award achievements depend on season outcomes. Scoring King, Defensive
-          Anchor, Season MVP, Finals MVP, Complete Superstar, Offensive Takeover,
-          Two-Way Monster, and Perfect Resume require individual awards or
-          specific combinations. These Build a Hooper Achievements are easier
-          when the build has a clear identity. A scoring route needs a reliable
-          shot diet, while a defensive route needs attributes that affect
-          possessions across the season.
+          Anchor, Season MVP, Finals MVP, Complete Superstar, Offensive
+          Takeover, Two-Way Monster, and Perfect Resume require individual
+          awards or specific combinations. These Build a Hooper Achievements are
+          easier when the build has a clear identity. A scoring route needs a
+          reliable shot diet, while a defensive route needs attributes that
+          affect possessions across the season.
         </p>
       </section>
 
@@ -340,9 +348,9 @@ function EnglishAchievementsGuide() {
           Do not abandon a run just because one target becomes impossible. The
           Build a Hooper Achievements system contains enough overlapping goals
           that the season can still produce progress. If an all-rookie route
-          breaks, the same card may still earn a position championship, an award,
-          a record, or leaderboard points. Finish credible runs and read the
-          result as feedback.
+          breaks, the same card may still earn a position championship, an
+          award, a record, or leaderboard points. Finish credible runs and read
+          the result as feedback.
         </p>
       </section>
 
@@ -381,10 +389,12 @@ function EnglishAchievementsGuide() {
         </h2>
         <div className="space-y-5 text-sm leading-7 sm:text-base">
           <div>
-            <h3 className="font-bold text-white">Do guest runs unlock achievements?</h3>
+            <h3 className="font-bold text-white">
+              Do guest runs unlock achievements?
+            </h3>
             <p>
-              Guest players can browse Build a Hooper Achievements, but persistent
-              unlock progress requires a signed-in saved run.
+              Guest players can browse Build a Hooper Achievements, but
+              persistent unlock progress requires a signed-in saved run.
             </p>
           </div>
           <div>
@@ -404,11 +414,13 @@ function EnglishAchievementsGuide() {
             </p>
           </div>
           <div>
-            <h3 className="font-bold text-white">Is this an official NBA system?</h3>
+            <h3 className="font-bold text-white">
+              Is this an official NBA system?
+            </h3>
             <p>
-              No. Build a Hooper Achievements is part of an unofficial fan
-              simulator and is not affiliated with the NBA, NBA 2K, Take-Two, or
-              any team or league.
+              No. Build a Hooper Achievements is part of the simulator and is
+              not affiliated with the NBA, NBA 2K, Take-Two, or any team or
+              league.
             </p>
           </div>
         </div>

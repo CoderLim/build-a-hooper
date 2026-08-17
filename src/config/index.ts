@@ -24,7 +24,7 @@ export const envConfigs: Record<string, string> = {
   app_name: publicEnv('VITE_APP_NAME') ?? 'Build a Hooper',
   app_description:
     publicEnv('VITE_APP_DESCRIPTION') ??
-    'Unofficial browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
+    'Browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
   app_logo: publicEnv('VITE_APP_LOGO') ?? '/logo.png',
 
   // Database

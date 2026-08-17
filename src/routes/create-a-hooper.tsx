@@ -31,7 +31,7 @@ const EN_FAQ = [
   {
     question: 'Is Create a Hooper free, and is it official NBA content?',
     answer:
-      'Yes — Create a Hooper play on this page is free in the browser. It is an unofficial fan simulator experience and is not affiliated with the NBA or official team branding.',
+      'Yes — Create a Hooper play on this page is free in the browser. It is a basketball simulator and is not affiliated with the NBA or official team branding.',
   },
 ] as const;
 

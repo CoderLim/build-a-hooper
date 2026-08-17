@@ -40,7 +40,7 @@ export function organizationJsonLd(locale?: string): JsonLdObject {
     logo,
     description:
       envConfigs.app_description ||
-      'Unofficial browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
+      'Browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.',
     ...(locale ? { inLanguage: locale } : {}),
   };
 }

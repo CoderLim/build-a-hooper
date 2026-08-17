@@ -10,7 +10,7 @@
     "DATABASE_PROVIDER": "d1",
     "VITE_APP_URL": "https://buildahooper.org",
     "VITE_APP_NAME": "Build a Hooper",
-    "VITE_APP_DESCRIPTION": "Unofficial browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.",
+    "VITE_APP_DESCRIPTION": "Browser basketball simulator — draft skills, shape a custom player, and test your build across a full season.",
   },
   "d1_databases": [
     {
