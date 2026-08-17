@@ -48,7 +48,6 @@ export type GameAction =
   | { type: 'REROLL' }
   | { type: 'SELECT_PLAYER'; playerId: string }
   | { type: 'SELECT_ATTRIBUTE'; attribute: AttributeKey }
-  | { type: 'LOCK_PICK' }
   | { type: 'TO_CAREER' }
   | { type: 'START_CAREER_SPIN' }
   | { type: 'COMPLETE_CAREER_SPIN' }
@@ -86,10 +85,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return rerollTeam(state);
     case 'SELECT_PLAYER':
       return selectPlayer(state, action.playerId);
-    case 'SELECT_ATTRIBUTE':
-      return selectAttribute(state, action.attribute);
-    case 'LOCK_PICK':
-      return lockPick(state);
+    case 'SELECT_ATTRIBUTE': {
+      const locked = lockPick(selectAttribute(state, action.attribute));
+      if (locked.screen !== 'build' || locked.buildPhase !== 'idle') {
+        return locked;
+      }
+      return startSpin(locked);
+    }
     case 'TO_CAREER':
       return proceedToCareerTeam(state);
     case 'START_CAREER_SPIN':

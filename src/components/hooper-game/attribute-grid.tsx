@@ -1,4 +1,4 @@
-import { ATTRIBUTE_KEYS } from '@/lib/hooper-game/constants';
+import { ATTRIBUTE_KEYS, GRADE_VALUES } from '@/lib/hooper-game/constants';
 import type { AttributeKey, BuildSlot, Grade } from '@/lib/hooper-game/types';
 import { cn } from '@/lib/utils';
 
@@ -42,9 +42,7 @@ export function AttributeGrid({
   const displaySlots = lockedOnly ? slots.filter((s) => s.locked) : slots;
 
   if (lockedOnly && displaySlots.length === 0) {
-    return (
-      <p className="text-sm text-white/40">No attributes locked yet.</p>
-    );
+    return <p className="text-sm text-white/40">No attributes locked yet.</p>;
   }
 
   return (
@@ -71,7 +69,9 @@ export function AttributeGrid({
               {slot.attribute}
             </span>
             {slot.locked && showValues ? (
-              <span className={cn('text-sm font-black', gradeColor(slot.grade))}>
+              <span
+                className={cn('text-sm font-black', gradeColor(slot.grade))}
+              >
                 {slot.grade}
               </span>
             ) : (
@@ -104,6 +104,14 @@ interface AttributePickerProps {
   onSelect: (attr: AttributeKey) => void;
 }
 
+const BAR_GRADIENTS = [
+  'from-amber-300 to-cyan-400',
+  'from-orange-400 to-sky-500',
+  'from-yellow-300 to-teal-400',
+  'from-orange-300 to-blue-500',
+  'from-red-400 to-orange-300',
+];
+
 export function AttributePicker({
   attributes,
   lockedAttributes,
@@ -112,33 +120,56 @@ export function AttributePicker({
   onSelect,
 }: AttributePickerProps) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {ATTRIBUTE_KEYS.map((attr) => {
+    <div className="grid grid-cols-2 gap-2.5">
+      {ATTRIBUTE_KEYS.map((attr, index) => {
         const grade = attributes[attr];
+        if (!grade) return null;
         const isLocked = lockedAttributes.includes(attr);
         const isSelected = selected === attr;
-        if (!grade || isLocked) return null;
+        const rating = GRADE_VALUES[grade] ?? 50;
+        const fill = hidden ? 0 : Math.min(100, (rating / 99) * 100);
+
         return (
           <button
             key={attr}
             type="button"
+            disabled={isLocked}
+            title={ATTRIBUTE_LABELS[attr]}
+            aria-pressed={isSelected}
             onClick={() => onSelect(attr)}
             className={cn(
-              'rounded-xl border px-3 py-2 text-left transition',
-              isSelected
-                ? 'border-orange-300 bg-orange-300/15'
-                : 'border-white/10 bg-white/3 hover:border-orange-300/40'
+              'rounded-xl border px-3 py-2.5 text-left transition',
+              isLocked && 'cursor-not-allowed opacity-35',
+              isSelected &&
+                !isLocked &&
+                'border-orange-300 bg-orange-300/15 shadow-[0_0_18px_rgba(253,186,116,0.12)]',
+              !isSelected &&
+                !isLocked &&
+                'border-orange-300/25 bg-transparent hover:border-orange-300/55 hover:bg-white/3'
             )}
           >
-            <span className="text-xs font-bold text-white/80">{attr}</span>
-            <span
-              className={cn(
-                'ml-2 text-sm font-black',
-                hidden ? 'text-white/20' : gradeColor(grade)
-              )}
-            >
-              {hidden ? '?' : grade}
-            </span>
+            <div className="flex items-baseline justify-between gap-2">
+              <span className="text-[11px] font-bold tracking-wide text-white">
+                {attr}
+              </span>
+              <span
+                className={cn(
+                  'text-sm font-black',
+                  hidden ? 'text-white/25' : 'text-orange-300'
+                )}
+              >
+                {hidden ? '??' : rating}
+              </span>
+            </div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/10">
+              <div
+                className={cn(
+                  'h-full rounded-full bg-linear-to-r transition-[width] duration-300',
+                  BAR_GRADIENTS[index % BAR_GRADIENTS.length]
+                )}
+                style={{ width: `${fill}%` }}
+              />
+            </div>
           </button>
         );
       })}

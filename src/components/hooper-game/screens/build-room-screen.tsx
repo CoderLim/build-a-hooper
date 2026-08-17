@@ -9,7 +9,8 @@ import type {
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 
-import { AttributeGrid, AttributePicker } from '../attribute-grid';
+import { AttributePicker } from '../attribute-grid';
+import { BuildProgressCard } from '../build-progress-card';
 import {
   GameButton,
   GameEyebrow,
@@ -22,7 +23,6 @@ import { SpinAnimation } from '../spin-animation';
 interface BuildRoomScreenProps {
   state: GameState;
   showRatings: boolean;
-  showPosition: boolean;
   progress: number;
   lockedAttributes: AttributeKey[];
   selectedPlayer: RosterPlayer | undefined;
@@ -31,13 +31,11 @@ interface BuildRoomScreenProps {
   onReroll: () => void;
   onSelectPlayer: (id: string) => void;
   onSelectAttribute: (attr: AttributeKey) => void;
-  onLockPick: () => void;
 }
 
 export function BuildRoomScreen({
   state,
   showRatings,
-  showPosition,
   progress,
   lockedAttributes,
   selectedPlayer,
@@ -46,7 +44,6 @@ export function BuildRoomScreen({
   onReroll,
   onSelectPlayer,
   onSelectAttribute,
-  onLockPick,
 }: BuildRoomScreenProps) {
   const abbrs = TEAM_SEASONS.map((t) => t.abbr);
 
@@ -69,9 +66,8 @@ export function BuildRoomScreen({
         />
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[1fr_1fr_240px]">
-        {/* Left: Team spin + roster */}
-        <GamePanel className="lg:col-span-1">
+      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+        <GamePanel>
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="text-[11px] font-bold tracking-[0.2em] text-white/40 uppercase">
@@ -125,67 +121,17 @@ export function BuildRoomScreen({
               state={state}
               showRatings={showRatings}
               lockedAttributes={lockedAttributes}
+              selectedPlayer={selectedPlayer}
               onSelectPlayer={onSelectPlayer}
               onSelectAttribute={onSelectAttribute}
-              onLockPick={onLockPick}
             />
           )}
         </GamePanel>
 
-        {/* Center: Selected player */}
-        <GamePanel title={m['game.build.selected_player']()}>
-          {!selectedPlayer ? (
-            <p className="text-sm text-white/45">
-              {m['game.build.no_player']()}
-            </p>
-          ) : (
-            <div className="space-y-4">
-              <div>
-                <p className="text-lg font-black">{selectedPlayer.name}</p>
-                <p className="text-sm text-white/50">
-                  OVR {showRatings ? selectedPlayer.overall : '??'} ·{' '}
-                  {selectedPlayer.positions.join('/')}
-                </p>
-              </div>
-              <AttributePicker
-                attributes={selectedPlayer.attributes}
-                lockedAttributes={lockedAttributes}
-                selected={state.selectedAttribute}
-                hidden={!showRatings}
-                onSelect={onSelectAttribute}
-              />
-              <GameButton
-                className="w-full"
-                disabled={!state.selectedAttribute}
-                onClick={onLockPick}
-              >
-                {m['game.build.lock_pick']()}
-              </GameButton>
-            </div>
-          )}
-        </GamePanel>
-
-        {/* Right: Locked progress only */}
-        <GamePanel
-          title={m['game.build.progress_panel']()}
-          className="hidden lg:block"
-        >
-          <div className="mb-4 flex items-center justify-between text-sm">
-            <span className="text-white/50">{m['game.build.mode']()}</span>
-            <span className="font-bold uppercase">{state.mode}</span>
-          </div>
-          {showPosition && state.position && (
-            <div className="mb-4 flex items-center justify-between text-sm">
-              <span className="text-white/50">
-                {m['game.build.position']()}
-              </span>
-              <span className="font-bold">{state.position}</span>
-            </div>
-          )}
-          <AttributeGrid
+        <GamePanel>
+          <BuildProgressCard
             slots={state.buildSlots}
-            showValues={showRatings}
-            lockedOnly
+            showRatings={showRatings}
           />
         </GamePanel>
       </div>
@@ -193,22 +139,58 @@ export function BuildRoomScreen({
   );
 }
 
+const AVATAR_COLORS = [
+  'bg-rose-500',
+  'bg-teal-500',
+  'bg-blue-500',
+  'bg-amber-500',
+  'bg-violet-500',
+  'bg-orange-500',
+  'bg-cyan-500',
+  'bg-fuchsia-500',
+  'bg-lime-600',
+  'bg-sky-500',
+];
+
+function playerInitials(name: string) {
+  const parts = name.replace(/['']/g, '').split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return '?';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
+function avatarColor(id: string) {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return AVATAR_COLORS[hash % AVATAR_COLORS.length];
+}
+
+function overallClass(overall: number, selected: boolean) {
+  if (selected) return 'text-red-600';
+  if (overall >= 90) return 'text-emerald-400';
+  if (overall >= 80) return 'text-orange-300';
+  if (overall >= 70) return 'text-yellow-400';
+  return 'text-red-400';
+}
+
 function RosterPanel({
   team,
   state,
   showRatings,
   lockedAttributes,
+  selectedPlayer,
   onSelectPlayer,
   onSelectAttribute,
-  onLockPick,
 }: {
   team: TeamSeason;
   state: GameState;
   showRatings: boolean;
   lockedAttributes: AttributeKey[];
+  selectedPlayer: RosterPlayer | undefined;
   onSelectPlayer: (id: string) => void;
   onSelectAttribute: (attr: AttributeKey) => void;
-  onLockPick: () => void;
 }) {
   return (
     <div className="mt-4 space-y-4">
@@ -223,74 +205,115 @@ function RosterPanel({
           </div>
         </div>
       </div>
-      <div className="overflow-hidden rounded-xl border border-white/10">
-        <div className="grid grid-cols-[1fr_auto] gap-2 border-b border-white/10 bg-white/3 px-3 py-2 text-[10px] font-bold tracking-wider text-white/40 uppercase">
-          <span>{m['game.build.col_player']()}</span>
-          <span>{m['game.build.col_status']()}</span>
-        </div>
+
+      <div className="flex flex-wrap gap-2">
         {team.roster.map((player) => {
           const used = isPlayerNameUsed(state, player.name);
           const selected = state.selectedPlayerId === player.id;
+          const color = avatarColor(player.id);
+
           return (
-            <div
+            <button
               key={player.id}
-              className="border-b border-white/5 last:border-0"
+              type="button"
+              disabled={used}
+              aria-pressed={selected}
+              onClick={() => onSelectPlayer(player.id)}
+              className={cn(
+                'flex min-w-0 items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition',
+                selected
+                  ? 'bg-orange-300 text-neutral-950 shadow-[0_0_20px_rgba(253,186,116,0.28)]'
+                  : 'border border-white/10 bg-white/4 text-white hover:border-orange-300/40',
+                used && 'cursor-not-allowed opacity-30 hover:border-white/10'
+              )}
             >
-              <button
-                type="button"
-                disabled={used}
-                onClick={() => onSelectPlayer(player.id)}
+              <span
                 className={cn(
-                  'grid w-full grid-cols-[1fr_auto] gap-2 px-3 py-3 text-left text-sm transition',
-                  selected && 'bg-orange-300/10',
-                  used ? 'cursor-not-allowed opacity-30' : 'hover:bg-white/4'
+                  'grid size-8 shrink-0 place-items-center rounded-full text-[11px] font-black text-white',
+                  color
                 )}
               >
-                <div>
-                  <span className="font-semibold">{player.name}</span>
-                  <span className="ml-2 text-xs text-white/40">
-                    {player.positions.join('/')}
+                {playerInitials(player.name)}
+              </span>
+              <span
+                className={cn(
+                  'max-w-34 truncate text-sm font-semibold sm:max-w-44',
+                  selected ? 'text-neutral-950' : 'text-white'
+                )}
+              >
+                {player.name}
+              </span>
+              <span className="ml-1 flex items-baseline gap-1.5 pr-0.5 text-xs font-bold">
+                {used ? (
+                  <span className="tracking-wider uppercase">
+                    {m['game.build.used']()}
                   </span>
-                </div>
-                <span
-                  className={cn(
-                    'text-xs font-bold uppercase',
-                    used
-                      ? 'text-white/30'
-                      : selected
-                        ? 'text-orange-300'
-                        : 'text-emerald-400'
-                  )}
-                >
-                  {used
-                    ? m['game.build.used']()
-                    : selected
-                      ? m['game.build.selected']()
-                      : m['game.build.available']()}
-                </span>
-              </button>
-              {selected && (
-                <div className="space-y-3 border-t border-white/5 px-3 py-3 lg:hidden">
-                  <AttributePicker
-                    attributes={player.attributes}
-                    lockedAttributes={lockedAttributes}
-                    selected={state.selectedAttribute}
-                    hidden={!showRatings}
-                    onSelect={onSelectAttribute}
-                  />
-                  <GameButton
-                    className="w-full"
-                    disabled={!state.selectedAttribute}
-                    onClick={onLockPick}
-                  >
-                    {m['game.build.lock_pick']()}
-                  </GameButton>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <>
+                    <span
+                      className={
+                        selected ? 'text-neutral-700' : 'text-white/45'
+                      }
+                    >
+                      {player.positions[0]}
+                    </span>
+                    <span
+                      className={cn(
+                        'tabular-nums',
+                        showRatings
+                          ? overallClass(player.overall, selected)
+                          : selected
+                            ? 'text-neutral-500'
+                            : 'text-white/30'
+                      )}
+                    >
+                      {showRatings ? player.overall : '??'}
+                    </span>
+                  </>
+                )}
+              </span>
+            </button>
           );
         })}
       </div>
+
+      {!selectedPlayer ? (
+        <div className="rounded-2xl border border-dashed border-white/15 px-4 py-10 text-center">
+          <p className="text-sm text-white/45">{m['game.build.no_player']()}</p>
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-orange-300/30 bg-neutral-950/40 p-4 sm:p-5">
+          <div className="flex items-center gap-4">
+            <span
+              className={cn(
+                'grid size-16 shrink-0 place-items-center rounded-2xl text-xl font-black text-white sm:size-18 sm:text-2xl',
+                avatarColor(selectedPlayer.id)
+              )}
+            >
+              {playerInitials(selectedPlayer.name)}
+            </span>
+            <div className="min-w-0">
+              <p className="truncate text-xl font-black tracking-tight sm:text-2xl">
+                {selectedPlayer.name}
+              </p>
+              <p className="mt-1 text-sm text-white/45">
+                {selectedPlayer.positions.join('/')} / OVR{' '}
+                {showRatings ? selectedPlayer.overall : '??'}
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5">
+            <AttributePicker
+              attributes={selectedPlayer.attributes}
+              lockedAttributes={lockedAttributes}
+              selected={state.selectedAttribute}
+              hidden={!showRatings}
+              onSelect={onSelectAttribute}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

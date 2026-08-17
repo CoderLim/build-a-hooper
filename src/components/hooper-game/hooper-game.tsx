@@ -148,7 +148,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
           <BuildRoomScreen
             state={state}
             showRatings={showRatings}
-            showPosition={showPosition}
             progress={progress}
             lockedAttributes={lockedAttributes}
             selectedPlayer={selectedPlayer}
@@ -161,7 +160,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
             onSelectAttribute={(attribute: AttributeKey) =>
               dispatch({ type: 'SELECT_ATTRIBUTE', attribute })
             }
-            onLockPick={act({ type: 'LOCK_PICK' })}
           />
         )}
 
