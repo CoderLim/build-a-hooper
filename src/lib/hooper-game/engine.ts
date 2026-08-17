@@ -37,14 +37,14 @@ function deterministicTeam(
 export function createInitialState(): GameState {
   return {
     screen: 'mode-select',
-    mode: null,
+    mode: 'classic',
     position: null,
     positionRevealed: false,
     buildPhase: 'idle',
     careerTeamPhase: 'idle',
     currentTeam: null,
     spinDisplayAbbr: null,
-    rerollsLeft: 0,
+    rerollsLeft: REROLLS_BY_MODE.classic,
     lockedPicks: [],
     buildSlots: ATTRIBUTE_KEYS.map((attribute) => ({
       attribute,
@@ -94,9 +94,7 @@ export function confirmMode(state: GameState): GameState {
   }
 
   const position =
-    POSITIONS[
-      deterministicIndex(state.runSeed, 'position', POSITIONS.length)
-    ]!;
+    POSITIONS[deterministicIndex(state.runSeed, 'position', POSITIONS.length)]!;
 
   if (state.mode === 'blind') {
     return {

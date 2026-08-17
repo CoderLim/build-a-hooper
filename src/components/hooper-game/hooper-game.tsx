@@ -1,8 +1,7 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useLayoutEffect, useReducer, useRef } from 'react';
 
 import { useSession } from '@/core/auth/client';
 import { apiPost } from '@/lib/api-client';
-import type { RunChallengeResponse } from '@/lib/hooper-game/run-challenge';
 import {
   createDevCardPreviewState,
   isDevCardPreviewActive,
@@ -12,6 +11,7 @@ import {
   positionVisible,
   ratingsVisible,
 } from '@/lib/hooper-game/engine';
+import type { RunChallengeResponse } from '@/lib/hooper-game/run-challenge';
 import type { AttributeKey } from '@/lib/hooper-game/types';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
@@ -66,6 +66,16 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
 
   const act = (action: GameAction) => () => dispatch(action);
 
+  const prevScreen = useRef(state.screen);
+  useLayoutEffect(() => {
+    if (!embedded) return;
+    if (prevScreen.current === state.screen) return;
+    prevScreen.current = state.screen;
+    document
+      .getElementById('play')
+      ?.scrollIntoView({ behavior: 'auto', block: 'start' });
+  }, [embedded, state.screen]);
+
   useEffect(() => {
     if (state.screen !== 'mode-select') return;
     if (state.runToken) return;
@@ -96,12 +106,7 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
     return () => {
       cancelled = true;
     };
-  }, [
-    state.screen,
-    state.runToken,
-    session?.user,
-    sessionPending,
-  ]);
+  }, [state.screen, state.runToken, session?.user, sessionPending]);
 
   return (
     <GameShell

@@ -1,3 +1,14 @@
+import { TEAM_SEASONS } from '@/lib/hooper-game/data';
+import { isPlayerNameUsed } from '@/lib/hooper-game/engine';
+import type {
+  AttributeKey,
+  GameState,
+  RosterPlayer,
+  TeamSeason,
+} from '@/lib/hooper-game/types';
+import { cn } from '@/lib/utils';
+import { m } from '@/paraglide/messages.js';
+
 import { AttributeGrid, AttributePicker } from '../attribute-grid';
 import {
   GameButton,
@@ -7,20 +18,6 @@ import {
   ProgressPill,
 } from '../game-ui';
 import { SpinAnimation } from '../spin-animation';
-import { TEAM_SEASONS } from '@/lib/hooper-game/data';
-import { isPlayerNameUsed } from '@/lib/hooper-game/engine';
-import type {
-  AttributeKey,
-  BuildPhase,
-  BuildSlot,
-  GameMode,
-  GameState,
-  Position,
-  RosterPlayer,
-  TeamSeason,
-} from '@/lib/hooper-game/types';
-import { m } from '@/paraglide/messages.js';
-import { cn } from '@/lib/utils';
 
 interface BuildRoomScreenProps {
   state: GameState;
@@ -35,21 +32,6 @@ interface BuildRoomScreenProps {
   onSelectPlayer: (id: string) => void;
   onSelectAttribute: (attr: AttributeKey) => void;
   onLockPick: () => void;
-}
-
-function stickyAction(
-  phase: BuildPhase,
-  selectedAttribute: AttributeKey | null,
-  onStartSpin: () => void,
-  onLockPick: () => void
-) {
-  if (phase === 'idle') {
-    return { label: m['game.build.start_spin'](), action: onStartSpin, disabled: false };
-  }
-  if (phase === 'roster' && selectedAttribute) {
-    return { label: m['game.build.lock_pick'](), action: onLockPick, disabled: false };
-  }
-  return null;
 }
 
 export function BuildRoomScreen({
@@ -67,24 +49,24 @@ export function BuildRoomScreen({
   onLockPick,
 }: BuildRoomScreenProps) {
   const abbrs = TEAM_SEASONS.map((t) => t.abbr);
-  const sticky = stickyAction(
-    state.buildPhase,
-    state.selectedAttribute,
-    onStartSpin,
-    onLockPick
-  );
 
   return (
-    <section className="flex flex-1 flex-col gap-6 pb-24 lg:pb-6">
+    <section className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <GameEyebrow>{m['game.build.eyebrow']()}</GameEyebrow>
           <GameTitle className="mt-2 text-2xl sm:text-3xl">
             {m['game.build.title']()}
           </GameTitle>
-          <p className="mt-2 text-sm text-white/55">{m['game.build.subtitle']()}</p>
+          <p className="mt-2 text-sm text-white/55">
+            {m['game.build.subtitle']()}
+          </p>
         </div>
-        <ProgressPill current={progress} total={13} label={m['game.build.progress']()} />
+        <ProgressPill
+          current={progress}
+          total={13}
+          label={m['game.build.progress']()}
+        />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_1fr_240px]">
@@ -98,7 +80,8 @@ export function BuildRoomScreen({
               <h3 className="mt-1 text-lg font-black uppercase">
                 {state.buildPhase === 'idle' && m['game.build.ready']()}
                 {state.buildPhase === 'spinning' && m['game.build.spinning']()}
-                {state.buildPhase === 'roster' && m['game.build.choose_player']()}
+                {state.buildPhase === 'roster' &&
+                  m['game.build.choose_player']()}
               </h3>
             </div>
             {state.buildPhase === 'roster' && (
@@ -106,7 +89,7 @@ export function BuildRoomScreen({
                 variant="secondary"
                 disabled={state.rerollsLeft <= 0}
                 onClick={onReroll}
-                className="hidden px-5 py-3 text-xs lg:inline-flex"
+                className="px-5 py-3 text-xs"
               >
                 {m['game.build.reroll']({ count: state.rerollsLeft })}
               </GameButton>
@@ -114,9 +97,14 @@ export function BuildRoomScreen({
           </div>
 
           {state.buildPhase === 'idle' && (
-            <div className="mt-6 hidden flex-col items-center rounded-2xl border border-dashed border-white/15 py-12 text-center lg:flex">
-              <p className="text-sm text-white/50">{m['game.build.no_team']()}</p>
-              <GameButton className="mt-6" onClick={onStartSpin}>
+            <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-white/15 px-4 py-10 text-center">
+              <p className="text-sm text-white/50">
+                {m['game.build.no_team']()}
+              </p>
+              <GameButton
+                className="mt-6 w-full max-w-xs"
+                onClick={onStartSpin}
+              >
                 {m['game.build.start_spin']()}
               </GameButton>
             </div>
@@ -139,6 +127,7 @@ export function BuildRoomScreen({
               lockedAttributes={lockedAttributes}
               onSelectPlayer={onSelectPlayer}
               onSelectAttribute={onSelectAttribute}
+              onLockPick={onLockPick}
             />
           )}
         </GamePanel>
@@ -146,7 +135,9 @@ export function BuildRoomScreen({
         {/* Center: Selected player */}
         <GamePanel title={m['game.build.selected_player']()}>
           {!selectedPlayer ? (
-            <p className="text-sm text-white/45">{m['game.build.no_player']()}</p>
+            <p className="text-sm text-white/45">
+              {m['game.build.no_player']()}
+            </p>
           ) : (
             <div className="space-y-4">
               <div>
@@ -164,7 +155,7 @@ export function BuildRoomScreen({
                 onSelect={onSelectAttribute}
               />
               <GameButton
-                className="hidden w-full lg:inline-flex"
+                className="w-full"
                 disabled={!state.selectedAttribute}
                 onClick={onLockPick}
               >
@@ -175,28 +166,29 @@ export function BuildRoomScreen({
         </GamePanel>
 
         {/* Right: Locked progress only */}
-        <GamePanel title={m['game.build.progress_panel']()} className="hidden lg:block">
+        <GamePanel
+          title={m['game.build.progress_panel']()}
+          className="hidden lg:block"
+        >
           <div className="mb-4 flex items-center justify-between text-sm">
             <span className="text-white/50">{m['game.build.mode']()}</span>
             <span className="font-bold uppercase">{state.mode}</span>
           </div>
           {showPosition && state.position && (
             <div className="mb-4 flex items-center justify-between text-sm">
-              <span className="text-white/50">{m['game.build.position']()}</span>
+              <span className="text-white/50">
+                {m['game.build.position']()}
+              </span>
               <span className="font-bold">{state.position}</span>
             </div>
           )}
-          <AttributeGrid slots={state.buildSlots} showValues={showRatings} lockedOnly />
+          <AttributeGrid
+            slots={state.buildSlots}
+            showValues={showRatings}
+            lockedOnly
+          />
         </GamePanel>
       </div>
-
-      {sticky && (
-        <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-neutral-950/95 p-4 backdrop-blur lg:hidden">
-          <GameButton className="w-full" onClick={sticky.action} disabled={sticky.disabled}>
-            {sticky.label}
-          </GameButton>
-        </div>
-      )}
     </section>
   );
 }
@@ -208,6 +200,7 @@ function RosterPanel({
   lockedAttributes,
   onSelectPlayer,
   onSelectAttribute,
+  onLockPick,
 }: {
   team: TeamSeason;
   state: GameState;
@@ -215,6 +208,7 @@ function RosterPanel({
   lockedAttributes: AttributeKey[];
   onSelectPlayer: (id: string) => void;
   onSelectAttribute: (attr: AttributeKey) => void;
+  onLockPick: () => void;
 }) {
   return (
     <div className="mt-4 space-y-4">
@@ -238,7 +232,10 @@ function RosterPanel({
           const used = isPlayerNameUsed(state, player.name);
           const selected = state.selectedPlayerId === player.id;
           return (
-            <div key={player.id} className="border-b border-white/5 last:border-0">
+            <div
+              key={player.id}
+              className="border-b border-white/5 last:border-0"
+            >
               <button
                 type="button"
                 disabled={used}
@@ -258,7 +255,11 @@ function RosterPanel({
                 <span
                   className={cn(
                     'text-xs font-bold uppercase',
-                    used ? 'text-white/30' : selected ? 'text-orange-300' : 'text-emerald-400'
+                    used
+                      ? 'text-white/30'
+                      : selected
+                        ? 'text-orange-300'
+                        : 'text-emerald-400'
                   )}
                 >
                   {used
@@ -269,7 +270,7 @@ function RosterPanel({
                 </span>
               </button>
               {selected && (
-                <div className="border-t border-white/5 px-3 py-2 lg:hidden">
+                <div className="space-y-3 border-t border-white/5 px-3 py-3 lg:hidden">
                   <AttributePicker
                     attributes={player.attributes}
                     lockedAttributes={lockedAttributes}
@@ -277,6 +278,13 @@ function RosterPanel({
                     hidden={!showRatings}
                     onSelect={onSelectAttribute}
                   />
+                  <GameButton
+                    className="w-full"
+                    disabled={!state.selectedAttribute}
+                    onClick={onLockPick}
+                  >
+                    {m['game.build.lock_pick']()}
+                  </GameButton>
                 </div>
               )}
             </div>

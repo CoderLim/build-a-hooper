@@ -11,24 +11,23 @@ export function GameShell({ children, className }: GameShellProps) {
   return (
     <div
       className={cn(
-        'relative isolate min-h-screen overflow-hidden bg-neutral-950 text-white selection:bg-orange-300/30',
+        'relative isolate min-h-screen bg-neutral-950 text-white selection:bg-orange-300/30',
         className
       )}
     >
-      <img
-        src="/imgs/hero-bg.webp"
-        alt=""
-        width={1920}
-        height={1081}
-        fetchPriority="high"
-        decoding="async"
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-20 size-full scale-110 object-cover object-center opacity-50 blur-sm"
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 bg-neutral-950/75"
-      />
+      <div className="pointer-events-none absolute inset-0 -z-20 overflow-hidden">
+        <img
+          src="/imgs/hero-bg.webp"
+          alt=""
+          width={1920}
+          height={1081}
+          fetchPriority="high"
+          decoding="async"
+          aria-hidden
+          className="absolute inset-0 size-full scale-110 object-cover object-center opacity-50 blur-sm"
+        />
+        <div className="absolute inset-0 bg-neutral-950/75" />
+      </div>
       <div className="relative">{children}</div>
     </div>
   );
