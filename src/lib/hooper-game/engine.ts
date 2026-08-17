@@ -105,13 +105,13 @@ export function confirmMode(state: GameState): GameState {
     };
   }
 
-  return {
+  return startSpin({
     ...state,
     position,
     positionRevealed: false,
     screen: 'build',
     buildPhase: 'idle',
-  };
+  });
 }
 
 export function selectPosition(
@@ -123,11 +123,11 @@ export function selectPosition(
 
 export function confirmPosition(state: GameState): GameState {
   if (!state.position) return state;
-  return { ...state, screen: 'build', buildPhase: 'idle' };
+  return startSpin({ ...state, screen: 'build', buildPhase: 'idle' });
 }
 
 export function confirmPositionRoll(state: GameState): GameState {
-  return { ...state, screen: 'build', buildPhase: 'idle' };
+  return startSpin({ ...state, screen: 'build', buildPhase: 'idle' });
 }
 
 export function startSpin(state: GameState): GameState {
