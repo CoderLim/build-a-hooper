@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 
 import { AttributePicker } from '../attribute-grid';
-import { BuildProgressCard } from '../build-progress-card';
+import { BuildProgressCard, DraftSimulateButton } from '../build-progress-card';
 import {
   GameButton,
   GameEyebrow,
@@ -31,6 +31,7 @@ interface BuildRoomScreenProps {
   onReroll: () => void;
   onSelectPlayer: (id: string) => void;
   onSelectAttribute: (attr: AttributeKey) => void;
+  onConfirmBuild: () => void;
 }
 
 export function BuildRoomScreen({
@@ -44,11 +45,13 @@ export function BuildRoomScreen({
   onReroll,
   onSelectPlayer,
   onSelectAttribute,
+  onConfirmBuild,
 }: BuildRoomScreenProps) {
   const abbrs = TEAM_SEASONS.map((t) => t.abbr);
+  const isDraftComplete = progress >= 13;
 
   return (
-    <section className="flex flex-1 flex-col gap-6">
+    <section className="flex flex-1 flex-col gap-6 pb-28 lg:pb-0">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <GameEyebrow>{m['game.build.eyebrow']()}</GameEyebrow>
@@ -132,8 +135,18 @@ export function BuildRoomScreen({
           <BuildProgressCard
             slots={state.buildSlots}
             showRatings={showRatings}
+            onSimulate={onConfirmBuild}
+            showSimulateButton
           />
         </GamePanel>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-neutral-950/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+        <DraftSimulateButton
+          lockedCount={progress}
+          disabled={!isDraftComplete}
+          onClick={onConfirmBuild}
+        />
       </div>
     </section>
   );

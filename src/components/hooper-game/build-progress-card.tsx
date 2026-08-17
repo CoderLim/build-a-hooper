@@ -4,9 +4,40 @@ import type { BuildSlot } from '@/lib/hooper-game/types';
 import { cn } from '@/lib/utils';
 import { m } from '@/paraglide/messages.js';
 
+import { GameButton } from './game-ui';
+
 interface BuildProgressCardProps {
   slots: BuildSlot[];
   showRatings: boolean;
+  onSimulate?: () => void;
+  showSimulateButton?: boolean;
+}
+
+const TOTAL_ATTRIBUTES = ATTRIBUTE_KEYS.length;
+
+export function DraftSimulateButton({
+  lockedCount,
+  disabled,
+  onClick,
+  className,
+}: {
+  lockedCount: number;
+  disabled: boolean;
+  onClick?: () => void;
+  className?: string;
+}) {
+  return (
+    <GameButton
+      disabled={disabled}
+      onClick={onClick}
+      className={cn(
+        'w-full rounded-xl py-3.5 tracking-normal normal-case',
+        className
+      )}
+    >
+      {m['game.build.draft_simulate']({ current: lockedCount })}
+    </GameButton>
+  );
 }
 
 const CX = 160;
@@ -194,9 +225,12 @@ function SlotPill({
 export function BuildProgressCard({
   slots,
   showRatings,
+  onSimulate,
+  showSimulateButton = true,
 }: BuildProgressCardProps) {
   const overall = getOverallRating(slots);
   const lockedCount = slots.filter((slot) => slot.locked).length;
+  const isDraftComplete = lockedCount >= TOTAL_ATTRIBUTES;
   const slotMap = new Map(slots.map((slot) => [slot.attribute, slot]));
   const orderedSlots: BuildSlot[] = ATTRIBUTE_KEYS.map(
     (key) => slotMap.get(key) ?? { attribute: key, locked: false }
@@ -239,9 +273,15 @@ export function BuildProgressCard({
         ))}
       </div>
 
-      <div className="mt-4 rounded-xl bg-linear-to-r from-orange-300 to-amber-500 px-3 py-3.5 text-center text-[13px] font-black text-neutral-950">
-        {m['game.build.draft_simulate']({ current: lockedCount })}
-      </div>
+      {showSimulateButton && (
+        <div className="mt-4 hidden lg:block">
+          <DraftSimulateButton
+            lockedCount={lockedCount}
+            disabled={!isDraftComplete}
+            onClick={onSimulate}
+          />
+        </div>
+      )}
     </div>
   );
 }

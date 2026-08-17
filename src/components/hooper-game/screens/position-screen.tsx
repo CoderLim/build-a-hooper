@@ -30,7 +30,7 @@ export function PositionSelectScreen({
   onConfirm,
 }: PositionScreenProps) {
   return (
-    <section className="flex flex-1 flex-col gap-8">
+    <section className="flex flex-1 flex-col gap-8 pb-28 lg:pb-0">
       <div>
         <GameEyebrow>{m['game.position.classic_eyebrow']()}</GameEyebrow>
         <GameTitle className="mt-3">{m['game.position.title']()}</GameTitle>
@@ -53,7 +53,7 @@ export function PositionSelectScreen({
           </GameCard>
         ))}
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="hidden flex-wrap items-center justify-between gap-4 lg:flex">
         <GamePanel className="min-w-[200px]">
           <p className="text-xs text-white/40 uppercase">
             {m['game.position.selected']()}
@@ -63,6 +63,24 @@ export function PositionSelectScreen({
         <GameButton disabled={!position} onClick={onConfirm}>
           {m['game.position.start']()}
         </GameButton>
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-neutral-950/95 p-4 pb-[max(1rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+        <div className="flex items-center gap-3">
+          <GamePanel className="min-w-0 flex-1 px-4 py-3">
+            <p className="text-[10px] text-white/40 uppercase">
+              {m['game.position.selected']()}
+            </p>
+            <p className="text-lg font-black">{position ?? '—'}</p>
+          </GamePanel>
+          <GameButton
+            disabled={!position}
+            onClick={onConfirm}
+            className="shrink-0 px-6 py-4 text-xs"
+          >
+            {m['game.position.start']()}
+          </GameButton>
+        </div>
       </div>
     </section>
   );

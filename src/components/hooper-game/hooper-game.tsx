@@ -14,7 +14,6 @@ import {
 import type { RunChallengeResponse } from '@/lib/hooper-game/run-challenge';
 import type { AttributeKey } from '@/lib/hooper-game/types';
 import { cn } from '@/lib/utils';
-import { m } from '@/paraglide/messages.js';
 
 import {
   createInitialState,
@@ -160,6 +159,7 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
             onSelectAttribute={(attribute: AttributeKey) =>
               dispatch({ type: 'SELECT_ATTRIBUTE', attribute })
             }
+            onConfirmBuild={act({ type: 'CONFIRM_BUILD' })}
           />
         )}
 
@@ -225,10 +225,6 @@ export function HooperGame({ embedded = false }: HooperGameProps = {}) {
             onPlayAgain={act({ type: 'RESET' })}
           />
         )}
-
-        <p className="mt-auto pt-8 text-center text-[11px] text-white/30">
-          {m['game.disclaimer']()}
-        </p>
       </div>
     </GameShell>
   );

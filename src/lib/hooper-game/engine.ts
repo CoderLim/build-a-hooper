@@ -275,7 +275,6 @@ export function lockPick(state: GameState): GameState {
       selectedPlayerId: null,
       selectedAttribute: null,
       currentRollAttempt: 0,
-      screen: 'reveal',
       positionRevealed: true,
     };
   }
@@ -292,6 +291,11 @@ export function lockPick(state: GameState): GameState {
     selectedAttribute: null,
     currentRollAttempt: 0,
   };
+}
+
+export function proceedToReveal(state: GameState): GameState {
+  if (state.lockedPicks.length < ATTRIBUTE_KEYS.length) return state;
+  return { ...state, screen: 'reveal', positionRevealed: true };
 }
 
 export function proceedToCareerTeam(state: GameState): GameState {

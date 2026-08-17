@@ -1083,7 +1083,6 @@
   "game.restart": "Restart",
   "game.restart_confirm": "Restart from scratch? Your current progress will be lost.",
   "game.cancel": "Cancel",
-  "game.disclaimer": "v1.7 / Browser basketball simulator.",
   "landing.nav.leaderboard": "Leaderboard",
   "landing.nav.achievements": "Achievements",
   "landing.nav.login": "Login",

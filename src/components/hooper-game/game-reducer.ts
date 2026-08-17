@@ -9,6 +9,7 @@ import {
   createInitialState,
   lockPick,
   proceedToCareerTeam,
+  proceedToReveal,
   rerollTeam,
   resetGame,
   selectAttribute,
@@ -48,6 +49,7 @@ export type GameAction =
   | { type: 'REROLL' }
   | { type: 'SELECT_PLAYER'; playerId: string }
   | { type: 'SELECT_ATTRIBUTE'; attribute: AttributeKey }
+  | { type: 'CONFIRM_BUILD' }
   | { type: 'TO_CAREER' }
   | { type: 'START_CAREER_SPIN' }
   | { type: 'COMPLETE_CAREER_SPIN' }
@@ -87,11 +89,19 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return selectPlayer(state, action.playerId);
     case 'SELECT_ATTRIBUTE': {
       const locked = lockPick(selectAttribute(state, action.attribute));
-      if (locked.screen !== 'build' || locked.buildPhase !== 'idle') {
+      if (locked.screen !== 'build') {
+        return locked;
+      }
+      if (locked.lockedPicks.length >= ATTRIBUTE_KEYS.length) {
+        return locked;
+      }
+      if (locked.buildPhase !== 'idle') {
         return locked;
       }
       return startSpin(locked);
     }
+    case 'CONFIRM_BUILD':
+      return proceedToReveal(state);
     case 'TO_CAREER':
       return proceedToCareerTeam(state);
     case 'START_CAREER_SPIN':

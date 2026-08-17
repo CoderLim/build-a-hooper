@@ -1083,7 +1083,6 @@
   "game.restart": "重新开始",
   "game.restart_confirm": "确定要重新开始吗？当前进度将会丢失。",
   "game.cancel": "取消",
-  "game.disclaimer": "v1.7 / 浏览器篮球模拟器。",
   "landing.nav.leaderboard": "排行榜",
   "landing.nav.achievements": "成就",
   "landing.nav.login": "登录",
