@@ -827,6 +827,7 @@
   "landing.hero.embed_title": "Build a Hooper 游戏嵌入",
   "landing.hero.embed_fallback": "如果游戏未能加载，请刷新页面后重试。",
   "landing.hero.embed_link": "直接打开游戏",
+  "landing.hero.tap_to_load": "点击任意处开始游戏",
   "landing.features.draft.title": "围绕球队风格去选技能",
   "landing.features.draft.description": "每次开局的选择都像是在确定球员原型，让你的 build 一开始就有明确方向，而不是随机堆效果。",
   "landing.features.build.title": "围绕强项来塑造球员",

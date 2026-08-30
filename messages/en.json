@@ -827,6 +827,7 @@
   "landing.hero.embed_title": "Build a Hooper game embed",
   "landing.hero.embed_fallback": "If the game does not load, refresh the page and try again.",
   "landing.hero.embed_link": "Open the game directly",
+  "landing.hero.tap_to_load": "Tap or click anywhere to start playing",
   "landing.features.draft.title": "Draft Build a Hooper skills with identity",
   "landing.features.draft.description": "Each run begins with choices tied to recognizable basketball archetypes. Your build has direction before the season even starts.",
   "landing.features.build.title": "Shape a player around strengths",

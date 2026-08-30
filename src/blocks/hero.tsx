@@ -1,5 +1,7 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 
+import { m } from '@/paraglide/messages.js';
+
 const HooperGame = lazy(() =>
   import('@/components/hooper-game/hooper-game').then((mod) => ({
     default: mod.HooperGame,
@@ -18,13 +20,13 @@ function GameFallback({ interactive = false }: { interactive?: boolean }) {
         width={1920}
         height={1081}
         fetchPriority="high"
-        decoding="async"
+        decoding="sync"
         className="pointer-events-none absolute inset-0 -z-20 size-full scale-110 object-cover object-center opacity-50 blur-sm"
       />
       <div className="absolute inset-0 -z-10 bg-neutral-950/75" />
       {interactive ? (
         <p className="pointer-events-none absolute inset-x-0 bottom-24 text-center text-sm text-white/50">
-          Tap or click anywhere to load the game
+          {m['landing.hero.tap_to_load']()}
         </p>
       ) : null}
     </div>

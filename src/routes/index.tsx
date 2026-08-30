@@ -100,6 +100,12 @@ export const Route = createFileRoute('/')({
           href: urlFor(loc),
         })),
         { rel: 'alternate', hrefLang: 'x-default', href: urlFor('en') },
+        {
+          rel: 'preload',
+          as: 'image',
+          href: '/imgs/hero-bg.webp',
+          fetchPriority: 'high',
+        },
       ],
       scripts: [
         jsonLdScript([

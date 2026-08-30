@@ -827,6 +827,7 @@
   "landing.hero.embed_title": "Build a Hooper ゲーム埋め込み",
   "landing.hero.embed_fallback": "ゲームが読み込まれない場合は、ページを更新してもう一度お試しください。",
   "landing.hero.embed_link": "ゲームを直接開く",
+  "landing.hero.tap_to_load": "タップまたはクリックしてゲームを開始",
   "landing.features.draft.title": "アイデンティティのあるスキルドラフト",
   "landing.features.draft.description": "各ランは認識できるバスケットボールアーキタイプに結びついた選択から始まります。シーズン開始前からビルドに方向性があります。",
   "landing.features.build.title": "強みを中心に選手を形成",

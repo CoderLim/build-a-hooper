@@ -827,6 +827,7 @@
   "landing.hero.embed_title": "Build a Hooper 게임 임베드",
   "landing.hero.embed_fallback": "게임이 로드되지 않으면 페이지를 새로고침한 뒤 다시 시도해 주세요.",
   "landing.hero.embed_link": "게임 직접 열기",
+  "landing.hero.tap_to_load": "아무 곳이나 탭하거나 클릭하여 게임 시작",
   "landing.features.draft.title": "정체성 있는 스킬 드래프트",
   "landing.features.draft.description": "각 런은 인식 가능한 농구 아키타입과 연결된 선택으로 시작됩니다. 시즌 시작 전부터 빌드에 방향성이 있습니다.",
   "landing.features.build.title": "강점 중심으로 선수 형성",
