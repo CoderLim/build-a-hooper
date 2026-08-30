@@ -6,11 +6,11 @@ const HooperGame = lazy(() =>
   }))
 );
 
-function GameFallback() {
+function GameFallback({ interactive = false }: { interactive?: boolean }) {
   return (
     <div
       className="relative isolate min-h-[100svh] overflow-hidden bg-neutral-950"
-      aria-hidden
+      aria-hidden={!interactive}
     >
       <img
         src="/imgs/hero-bg.webp"
@@ -22,17 +22,20 @@ function GameFallback() {
         className="pointer-events-none absolute inset-0 -z-20 size-full scale-110 object-cover object-center opacity-50 blur-sm"
       />
       <div className="absolute inset-0 -z-10 bg-neutral-950/75" />
+      {interactive ? (
+        <p className="pointer-events-none absolute inset-x-0 bottom-24 text-center text-sm text-white/50">
+          Tap or click anywhere to load the game
+        </p>
+      ) : null}
     </div>
   );
 }
 
-/** Defer the game bundle until idle or first interaction so LCP stays on the hero image. */
+/** Defer the game bundle until the user interacts so LCP stays on the hero image. */
 function useDeferredGameLoad() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    if (ready) return;
-
     let cancelled = false;
     const start = () => {
       if (!cancelled) setReady(true);
@@ -47,22 +50,10 @@ function useDeferredGameLoad() {
     window.addEventListener('pointerdown', onInteraction, { passive: true });
     window.addEventListener('keydown', onInteraction);
 
-    let idleId: number;
-    if ('requestIdleCallback' in window) {
-      idleId = requestIdleCallback(start, { timeout: 4000 });
-    } else {
-      idleId = window.setTimeout(start, 4000) as unknown as number;
-    }
-
     return () => {
       cancelled = true;
       window.removeEventListener('pointerdown', onInteraction);
       window.removeEventListener('keydown', onInteraction);
-      if ('requestIdleCallback' in window) {
-        cancelIdleCallback(idleId);
-      } else {
-        window.clearTimeout(idleId);
-      }
     };
   }, []);
 
@@ -79,7 +70,7 @@ export function Hero() {
           <HooperGame embedded />
         </Suspense>
       ) : (
-        <GameFallback />
+        <GameFallback interactive />
       )}
     </section>
   );
