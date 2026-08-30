@@ -31,12 +31,16 @@ const WWW_RULE = {
   },
 };
 
-const token = process.env.CLOUDFLARE_API_TOKEN;
+const token =
+  process.env.CLOUDFLARE_API_TOKEN ?? process.env.WRANGLER_API_TOKEN;
 if (!token) {
   console.error(
     'Missing CLOUDFLARE_API_TOKEN.\n' +
-      'Create a token with Zone > Single Redirect > Edit and Zone > Bot Management > Edit at:\n' +
-      'https://dash.cloudflare.com/profile/api-tokens'
+      'Wrangler OAuth cannot edit Bot Management — create a token with\n' +
+      'Zone > Single Redirect > Edit and Zone > Bot Management > Edit:\n' +
+      'https://dash.cloudflare.com/profile/api-tokens\n\n' +
+      `Or disable manually: Security → Bots → turn off Managed robots.txt:\n` +
+      `https://dash.cloudflare.com/bf6733e0074adfcf86efe8653db2ee0c/${ZONE_NAME}/security/bots`
   );
   process.exit(1);
 }

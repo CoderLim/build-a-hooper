@@ -8,21 +8,27 @@ const HooperGame = lazy(() =>
   }))
 );
 
+const HERO_BG_DESKTOP = '/imgs/hero-bg.webp';
+const HERO_BG_MOBILE = '/imgs/hero-bg-mobile.webp';
+
 function GameFallback({ interactive = false }: { interactive?: boolean }) {
   return (
     <div
       className="relative isolate min-h-[100svh] overflow-hidden bg-neutral-950"
       aria-hidden={!interactive}
     >
-      <img
-        src="/imgs/hero-bg.webp"
-        alt=""
-        width={1920}
-        height={1081}
-        fetchPriority="high"
-        decoding="sync"
-        className="pointer-events-none absolute inset-0 -z-20 size-full scale-110 object-cover object-center opacity-50 blur-sm"
-      />
+      <picture className="pointer-events-none absolute inset-0 -z-20 size-full">
+        <source media="(max-width: 768px)" srcSet={HERO_BG_MOBILE} />
+        <img
+          src={HERO_BG_DESKTOP}
+          alt=""
+          width={1920}
+          height={1081}
+          fetchPriority="high"
+          decoding="sync"
+          className="size-full scale-110 object-cover object-center opacity-50 blur-sm"
+        />
+      </picture>
       <div className="absolute inset-0 -z-10 bg-neutral-950/75" />
       {interactive ? (
         <p className="pointer-events-none absolute inset-x-0 bottom-24 text-center text-sm text-white/50">

@@ -103,7 +103,15 @@ export const Route = createFileRoute('/')({
         {
           rel: 'preload',
           as: 'image',
+          href: '/imgs/hero-bg-mobile.webp',
+          media: '(max-width: 768px)',
+          fetchPriority: 'high',
+        },
+        {
+          rel: 'preload',
+          as: 'image',
           href: '/imgs/hero-bg.webp',
+          media: '(min-width: 769px)',
           fetchPriority: 'high',
         },
       ],
