@@ -28,6 +28,9 @@ function ensureCloudflareEnv(): Promise<void> {
 // getLocale() resolves per-request (AsyncLocalStorage) during SSR.
 export default {
   async fetch(req: Request): Promise<Response> {
+    const redirect = canonicalRedirect(req);
+    if (redirect) return redirect;
+
     await ensureCloudflareEnv();
     return paraglideMiddleware(req, () => handler.fetch(req));
   },
