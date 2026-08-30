@@ -1,15 +1,31 @@
-// Google AdSense loader — rendered as a native <script> tag (not next/script)
-// so it lands in the SSR HTML directly; see analytics/google-analytics.tsx for
-// the full rationale. `async` flags this to React 19 as a hoistable resource,
-// so it's lifted into <head> where AdSense's site verification expects it.
+import { useEffect } from 'react';
+
+/**
+ * Inject the AdSense loader after first paint so it does not compete with LCP.
+ * Site verification still works once the script lands in <head>.
+ */
 export function GoogleAdsense({ clientId }: { clientId: string }) {
-  if (!clientId) return null;
-  return (
-    <script
-      id="adsbygoogle-loader"
-      src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`}
-      crossOrigin="anonymous"
-      async
-    />
-  );
+  useEffect(() => {
+    if (!clientId || document.getElementById('adsbygoogle-loader')) return;
+
+    const load = () => {
+      if (document.getElementById('adsbygoogle-loader')) return;
+      const script = document.createElement('script');
+      script.id = 'adsbygoogle-loader';
+      script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${clientId}`;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+    };
+
+    if ('requestIdleCallback' in window) {
+      const id = requestIdleCallback(load, { timeout: 4000 });
+      return () => cancelIdleCallback(id);
+    }
+
+    const timer = window.setTimeout(load, 2000);
+    return () => window.clearTimeout(timer);
+  }, [clientId]);
+
+  return null;
 }

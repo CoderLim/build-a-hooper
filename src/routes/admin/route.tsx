@@ -72,7 +72,7 @@ function AdminLayout() {
       footerNavItems={footerNavItems}
       brand={envConfigs.app_name}
       brandHref="/admin"
-      profileHref="/settings/profile"
+      profileHref="/"
       requirePermission="admin.*"
     >
       <Outlet />

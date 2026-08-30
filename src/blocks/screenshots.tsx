@@ -2,9 +2,9 @@ import { tDynamic } from '@/core/i18n/dynamic';
 import { m } from '@/paraglide/messages.js';
 
 const SHOTS = [
-  { key: 'modes', src: '/imgs/screenshots/mode-select.png' },
-  { key: 'position', src: '/imgs/screenshots/position-select.png' },
-  { key: 'build', src: '/imgs/screenshots/draft-spin.png' },
+  { key: 'modes', src: '/imgs/screenshots/mode-select.webp' },
+  { key: 'position', src: '/imgs/screenshots/position-select.webp' },
+  { key: 'build', src: '/imgs/screenshots/draft-spin.webp' },
 ] as const;
 
 export function Screenshots() {

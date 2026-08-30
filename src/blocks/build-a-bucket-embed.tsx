@@ -11,7 +11,7 @@ export function BuildABucketEmbed() {
           <iframe
             src={OFFICIAL_GAME_URL}
             title="Build a Bucket NBA Game"
-            className="h-[calc(100vh-7rem)] min-h-[680px] w-full bg-white"
+            className="h-[min(calc(100dvh-7rem),680px)] min-h-[min(420px,calc(100dvh-7rem))] w-full bg-white sm:min-h-[560px] lg:min-h-[680px]"
             allow="fullscreen"
             referrerPolicy="strict-origin-when-cross-origin"
           />

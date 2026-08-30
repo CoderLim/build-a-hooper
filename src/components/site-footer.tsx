@@ -22,6 +22,7 @@ export interface FooterSocial {
 }
 
 const footerBadgeClass = 'h-7 w-auto';
+const footerBadgeSize = { width: 120, height: 28 } as const;
 
 const footerPartnerLinks = [
   {
@@ -32,6 +33,10 @@ const footerPartnerLinks = [
         src="https://submito.net/badge/listed-light.svg"
         alt="Listed on Submito"
         className={footerBadgeClass}
+        width={footerBadgeSize.width}
+        height={footerBadgeSize.height}
+        loading="lazy"
+        decoding="async"
       />
     ),
   },
@@ -43,6 +48,10 @@ const footerPartnerLinks = [
         src="https://lovableapp.org/lovable-app-badge.svg"
         alt="Lovable App Badge"
         className={footerBadgeClass}
+        width={footerBadgeSize.width}
+        height={footerBadgeSize.height}
+        loading="lazy"
+        decoding="async"
       />
     ),
   },
@@ -54,6 +63,10 @@ const footerPartnerLinks = [
         src="https://saastool.site/badges/saastool-dark.svg"
         alt="Featured on SaaSTool.site"
         className={footerBadgeClass}
+        width={footerBadgeSize.width}
+        height={footerBadgeSize.height}
+        loading="lazy"
+        decoding="async"
       />
     ),
   },
@@ -65,6 +78,10 @@ const footerPartnerLinks = [
         src="https://findly.tools/badges/findly-tools-badge-light.svg"
         alt="Featured on Findly.tools"
         className={footerBadgeClass}
+        width={footerBadgeSize.width}
+        height={footerBadgeSize.height}
+        loading="lazy"
+        decoding="async"
       />
     ),
   },
@@ -125,7 +142,7 @@ export function SiteFooter({
                           href={link.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-sm text-neutral-400 transition-colors hover:text-neutral-100"
+                          className="text-sm text-neutral-300 transition-colors hover:text-neutral-100"
                         >
                           {link.label}
                         </a>
@@ -133,7 +150,7 @@ export function SiteFooter({
                         <Link
                           href={link.href}
                           target={link.external ? '_blank' : undefined}
-                          className="text-sm text-neutral-400 transition-colors hover:text-neutral-100"
+                          className="text-sm text-neutral-300 transition-colors hover:text-neutral-100"
                         >
                           {link.label}
                         </Link>
@@ -175,7 +192,7 @@ export function SiteFooter({
                   'min-h-9 px-2 text-sm transition-colors',
                   loc === getLocale()
                     ? 'font-semibold text-neutral-100'
-                    : 'text-neutral-400 hover:text-neutral-200'
+                    : 'text-neutral-300 hover:text-neutral-100'
                 )}
               >
                 {localeNames[loc] || loc}
@@ -199,7 +216,7 @@ export function SiteFooter({
               </a>
             ))}
           </div>
-          <span className="text-sm text-neutral-400">
+          <span className="text-sm text-neutral-300">
             {copyright ||
               `© ${year} ${envConfigs.app_name}. All rights reserved.`}
           </span>

@@ -1,5 +1,6 @@
 import handler from '@tanstack/react-start/server-entry';
 
+import { canonicalRedirect } from './lib/canonical-redirect.js';
 import { paraglideMiddleware } from './paraglide/server.js';
 
 // On Cloudflare Workers, stash the binding env (D1, ASSETS, …) on globalThis

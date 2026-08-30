@@ -38,7 +38,7 @@ function RedeemInvitePage() {
       .then((res) => {
         if (cancelled) return;
         if (res.code === 0 && !res.data?.needsInvite) {
-          router.push('/settings');
+          router.push('/');
         } else {
           setChecking(false);
         }
@@ -82,7 +82,7 @@ function RedeemInvitePage() {
       }
 
       // Hard navigation so the new plan/membership is reflected everywhere.
-      window.location.assign(localizeHref('/settings'));
+      window.location.assign(localizeHref('/'));
     } catch (err: any) {
       setError(err?.message || m['common.sign.invite_code_invalid']());
       setLoading(false);
