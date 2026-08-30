@@ -39,14 +39,17 @@ function GameFallback({ interactive = false }: { interactive?: boolean }) {
   );
 }
 
-/** Defer the game bundle until the user interacts so LCP stays on the hero image. */
+/** Defer the game bundle until LCP is recorded (or idle) so the hero image stays LCP. */
 function useDeferredGameLoad() {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
+    let started = false;
     const start = () => {
-      if (!cancelled) setReady(true);
+      if (cancelled || started) return;
+      started = true;
+      setReady(true);
     };
 
     const onInteraction = () => {
@@ -58,10 +61,38 @@ function useDeferredGameLoad() {
     window.addEventListener('pointerdown', onInteraction, { passive: true });
     window.addEventListener('keydown', onInteraction);
 
+    // Load after LCP is measured so the game bundle doesn't become LCP.
+    let lcpObserver: PerformanceObserver | undefined;
+    if ('PerformanceObserver' in window) {
+      try {
+        lcpObserver = new PerformanceObserver(() => start());
+        lcpObserver.observe({
+          type: 'largest-contentful-paint',
+          buffered: true,
+        });
+      } catch {
+        // LCP not supported in this browser.
+      }
+    }
+
+    // Fallback for browsers without LCP support or slow connections.
+    let idleId: number;
+    if ('requestIdleCallback' in window) {
+      idleId = requestIdleCallback(start, { timeout: 5000 });
+    } else {
+      idleId = window.setTimeout(start, 5000) as unknown as number;
+    }
+
     return () => {
       cancelled = true;
       window.removeEventListener('pointerdown', onInteraction);
       window.removeEventListener('keydown', onInteraction);
+      lcpObserver?.disconnect();
+      if ('requestIdleCallback' in window) {
+        cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
     };
   }, []);
 
@@ -78,7 +109,7 @@ export function Hero() {
           <HooperGame embedded />
         </Suspense>
       ) : (
-        <GameFallback interactive />
+        <GameFallback />
       )}
     </section>
   );
