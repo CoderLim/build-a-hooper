@@ -38,6 +38,7 @@ wrangler.staging.jsonc
 !.cursor/skills
 
 # misc
+.lighthouse/
 .DS_Store
 *.pem
 

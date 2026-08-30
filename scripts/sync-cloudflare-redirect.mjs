@@ -6,6 +6,8 @@
  * Usage:
  *   CLOUDFLARE_API_TOKEN=... node scripts/sync-cloudflare-redirect.mjs
  *   CLOUDFLARE_API_TOKEN=... node scripts/sync-cloudflare-redirect.mjs --zone buildahooper.org
+ *
+ * Token scopes: Zone > Single Redirect > Edit, Zone > Bot Management > Edit (for robots.txt).
  */
 
 const ZONE_NAME = getArg('--zone') ?? 'buildahooper.org';
@@ -33,7 +35,7 @@ const token = process.env.CLOUDFLARE_API_TOKEN;
 if (!token) {
   console.error(
     'Missing CLOUDFLARE_API_TOKEN.\n' +
-      'Create a token with "Zone > Single Redirect > Edit" at:\n' +
+      'Create a token with Zone > Single Redirect > Edit and Zone > Bot Management > Edit at:\n' +
       'https://dash.cloudflare.com/profile/api-tokens'
   );
   process.exit(1);
@@ -56,6 +58,7 @@ async function main() {
       rules: [WWW_RULE],
     });
     console.log(`Created redirect ruleset ${created.result.id}.`);
+    await disableManagedRobots(zoneId);
     return;
   }
 
@@ -74,6 +77,7 @@ async function main() {
     console.log(
       `Updated redirect rule ${existing.id} in ruleset ${entrypoint.id}.`
     );
+    await disableManagedRobots(zoneId);
     return;
   }
 
@@ -83,6 +87,32 @@ async function main() {
     WWW_RULE
   );
   console.log(`Added redirect rule to ruleset ${entrypoint.id}.`);
+
+  await disableManagedRobots(zoneId);
+}
+
+/** Stop Cloudflare prepending Content-Signal blocks (Lighthouse flags them as invalid). */
+async function disableManagedRobots(zoneId) {
+  try {
+    const current = await api('GET', `/zones/${zoneId}/bot_management`);
+    if (current.result?.is_robots_txt_managed === false) {
+      console.log('Managed robots.txt already disabled.');
+      return;
+    }
+    await api('PUT', `/zones/${zoneId}/bot_management`, {
+      ...current.result,
+      is_robots_txt_managed: false,
+    });
+    console.log(
+      'Disabled Cloudflare managed robots.txt (removes Content-Signal prepend).'
+    );
+  } catch (error) {
+    console.warn(
+      'Could not disable managed robots.txt via API:',
+      error instanceof Error ? error.message : error,
+      '\nDisable manually: Security → Bots → turn off Managed robots.txt / Bot Preference Sync.'
+    );
+  }
 }
 
 async function getZoneId(name) {

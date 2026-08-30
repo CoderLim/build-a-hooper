@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 
 const HooperGame = lazy(() =>
   import('@/components/hooper-game/hooper-game').then((mod) => ({
@@ -26,12 +26,61 @@ function GameFallback() {
   );
 }
 
+/** Defer the game bundle until idle or first interaction so LCP stays on the hero image. */
+function useDeferredGameLoad() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (ready) return;
+
+    let cancelled = false;
+    const start = () => {
+      if (!cancelled) setReady(true);
+    };
+
+    const onInteraction = () => {
+      start();
+      window.removeEventListener('pointerdown', onInteraction);
+      window.removeEventListener('keydown', onInteraction);
+    };
+
+    window.addEventListener('pointerdown', onInteraction, { passive: true });
+    window.addEventListener('keydown', onInteraction);
+
+    let idleId: number;
+    if ('requestIdleCallback' in window) {
+      idleId = requestIdleCallback(start, { timeout: 4000 });
+    } else {
+      idleId = window.setTimeout(start, 4000) as unknown as number;
+    }
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('pointerdown', onInteraction);
+      window.removeEventListener('keydown', onInteraction);
+      if ('requestIdleCallback' in window) {
+        cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
+    };
+  }, []);
+
+  return ready;
+}
+
 export function Hero() {
+  const loadGame = useDeferredGameLoad();
+
   return (
     <section id="play" className="scroll-mt-16">
-      <Suspense fallback={<GameFallback />}>
-        <HooperGame embedded />
-      </Suspense>
+      {loadGame ? (
+        <Suspense fallback={<GameFallback />}>
+          <HooperGame embedded />
+        </Suspense>
+      ) : (
+        <GameFallback />
+      )}
     </section>
   );
 }

@@ -7,8 +7,7 @@ export const Route = createFileRoute('/robots.txt')({
     handlers: {
       GET: () => {
         const body = [
-          'User-Agent: *',
-          'Allow: /',
+          'User-agent: *',
           'Disallow: /admin',
           'Disallow: /sign-in',
           'Disallow: /sign-up',
