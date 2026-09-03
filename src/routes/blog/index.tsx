@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
+import { publicLocales } from '@/config/locale';
 import {
   breadcrumbListJsonLd,
   jsonLdScript,
@@ -8,7 +9,7 @@ import {
 } from '@/lib/seo/json-ld';
 import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { baseLocale, getLocale, locales } from '@/paraglide/runtime.js';
+import { baseLocale, getLocale } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
 import { BlogCard } from '@/components/blog-card';
@@ -31,7 +32,7 @@ export const Route = createFileRoute('/blog/')({
       path: '/blog',
       locale,
       canonicalLocale: locale,
-      alternateLocales: [...locales],
+      alternateLocales: publicLocales,
       indexable: true,
     });
     return {

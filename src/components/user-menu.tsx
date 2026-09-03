@@ -8,14 +8,9 @@ import {
 
 import { signOut } from '@/core/auth/client';
 import { useRouter } from '@/core/i18n/navigation';
-import { localeNames } from '@/config/locale';
+import { localeNames, publicLocales } from '@/config/locale';
 import { m } from '@/paraglide/messages.js';
-import {
-  getLocale,
-  locales,
-  localizeHref,
-  setLocale,
-} from '@/paraglide/runtime.js';
+import { getLocale, localizeHref, setLocale } from '@/paraglide/runtime.js';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -121,24 +116,32 @@ export function UserMenu({
                 {m['common.nav.profile']()}
               </DropdownMenuItem>
             )}
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger className="gap-2 px-2 py-2">
-                <LanguagesIcon className="size-4" />
-                <span className="flex-1">{localeNames[locale] || locale}</span>
-              </DropdownMenuSubTrigger>
-              <DropdownMenuSubContent>
-                {locales.map((loc) => (
-                  <DropdownMenuItem
-                    key={loc}
-                    onClick={() => handleLocaleSwitch(loc)}
-                  >
-                    <span className="flex-1">{localeNames[loc] || loc}</span>
-                    {loc === locale && <CheckIcon className="size-3.5" />}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuSubContent>
-            </DropdownMenuSub>
-            <DropdownMenuSeparator />
+            {publicLocales.length > 1 && (
+              <>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger className="gap-2 px-2 py-2">
+                    <LanguagesIcon className="size-4" />
+                    <span className="flex-1">
+                      {localeNames[locale] || locale}
+                    </span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    {publicLocales.map((loc) => (
+                      <DropdownMenuItem
+                        key={loc}
+                        onClick={() => handleLocaleSwitch(loc)}
+                      >
+                        <span className="flex-1">
+                          {localeNames[loc] || loc}
+                        </span>
+                        {loc === locale && <CheckIcon className="size-3.5" />}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
+                <DropdownMenuSeparator />
+              </>
+            )}
             <DropdownMenuItem onClick={handleSignOut}>
               <LogOutIcon className="size-4" />
               {m['common.sign.sign_out_title']()}

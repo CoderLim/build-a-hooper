@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
+import { publicLocales } from '@/config/locale';
 import {
   breadcrumbListJsonLd,
   faqPageJsonLd,
@@ -9,7 +10,7 @@ import {
 } from '@/lib/seo/json-ld';
 import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, locales } from '@/paraglide/runtime.js';
+import { getLocale } from '@/paraglide/runtime.js';
 import { CreateAHooperGuide } from '@/blocks/create-a-hooper-guide';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
@@ -80,7 +81,7 @@ export const Route = createFileRoute('/create-a-hooper')({
       description,
       path: PATH,
       locale,
-      alternateLocales: locales,
+      alternateLocales: publicLocales,
     });
 
     return {

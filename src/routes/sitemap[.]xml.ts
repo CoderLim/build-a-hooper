@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
+import { publicLocales } from '@/config/locale';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 import {
   getAvailablePostLocales,
@@ -8,8 +9,8 @@ import {
   mergePosts,
 } from '@/content/posts';
 
-const ALL_UI_LOCALES = ['en', 'zh', 'ja', 'ko'] as const;
-const LONG_FORM_LOCALES = ['en', 'zh'] as const;
+const ALL_UI_LOCALES = publicLocales;
+const LONG_FORM_LOCALES = publicLocales;
 const ENGLISH_ONLY = ['en'] as const;
 
 const STATIC_PATHS: {

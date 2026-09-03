@@ -2,9 +2,9 @@ import type { ComponentType, SVGProps } from 'react';
 
 import { Link } from '@/core/i18n/navigation';
 import { envConfigs } from '@/config';
-import { localeNames } from '@/config/locale';
+import { localeNames, publicLocales } from '@/config/locale';
 import { cn } from '@/lib/utils';
-import { getLocale, locales, setLocale } from '@/paraglide/runtime.js';
+import { getLocale, setLocale } from '@/paraglide/runtime.js';
 
 export interface FooterColumn {
   title: string;
@@ -163,43 +163,47 @@ export function SiteFooter({
           </div>
         )}
 
-        {/* Socials + language row */}
-        <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-          {socials && socials.length > 0 ? (
-            <div className="flex items-center gap-2">
-              {socials.map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  aria-label={s.label}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex size-10 items-center justify-center text-neutral-300 transition-colors hover:text-neutral-100"
-                >
-                  <s.icon className="size-[18px]" />
-                </a>
-              ))}
-            </div>
-          ) : (
-            <div />
-          )}
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            {locales.map((loc) => (
-              <button
-                key={loc}
-                onClick={() => setLocale(loc)}
-                className={cn(
-                  'min-h-9 px-2 text-sm transition-colors',
-                  loc === getLocale()
-                    ? 'font-semibold text-neutral-100'
-                    : 'text-neutral-300 hover:text-neutral-100'
-                )}
-              >
-                {localeNames[loc] || loc}
-              </button>
-            ))}
+        {/* Socials + optional language row */}
+        {(socials?.length || publicLocales.length > 1) && (
+          <div className="mt-8 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            {socials && socials.length > 0 ? (
+              <div className="flex items-center gap-2">
+                {socials.map((s) => (
+                  <a
+                    key={s.label}
+                    href={s.href}
+                    aria-label={s.label}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex size-10 items-center justify-center text-neutral-300 transition-colors hover:text-neutral-100"
+                  >
+                    <s.icon className="size-[18px]" />
+                  </a>
+                ))}
+              </div>
+            ) : (
+              <div />
+            )}
+            {publicLocales.length > 1 && (
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                {publicLocales.map((loc) => (
+                  <button
+                    key={loc}
+                    onClick={() => setLocale(loc)}
+                    className={cn(
+                      'min-h-9 px-2 text-sm transition-colors',
+                      loc === getLocale()
+                        ? 'font-semibold text-neutral-100'
+                        : 'text-neutral-300 hover:text-neutral-100'
+                    )}
+                  >
+                    {localeNames[loc] || loc}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
         {/* Bottom bar */}
         <div className="mt-6 flex flex-col gap-3 border-t border-neutral-800 pt-5 sm:flex-row sm:items-center sm:justify-between">

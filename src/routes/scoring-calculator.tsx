@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 
-import { envConfigs } from '@/config';
 import { tDynamic } from '@/core/i18n/dynamic';
 import { Link } from '@/core/i18n/navigation';
+import { envConfigs } from '@/config';
+import { publicLocales } from '@/config/locale';
 import {
   computeLegacyPointsBreakdown,
   type PlayoffResult,
@@ -16,7 +17,7 @@ import {
 } from '@/lib/seo/json-ld';
 import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, locales } from '@/paraglide/runtime.js';
+import { getLocale } from '@/paraglide/runtime.js';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
 import {
@@ -52,9 +53,7 @@ export const Route = createFileRoute('/scoring-calculator')({
     return {
       locale,
       title:
-        locale === 'en'
-          ? EN_TITLE
-          : m['scoring.meta.title']({}, { locale }),
+        locale === 'en' ? EN_TITLE : m['scoring.meta.title']({}, { locale }),
       description:
         locale === 'en'
           ? EN_DESCRIPTION
@@ -74,7 +73,7 @@ export const Route = createFileRoute('/scoring-calculator')({
       description,
       path: PATH,
       locale,
-      alternateLocales: locales,
+      alternateLocales: publicLocales,
     });
 
     return {

@@ -44,4 +44,44 @@ describe('canonicalRedirect', () => {
     const req = new Request('http://localhost:3000/');
     assert.equal(canonicalRedirect(req), null);
   });
+
+  it('redirects each retired locale prefix to the equivalent English URL', () => {
+    const cases = [
+      ['https://buildahooper.org/zh', 'https://buildahooper.org/'],
+      [
+        'https://buildahooper.org/ja/blog/introducing-buildahooper',
+        'https://buildahooper.org/blog/introducing-buildahooper',
+      ],
+      [
+        'https://buildahooper.org/ko/scoring-calculator?mode=quick',
+        'https://buildahooper.org/scoring-calculator?mode=quick',
+      ],
+    ] as const;
+
+    for (const [from, to] of cases) {
+      const res = canonicalRedirect(new Request(from));
+      assert.ok(res);
+      assert.equal(res.status, 301);
+      assert.equal(res.headers.get('location'), to);
+    }
+  });
+
+  it('normalizes host, protocol, and locale in one redirect', () => {
+    const req = new Request(
+      'http://www.buildahooper.org/ja/leaderboard?tab=all'
+    );
+    const res = canonicalRedirect(req);
+
+    assert.ok(res);
+    assert.equal(res.status, 301);
+    assert.equal(
+      res.headers.get('location'),
+      'https://buildahooper.org/leaderboard?tab=all'
+    );
+  });
+
+  it('does not redirect a path that only starts with a locale-like string', () => {
+    const req = new Request('https://buildahooper.org/jazz');
+    assert.equal(canonicalRedirect(req), null);
+  });
 });

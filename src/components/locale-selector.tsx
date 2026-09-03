@@ -1,8 +1,8 @@
 import { Check, ChevronDown, Globe, Languages } from 'lucide-react';
 
-import { localeNames } from '@/config/locale';
+import { localeNames, publicLocales } from '@/config/locale';
 import { cn } from '@/lib/utils';
-import { getLocale, locales, setLocale } from '@/paraglide/runtime.js';
+import { getLocale, setLocale } from '@/paraglide/runtime.js';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,8 @@ export function LocaleSelector({
   className?: string;
 }) {
   const locale = getLocale();
+
+  if (publicLocales.length <= 1) return null;
 
   function handleSwitch(newLocale: string) {
     // Writes the locale cookie and reloads on the localized URL.
@@ -49,7 +51,7 @@ export function LocaleSelector({
         )}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {locales.map((loc) => (
+        {publicLocales.map((loc) => (
           <DropdownMenuItem
             key={loc}
             onClick={() => handleSwitch(loc)}

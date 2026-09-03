@@ -1,4 +1,9 @@
+import { retiredLocalePrefixes } from '@/config/locale';
+
 const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1']);
+const retiredLocalePrefixPattern = new RegExp(
+  `^/(${retiredLocalePrefixes.join('|')})(?=/|$)`
+);
 
 /** Skip canonical redirects for local dev and Cloudflare preview hosts. */
 function shouldSkipCanonicalRedirect(hostname: string) {
@@ -14,17 +19,26 @@ function shouldSkipCanonicalRedirect(hostname: string) {
 export function canonicalRedirect(req: Request): Response | null {
   const url = new URL(req.url);
   const host = url.hostname;
+  let shouldRedirect = false;
 
-  if (shouldSkipCanonicalRedirect(host)) return null;
-
-  const isWww = host.startsWith('www.');
-  const isHttp = url.protocol === 'http:';
-  if (!isWww && !isHttp) return null;
-
-  url.protocol = 'https:';
-  if (isWww) {
-    url.hostname = host.replace(/^www\./, '');
+  if (retiredLocalePrefixPattern.test(url.pathname)) {
+    url.pathname = url.pathname.replace(retiredLocalePrefixPattern, '') || '/';
+    shouldRedirect = true;
   }
 
-  return Response.redirect(url.toString(), 301);
+  if (!shouldSkipCanonicalRedirect(host)) {
+    const isWww = host.startsWith('www.');
+    const isHttp = url.protocol === 'http:';
+
+    if (isHttp) {
+      url.protocol = 'https:';
+      shouldRedirect = true;
+    }
+    if (isWww) {
+      url.hostname = host.replace(/^www\./, '');
+      shouldRedirect = true;
+    }
+  }
+
+  return shouldRedirect ? Response.redirect(url.toString(), 301) : null;
 }

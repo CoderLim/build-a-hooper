@@ -1,6 +1,7 @@
 import type { ComponentType } from 'react';
 
-import { baseLocale, locales } from '@/paraglide/runtime.js';
+import { publicLocales } from '@/config/locale';
+import { baseLocale } from '@/paraglide/runtime.js';
 
 /**
  * Local blog posts written as MDX files in this directory.
@@ -102,7 +103,7 @@ export function loadLocalPost(slug: string, locale: string): PostModule | null {
 }
 
 export function getAvailablePostLocales(slug: string): string[] {
-  return locales.filter(
+  return publicLocales.filter(
     (locale) => postModules[`/src/content/posts/${slug}.${locale}.mdx`]
   );
 }

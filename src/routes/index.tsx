@@ -1,6 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 
 import { envConfigs } from '@/config';
+import { publicLocales } from '@/config/locale';
 import {
   faqPageJsonLd,
   jsonLdScript,
@@ -10,7 +11,7 @@ import {
 } from '@/lib/seo/json-ld';
 import { buildOpenGraphMeta } from '@/lib/seo/open-graph';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
+import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
 import { Blog } from '@/blocks/blog';
 import { Disclaimer } from '@/blocks/disclaimer';
 import { FAQ } from '@/blocks/faq';
@@ -94,7 +95,7 @@ export const Route = createFileRoute('/')({
       ],
       links: [
         { rel: 'canonical', href: canonical },
-        ...locales.map((loc) => ({
+        ...publicLocales.map((loc) => ({
           rel: 'alternate',
           hrefLang: loc,
           href: urlFor(loc),

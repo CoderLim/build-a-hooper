@@ -1,4 +1,5 @@
 import { envConfigs } from '@/config';
+import { publicLocales } from '@/config/locale';
 import { baseLocale, locales, localizeUrl } from '@/paraglide/runtime.js';
 
 import { buildOpenGraphMeta } from './open-graph';
@@ -30,7 +31,7 @@ export function buildPageHead({
   path,
   locale,
   canonicalLocale = locale,
-  alternateLocales = locales,
+  alternateLocales = publicLocales,
   indexable = true,
   image,
   type,

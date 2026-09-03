@@ -1,10 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { createServerFn } from '@tanstack/react-start';
 
+import { publicLocales } from '@/config/locale';
 import type { LeaderboardResult } from '@/modules/hooper/types';
 import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, locales } from '@/paraglide/runtime.js';
+import { getLocale } from '@/paraglide/runtime.js';
 import { Header } from '@/blocks/header';
 import { LeaderboardGuide } from '@/blocks/leaderboard-guide';
 import { LeaderboardPage } from '@/components/hooper-leaderboard/leaderboard-page';
@@ -78,7 +79,7 @@ export const Route = createFileRoute('/leaderboard')({
           description: loaderData.description,
           path: '/leaderboard',
           locale: loaderData.locale,
-          alternateLocales: locales,
+          alternateLocales: publicLocales,
         })
       : {},
   component: LeaderboardRoutePage,

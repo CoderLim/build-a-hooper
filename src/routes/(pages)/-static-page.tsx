@@ -2,10 +2,11 @@ import type { ComponentType } from 'react';
 import { notFound, useLoaderData } from '@tanstack/react-router';
 
 import { Link } from '@/core/i18n/navigation';
+import { publicLocales } from '@/config/locale';
 import { articleJsonLd, jsonLdScript } from '@/lib/seo/json-ld';
 import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { baseLocale, getLocale, locales } from '@/paraglide/runtime.js';
+import { baseLocale, getLocale } from '@/paraglide/runtime.js';
 
 type PageMeta = {
   title: string;
@@ -68,7 +69,7 @@ function resolvePage(slug: string, locale: string): ResolvedPage | null {
 }
 
 function availablePageLocales(slug: string): string[] {
-  return locales.filter(
+  return publicLocales.filter(
     (locale) => pages[`/src/content/pages/${slug}.${locale}.mdx`]
   );
 }
@@ -138,13 +139,8 @@ export function staticPageRouteOptions(slug: string, path?: string) {
     },
     head: ({ loaderData }: { loaderData?: LoaderData }) => {
       if (!loaderData) return {};
-      const {
-        meta,
-        locale,
-        resolvedLocale,
-        isFallback,
-        availableLocales,
-      } = loaderData;
+      const { meta, locale, resolvedLocale, isFallback, availableLocales } =
+        loaderData;
       const head = buildPageHead({
         title: meta.title,
         description: meta.description,

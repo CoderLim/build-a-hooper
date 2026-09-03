@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 
+import { publicLocales } from '@/config/locale';
 import { lockedAchievementCatalog } from '@/lib/hooper/achievements';
 import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
-import { getLocale, locales } from '@/paraglide/runtime.js';
+import { getLocale } from '@/paraglide/runtime.js';
 import { Header } from '@/blocks/header';
 import { AchievementsPage } from '@/components/hooper-achievements/achievements-page';
 
@@ -44,7 +45,7 @@ export const Route = createFileRoute('/achievements')({
           description: loaderData.description,
           path: '/achievements',
           locale: loaderData.locale,
-          alternateLocales: locales,
+          alternateLocales: publicLocales,
         })
       : {},
   component: AchievementsRoutePage,

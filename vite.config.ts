@@ -76,7 +76,9 @@ export default defineConfig({
       outdir: './src/paraglide',
       outputStructure: 'message-modules',
       cookieName: 'PARAGLIDE_LOCALE',
-      strategy: ['url', 'cookie', 'baseLocale'],
+      // Public pages currently resolve from the URL only. This prevents an old
+      // locale cookie from rendering retired translations at the English URL.
+      strategy: ['url', 'baseLocale'],
       urlPatterns: [
         // API endpoints are never locale-prefixed.
         {
