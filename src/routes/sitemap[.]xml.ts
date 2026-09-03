@@ -46,8 +46,7 @@ const STATIC_PATHS: {
     availableLocales: LONG_FORM_LOCALES,
   },
   { path: '/best-builds/center', availableLocales: LONG_FORM_LOCALES },
-  { path: '/privacy-policy', availableLocales: LONG_FORM_LOCALES },
-  { path: '/terms-of-service', availableLocales: LONG_FORM_LOCALES },
+  // privacy-policy & terms-of-service intentionally omitted (noindex)
   { path: '/contact', availableLocales: LONG_FORM_LOCALES },
   { path: '/about', availableLocales: LONG_FORM_LOCALES },
 ];

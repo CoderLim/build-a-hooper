@@ -56,14 +56,8 @@ function LeaderboardRoutePage() {
 export const Route = createFileRoute('/leaderboard')({
   loader: async () => {
     const locale = getLocale();
-    const title =
-      locale === 'en'
-        ? 'Build a Hooper Leaderboard: Rankings & Points'
-        : m['leaderboard.meta.title']({}, { locale });
-    const description =
-      locale === 'en'
-        ? 'Explore the Build a Hooper Leaderboard and learn how legacy points, championships, win rate, awards, runs, and overall ratings shape every ranking.'
-        : m['leaderboard.meta.description']({}, { locale });
+    const title = m['leaderboard.meta.title']({}, { locale });
+    const description = m['leaderboard.meta.description']({}, { locale });
 
     return {
       locale,

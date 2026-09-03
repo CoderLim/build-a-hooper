@@ -39,6 +39,8 @@ const EDITORIAL_SLUGS = new Set([
   'best-builds-center',
 ]);
 
+const NOINDEX_SLUGS = new Set(['privacy-policy', 'terms-of-service']);
+
 const BY_LABELS: Record<string, string> = {
   en: 'By',
   zh: '作者',
@@ -148,7 +150,7 @@ export function staticPageRouteOptions(slug: string, path?: string) {
         locale,
         canonicalLocale: resolvedLocale,
         alternateLocales: availableLocales,
-        indexable: !isFallback,
+        indexable: !isFallback && !NOINDEX_SLUGS.has(slug),
       });
 
       if (!EDITORIAL_SLUGS.has(slug) || isFallback) return head;

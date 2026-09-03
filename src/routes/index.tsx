@@ -67,10 +67,7 @@ export const Route = createFileRoute('/')({
     const locale = loaderData?.locale ?? 'en';
     const urlFor = (loc: string) =>
       localizeUrl(`${envConfigs.app_url}/`, { locale: loc as any }).href;
-    const title =
-      locale === 'en'
-        ? 'Build a Hooper - Play Online & Master the Season'
-        : m['landing.meta.title']({}, { locale: locale as any });
+    const title = m['landing.meta.title']({}, { locale: locale as any });
     const description = m['landing.meta.description'](
       {},
       { locale: locale as any }
