@@ -12,6 +12,7 @@ import {
 import { buildOpenGraphMeta } from '@/lib/seo/open-graph';
 import { m } from '@/paraglide/messages.js';
 import { getLocale, localizeUrl } from '@/paraglide/runtime.js';
+import { AdSlotInContent, AdSlotTop } from '@/blocks/ad-slot';
 import { Blog } from '@/blocks/blog';
 import { Disclaimer } from '@/blocks/disclaimer';
 import { FAQ } from '@/blocks/faq';
@@ -42,10 +43,12 @@ function HomePage() {
       <Header overlay />
       <main>
         <Hero />
+        <AdSlotTop />
         <PlayIntro />
         <Features />
         <Screenshots />
         <HowItWorks />
+        <AdSlotInContent />
         <Guide />
         <FAQ />
         <Blog posts={posts} />

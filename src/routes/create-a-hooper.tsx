@@ -11,6 +11,7 @@ import {
 import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { getLocale } from '@/paraglide/runtime.js';
+import { AdSlotInContent, AdSlotTop } from '@/blocks/ad-slot';
 import { CreateAHooperGuide } from '@/blocks/create-a-hooper-guide';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
@@ -117,7 +118,9 @@ function CreateAHooperPage() {
       <Header overlay />
       <main>
         <Hero />
+        <AdSlotTop />
         <CreateAHooperGuide />
+        <AdSlotInContent />
       </main>
       <Footer />
     </div>

@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 
 import { Link } from '@/core/i18n/navigation';
 import { m } from '@/paraglide/messages.js';
+import { AdSlotInContent, AdSlotTop } from '@/blocks/ad-slot';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
 import { mdxComponents } from '@/components/mdx-components';
@@ -25,9 +26,11 @@ function PagesLayout() {
           {m['common.pages.back_to_home']()}
         </Link>
         <div className="pt-6 pb-12 md:pt-8 md:pb-16">
+          <AdSlotTop />
           <MDXProvider components={mdxComponents}>
             <Outlet />
           </MDXProvider>
+          <AdSlotInContent />
         </div>
       </div>
       <Footer />

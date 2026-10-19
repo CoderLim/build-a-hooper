@@ -5,6 +5,7 @@ import { lockedAchievementCatalog } from '@/lib/hooper/achievements';
 import { buildPageHead } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { getLocale } from '@/paraglide/runtime.js';
+import { AdSlotInContent, AdSlotTop } from '@/blocks/ad-slot';
 import { Header } from '@/blocks/header';
 import { AchievementsPage } from '@/components/hooper-achievements/achievements-page';
 
@@ -14,7 +15,9 @@ function AchievementsRoutePage() {
   return (
     <div className="bg-background text-foreground flex min-h-screen flex-col">
       <Header />
+      <AdSlotTop />
       <AchievementsPage initialData={initialData} />
+      <AdSlotInContent />
     </div>
   );
 }

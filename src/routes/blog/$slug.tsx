@@ -12,6 +12,7 @@ import {
 import { buildPageHead, localizedPageUrl } from '@/lib/seo/metadata';
 import { m } from '@/paraglide/messages.js';
 import { baseLocale, getLocale } from '@/paraglide/runtime.js';
+import { AdSlotInContent, AdSlotTop } from '@/blocks/ad-slot';
 import { Footer } from '@/blocks/footer';
 import { Header } from '@/blocks/header';
 import { MarkdownContent } from '@/components/markdown-content';
@@ -138,6 +139,8 @@ function BlogPostPage() {
             </div>
           </header>
 
+          <AdSlotTop />
+
           {post.image && (
             <img
               src={post.image}
@@ -159,6 +162,8 @@ function BlogPostPage() {
           ) : (
             <MarkdownContent content={post.content || ''} />
           )}
+
+          <AdSlotInContent />
         </article>
       </main>
       <Footer />
